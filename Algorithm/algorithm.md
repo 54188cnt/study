@@ -1,11 +1,17 @@
-# 一、单调栈
-数据结构：`Deque<Object> stack = new ArrayDeque<>();`  
+# 一、栈
+定义：栈是一种后进先出(FILO/LIFO)的数据结构。
 
-方法：`E peek, push(e), E pop()`
+数据结构：
+- `Deque<Object> stack = new ArrayDeque<>();`  
+- `Deque<Object> stack = new LinkedList<>();`
+- `Stack<Object> stack = new Stack<>()`
+
+方法：`E peek(), push(e), E pop()`
 
 <font color="lightblue">提示</font>：栈中的元素可以是值，也可以是指向这个值的索引。
 
-## 1.1 单调递减栈
+## 1.1 单调栈
+### 1.1。1 单调递减栈
 定义：栈中存放的是<font color="red">单调递减的元素</font>，栈顶的元素比栈内元素都大。  
 
 代码模板(以int为例)：
@@ -26,7 +32,7 @@ for (int i = 0; i < nums.length; i++) {
 题目：
 - [T42.接雨水](https://leetcode.cn/problems/trapping-rain-water/description/)
 
-## 1.2 单调递增栈
+### 1.1.2 单调递增栈
 定义：栈中存放的是<font color="red">单调递增的元素</font>，栈顶的元素比栈内元素都小。
 
 代码模板：
@@ -318,3 +324,55 @@ class Trie {
 定义：哈希表是一种数据结构，用于存储键值对。
 
 常见的Map结构：Map(不可以new), HashMap
+
+
+# 九、字符串
+定义：字符串是一组字符的集合。字符串一旦创建不可修改。
+
+常用方法：
+- `int indexOf(String str)`
+
+## 9.1 字符串匹配(KMP)
+
+
+
+# 十、队列
+定义：队列是一种数据结构，FIFO(先进先出)。
+
+数据结构：
+- `Deque<Obejct> queue = new LinkedList<>();`
+- `Deque<Object> queue = new ArrayDeque<>();`
+- `Queue<Object> queue = new LinkedList<>();`
+
+方法：`boolean offer(e), E poll(), E peek()`
+
+## 10.1 优先队列
+定义：优先队列其实就是堆，一般默认都是小顶堆。  
+
+数据结构：`PriorityQueue<Obejct> queue = new PriorityQueue<>();`
+
+方法：`boolean offer(e), E poll(), E peek()`
+
+代码模板(以T23.合并k个升序链表为例):
+```java
+public ListNode mergeKLists(ListNode[] lists) {
+        if(lists == null || lists.length == 0) return null;
+        int n = lists.length;
+        if(n == 1) return lists[0];
+        // 创建小根堆
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(n, (a, b) -> a.val - b.val);
+        for(ListNode node: lists) {
+            if(node != null) {
+                queue.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(), pre = dummy;
+    while(!queue.isEmpty()) {
+        ListNode node = queue.poll();
+        if(node.next != null) queue.offer(node.next);
+        pre.next = node;
+        pre = node;
+    }
+        return dummy.next;
+    }
+```
