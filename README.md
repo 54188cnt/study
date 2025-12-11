@@ -1,5 +1,5 @@
 # Algorithm 
-算法学习(基于Java)
+[algorithm.md](Algorithm/algorithm.md): 算法学习(基于Java)
 
 # JavaStudy
 
