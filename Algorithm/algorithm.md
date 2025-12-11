@@ -168,11 +168,12 @@ public int coinChange(int[] coins, int amount) {
 - 邻接矩阵 `int[][]`
 - 邻接表 `List<Integer>[]`
 
+## 5.1 遍历方式
 两种遍历方式：
 - DFS: 深度优先搜索
 - BFS: 广度优先搜索
 
-## 5.1 DFS
+## 5.1.1 DFS
 代码模板(以T200.岛屿数量为例):  
 ```java
 private int m, n;
@@ -204,6 +205,53 @@ private int m, n;
             dfs(g, x, y);
         }
     }
+```
+
+## 5.1.2 BFS
+
+
+## 5.2 拓扑排序
+定义：拓扑排序，可以判断一个有向图是否存在环  
+
+基本代码模板(以T207.课程表为例):  
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    // 创建图的邻接表
+    List<Integer>[] graph = new ArrayList[numCourses];
+    Arrays.setAll(graph, i -> new ArrayList<>());
+    // 图的每个节点的入度
+    int[] inDegree = new int[numCourses];
+    for(int[] e: prerequisites) {
+        // 计算入度
+        inDegree[e[0]]++;
+        // 添加邻接节点
+        graph[e[1]].add(e[0]);
+    }
+    int[] queue = new int[numCourses];
+    // [front, rear)
+    int front = 0, rear = 0;  
+    // 添加入度为0的节点
+    for(int i = 0;i < numCourses;++i) {
+        if(inDegree[i] == 0) {
+            queue[rear++] = i;
+        }
+    }
+    // 还有多少个点没访问
+    int n = numCourses;
+    while(front < rear) {
+        // 出队
+        int cur = queue[front++];
+        n--;
+        for(int nxt: graph[cur]) {
+            // 删边，并判断删除边之后是否满足入度为0
+            if(--inDegree[nxt] == 0) {
+                // 入度为0的节点入队
+                queue[rear++] = nxt;
+            }
+        }
+    }
+    return n == 0;
+}
 ```
 
 # 六、二分查找
@@ -245,7 +293,107 @@ private int binarySearch(int[] nums, int target) {
 - 层序遍历
 
 ## 7.1 四种遍历方式模板
+### 7.1.1 先序遍历
+递归模板：
+```java
+private void recursivePreorderTraversal(TreeNode root) { 
+    
+}
+```
 
+
+迭代模板：
+```java
+private void iterativePreorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
+```java
+private void morrisPreorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+### 7.1.2 中序遍历
+递归模板：
+```java
+private void recursiveInorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+迭代模板：
+```java
+private void iterativeInorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
+```java
+private void morrisInorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+### 7.1.3 后序遍历
+递归模板：
+```java
+private void recursivePostorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+迭代模板：
+```java
+private void iterativePostorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
+```java
+private void morrisPostorderTraversal(TreeNode root) { 
+    
+}
+```
+
+
+### 7.1.4 层序遍历
+基本代码块：
+```java
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> res = new ArrayList<>();
+    if(root == null) return res;
+    // 使用List模拟队列
+    List<TreeNode> queue = new ArrayList<>();
+    queue.add(root);
+    while(!queue.isEmpty()) { 
+        List<Integer> level = new ArrayList<>();
+        List<TreeNode> nxt = new ArrayList<>();
+        for(TreeNode node: queue) {
+            level.add(node.val);
+            // 添加下一层的节点
+            if(node.left != null) nxt.add(node.left);
+            if(node.right != null) nxt.add(node.right);
+        }
+        // 添加遍历结果
+        res.add(level);
+        // 更新队列
+        queue = nxt;
+    }
+    return res;
+}
+```
 
 
 ## 7.2 前缀树/字典树
@@ -325,12 +473,22 @@ class Trie {
 
 常见的Map结构：Map(不可以new), HashMap
 
+常用方法：
+- `V get(K key): 获取key对应的值`
+- `V getOrDefault(K key, V defaultValue): 获取key对应的值, 如果key不存在则返回defaultValue`
+- `V put(K key, V value): 添加键值对, 返回旧值`
+- `V remove(K key): 删除key对应的键值对`
+- `size(), isEmpty(), containsKey(K, key)`
+- `V merge(K, V, BiFunction<V, V, V>): 合并key对应的值, 返回合并后的值(新值)`
+- `static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, ...): 创建一个只包含指定键值对的Map（最多10个键值对）`
+
 
 # 九、字符串
-定义：字符串是一组字符的集合。字符串一旦创建不可修改。
+定义：字符串是一种数据结构，用于存储字符序列。  
+<font color="red">注：</font>Java中的字符串是一个不可变的对象，一旦创建，就不能被修改。  
 
 常用方法：
-- `int indexOf(String str)`
+- `int indexOf(String str): 返回str在当前字符串中第一次出现的索引，如果没有则返回-1`
 
 ## 9.1 字符串匹配(KMP)
 
@@ -374,5 +532,56 @@ public ListNode mergeKLists(ListNode[] lists) {
         pre = node;
     }
         return dummy.next;
+    }
+```
+
+# 十一、滑动窗口
+定义：滑动窗口是一种数据结构，用于维护一个窗口，窗口大小为k，窗口内元素为[i, i+k-1]。
+
+## 11.1 定长滑动窗口
+定义：定长滑动窗口，窗口大小为k，窗口内元素为[i, i+k-1]。
+
+代码模板(以T30.串联所有单词的子串为例)：
+```java
+// 学会理解overload的思想
+public List<Integer> findSubstring(String s, String[] words) {
+        List<Integer> res = new ArrayList<>();
+        int wordLen = words[0].length(), n = s.length();
+        int windowLen = wordLen * words.length;
+        Map<String, Integer> targetCnt = new HashMap<>();
+        for(String word: words) targetCnt.merge(word, 1, Integer::sum);
+        // wordLen次定长滑动窗口
+        for(int start = 0;start < wordLen; start++) {
+            // cnt统计窗口内元素出现的次数
+            Map<String, Integer> cnt = new HashMap<>();
+            // overload表示过多的单词的个数(包括不在words里的)
+            int overload = 0;
+            for(int right = start + wordLen; right <= n; right += wordLen) {
+                // inWord表示进入窗口的的那次， outWord表示离开窗口的
+                String inWord = s.substring(right - wordLen, right);
+                // 当原本已经相等但是又多了一个word便会溢出，触发overload++;
+                if(cnt.getOrDefault(inWord, 0).equals(targetCnt.getOrDefault(inWord, 0))) {
+                    overload++;
+                }
+                cnt.merge(inWord, 1, Integer::sum);
+                
+                int left = right - windowLen;
+                // 未满足一个windowLen的长度
+                if(left < 0) continue;
+                
+                // 此时说明已经存在一个windowLen长度的window
+                // 判断是否满足只需要看 overload 是否为 0 即可
+                if(overload == 0) res.add(left);
+                
+                // 窗口单词数满了需要删除一个单词
+                String outWord = s.substring(left, left + wordLen);
+                cnt.merge(outWord, -1, Integer::sum);
+                // 如是outWord的数量与targetCnt相等说明此时这个单词不再溢出，触发overload--
+                if(cnt.getOrDefault(outWord, 0).equals(targetCnt.getOrDefault(outWord, 0))) {
+                    overload--;
+                }
+            }
+        }
+        return res;
     }
 ```
