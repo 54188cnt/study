@@ -652,9 +652,10 @@ public int reverseBits(int n) {
 	final int M1 = 0x55555555;
 	final int M2 = 0x33333333;
 	final int M4 = 0x0f0f0f0f;
-	final int M8 = 0x
-	n = n >>> 1 & M1 | (n & M1) <<< 1;
-	n = n >>> 8 & M8  |  n << 8
+	final int M8 = 0x00ff00ff;
+	n = n >>> 1 & M1 | (n & M1) << 1;
+	n = n >>> 2
+	n = n >>> 8 & M8 | (n & M8) << 8;
 	return n >>> 16 | n <<< 16;
 }
 ```
