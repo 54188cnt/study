@@ -636,3 +636,8 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 ```
 
 #  十三、差分数组
+
+
+
+# 十四、分治
+定义：分治是把一个大问题拆分成各个小问题去解决和再合并
