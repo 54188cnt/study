@@ -598,7 +598,7 @@ public List<Integer> findSubstring(String s, String[] words) {
 ## 12.2 二维前缀和
 定义：二维前缀和可以快速计算矩阵的区间元素和。
 
-讲解：![](assets/algorithm/file-20251212110001139.png)
+讲解：![](assets/algorithm/二维前缀和讲解.png)
 
 代码模板：
 ```java
