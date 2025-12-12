@@ -491,8 +491,35 @@ class Trie {
 - `int indexOf(String str): 返回str在当前字符串中第一次出现的索引，如果没有则返回-1`
 
 ## 9.1 字符串匹配(KMP)
+定义：- KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。
 
-
+代码模板：
+```java
+public int[] calculateNext(String s) {
+	int n = s.length;
+	int[] next = new int[n];
+	/*
+    len有两个作用：
+	    1. 用于记录当前子串的最长公共前后缀长度
+        2. 同时知道当前子串的最长公共前后缀的前缀字符串对应索引 [0,len)
+        3. len表示当前子串最长公共前缀字符串的下一个字符的索引
+    */
+	int i = 1;
+	while(i < n) {
+		if(s.charAt(i) == s.charAt(len)) {
+			// 相等，拼接公共前缀
+			next[i] = next[i - 1] + 1;
+			i++;
+		}else if(len == 0) {
+			// 表示[0, i]的不存在公共前缀
+			next[i] == 0;
+			i++;
+		}else{
+			len = next[len - 1];
+		}
+	}
+}
+```
 
 # 十、队列
 定义：队列是一种数据结构，FIFO(先进先出)。
