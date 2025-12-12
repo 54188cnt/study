@@ -77,24 +77,24 @@ for (int i = 0; i < nums.length; i++) {
  * @return 可以接的雨水量
  */
 public int trap(int[] height) {
-        int n = height.length, res = 0;
-        int l = 0, r = n - 1;
-        int preMax = 0, sufMax = 0;
-        while(l < r) {
-            int hL = height[l], hR = height[r];
-            preMax = Math.max(preMax, hL);
-            sufMax = Math.max(sufMax, hR);
-            // 谁小谁先移动
-            if(preMax  < sufMax){
-                res += preMax - hL;
-                l++;
-            }else{
-                res += sufMax - hR;
-                r--;
-            }
+    int n = height.length, res = 0;
+    int l = 0, r = n - 1;
+    int preMax = 0, sufMax = 0;
+    while(l < r) {
+        int hL = height[l], hR = height[r];
+        preMax = Math.max(preMax, hL);
+        sufMax = Math.max(sufMax, hR);
+        // 谁小谁先移动
+        if(preMax  < sufMax){
+            res += preMax - hL;
+            l++;
+        }else{
+            res += sufMax - hR;
+            r--;
         }
-        return res;
     }
+    return res;
+}
 ```
 
 题目：
