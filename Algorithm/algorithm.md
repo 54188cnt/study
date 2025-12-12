@@ -508,8 +508,8 @@ public int[] calculateNext(String s) {
 	while(i < n) {
 		if(s.charAt(i) == s.charAt(len)) {
 			// 相等，拼接公共前缀
-			next[i] = next[i - 1] + 1;
 			len++;
+			next[i] = len;
 			i++;
 		}else if(len == 0) {
 			// 表示[0, i]的不存在公共前缀
@@ -519,6 +519,24 @@ public int[] calculateNext(String s) {
 			len = next[len - 1];
 		}
 	}
+}
+
+public int kmpSearch(String origin, String target) {
+	int m = origin.length(), n = target.length();
+	int[] next = calculateNext(target);
+	int i = 0, j = 0;
+	while(i < m && j < n) {
+		if(origin.charAt(i) == target.charAt(j)) {
+			i++;
+			j++;
+		}else if(j == 0) {
+			// 第一个字符就不匹配
+			i++;
+		}else {
+			j = next[j - 1];
+		}
+	}
+	return j == n ? i - j : -1;
 }
 ```
 
