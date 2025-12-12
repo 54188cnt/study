@@ -612,6 +612,10 @@ public int[][] calculatePreSum(int[][] grid) {
 	}
 	return pre;
 }
+// 计算[(r1, c1),(r2-1, c2 -1)]之间的值的和
+public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
+	return pre[r2][c2] - pre[r2][c1] - pre[r1][c2] + pre[r1][c1];
+}
 ```
 
 
