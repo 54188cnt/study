@@ -585,3 +585,26 @@ public List<Integer> findSubstring(String s, String[] words) {
         return res;
     }
 ```
+
+# 十二、前缀和
+定义：前缀和可以快速计算区间内的元素和。
+
+数据结构：`int[] preSum = new int[n+1];`  
+
+## 12.1 一维前缀和
+
+
+
+## 12.2 二维前缀和
+定义：二维前缀和可以快速计算矩阵的区间元素和。
+
+讲解：
+
+代码模板：
+```java
+
+```
+
+
+
+#  十三、差分数组
