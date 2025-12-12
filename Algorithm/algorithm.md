@@ -646,7 +646,14 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 
 
 ## 14.2 位运算分治
-
+代码模板(以T190. 颠倒二进制位为例):  
+```java
+public int reverseBits(int n) {
+	
+	n = n >>> 8  |  n << 8
+	return n >>> 16 | n <<< 16;
+}
+```
 
 ## 14.3 链表分治
 
