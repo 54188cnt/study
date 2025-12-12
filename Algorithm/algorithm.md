@@ -491,8 +491,54 @@ class Trie {
 - `int indexOf(String str): 返回str在当前字符串中第一次出现的索引，如果没有则返回-1`
 
 ## 9.1 字符串匹配(KMP)
+定义：- KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。
 
+代码模板：
+```java
+public int[] calculateNext(String s) {
+	int n = s.length;
+	int[] next = new int[n];
+	/*
+    len有两个作用：
+	    1. 用于记录当前子串的最长公共前后缀长度
+        2. 同时知道当前子串的最长公共前后缀的前缀字符串对应索引 [0,len)
+        3. len表示当前子串最长公共前缀字符串的下一个字符的索引
+    */
+	int i = 1;
+	while(i < n) {
+		if(s.charAt(i) == s.charAt(len)) {
+			// 相等，拼接公共前缀
+			len++;
+			next[i] = len;
+			i++;
+		}else if(len == 0) {
+			// 表示[0, i]的不存在公共前缀
+			next[i] == 0;
+			i++;
+		}else{
+			len = next[len - 1];
+		}
+	}
+}
 
+public int kmpSearch(String origin, String target) {
+	int m = origin.length(), n = target.length();
+	int[] next = calculateNext(target);
+	int i = 0, j = 0;
+	while(i < m && j < n) {
+		if(origin.charAt(i) == target.charAt(j)) {
+			i++;
+			j++;
+		}else if(j == 0) {
+			// 第一个字符就不匹配
+			i++;
+		}else {
+			j = next[j - 1];
+		}
+	}
+	return j == n ? i - j : -1;
+}
+```
 
 # 十、队列
 定义：队列是一种数据结构，FIFO(先进先出)。
@@ -585,3 +631,91 @@ public List<Integer> findSubstring(String s, String[] words) {
         return res;
     }
 ```
+
+# 十二、前缀和
+定义：前缀和可以快速计算区间内的元素和。
+
+数据结构：`int[] preSum = new int[n+1];`  
+
+## 12.1 一维前缀和
+定义：一维前缀和可以快速计算数组的区间元素和。
+
+代码模板：
+```java
+public int[] calculatePreSum(int[] nums) {
+	int n = nums.length;
+	int[] pre = new int[n + 1];
+	// pre[i + 1]表示[0, i]的元素的和
+	for(int i = 0;i < n;++i) {
+		pre[i + 1] = pre[i] + nums[i];
+	}
+	return pre;
+}
+// 计算[left, right)区间的和
+public int getSum(int[] pre, int left, int right) {
+	return pre[right] - pre[left];
+}
+```
+
+
+## 12.2 二维前缀和
+定义：二维前缀和可以快速计算矩阵的区间元素和。
+
+讲解：![](assets/algorithm/二维前缀和讲解.png)
+
+代码模板：
+```java
+public int[][] calculatePreSum(int[][] grid) {
+	int m = grid.length, n = grid[0].length;
+	int[][] pre = new int[m][n];
+	for(int i = 0;i < m;++i) {
+		for(int j = 0;j < n;++j) {
+			pre[i+1][j+1] = pre[i+1][j] + pre[i][j+1] - pre[i][j] + grid[i][j];
+		}
+	}
+	return pre;
+}
+// 计算[(r1, c1),(r2-1, c2 -1)]之间的值的和
+public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
+	return pre[r2][c2] - pre[r2][c1] - pre[r1][c2] + pre[r1][c1];
+}
+```
+
+#  十三、差分数组
+
+
+
+# 十四、分治
+定义：分治是把一个大问题拆分成各个小问题去解决和再合并。
+
+## 14.1 数组分治
+
+
+## 14.2 位运算分治
+位运算：`>>, <<, >>>, <<<, &, |, ^, ~`
+
+位运算常用用法：
+- `n & 1`: 判断n的奇偶性
+- `num & (-num)`: 提取num二进制中最右边的1
+- `num & (num - 1)`: 删除num二进制中最右边的1
+- `n & ~(1 << k)`: 将n第k位清0
+- 
+
+代码模板(以T190. 颠倒二进制位为例):  
+```java
+public int reverseBits(int n) {
+	final int M1 = 0x55555555;
+	final int M2 = 0x33333333;
+	final int M4 = 0x0f0f0f0f;
+	final int M8 = 0x00ff00ff;
+	n = n >>> 1 & M1 | (n & M1) << 1;
+	n = n >>> 2 & M2 | (n & M2) << 2;
+	n = n >>> 4 & M4 | (n & M4) << 4;
+	n = n >>> 8 & M8 | (n & M8) << 8;
+	return n >>> 16 | n << 16;
+}
+```
+
+## 14.3 链表分治
+
+
