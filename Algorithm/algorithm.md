@@ -650,6 +650,9 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 
 位运算常用用法：
 - `n & 1`: 判断n的奇偶性
+- `num & (-num)`: 提取num二进制中最右边的1
+- `num & (num - 1)`: 删除num二进制中最右边的1
+- `n & ~(1 << k)`: 将n第k位清0
 - 
 
 代码模板(以T190. 颠倒二进制位为例):  
