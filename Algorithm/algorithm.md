@@ -649,7 +649,8 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 代码模板(以T190. 颠倒二进制位为例):  
 ```java
 public int reverseBits(int n) {
-	
+	static final 
+	n = n >>> 1 & M1
 	n = n >>> 8  |  n << 8
 	return n >>> 16 | n <<< 16;
 }
