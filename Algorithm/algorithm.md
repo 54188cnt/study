@@ -592,7 +592,24 @@ public List<Integer> findSubstring(String s, String[] words) {
 数据结构：`int[] preSum = new int[n+1];`  
 
 ## 12.1 一维前缀和
+定义：一维前缀和可以快速计算数组的区间元素和。
 
+代码模板：
+```java
+public int[] calculatePreSum(int[] nums) {
+	int n = nums.length;
+	int[] pre = new int[n + 1];
+	// pre[i + 1]表示[0, i]的元素的和
+	for(int i = 0;i < n;++i) {
+		pre[i + 1] = pre[i] + nums[i];
+	}
+	return pre;
+}
+// 计算[left, right)区间的和
+public int getSum(int[] pre, int left, int right) {
+	return pre[right] - pre[left];
+}
+```
 
 
 ## 12.2 二维前缀和
@@ -617,7 +634,5 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 	return pre[r2][c2] - pre[r2][c1] - pre[r1][c2] + pre[r1][c1];
 }
 ```
-
-
 
 #  十三、差分数组
