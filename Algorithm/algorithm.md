@@ -509,6 +509,7 @@ public int[] calculateNext(String s) {
 		if(s.charAt(i) == s.charAt(len)) {
 			// 相等，拼接公共前缀
 			next[i] = next[i - 1] + 1;
+			len++;
 			i++;
 		}else if(len == 0) {
 			// 表示[0, i]的不存在公共前缀
