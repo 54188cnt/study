@@ -602,10 +602,15 @@ public List<Integer> findSubstring(String s, String[] words) {
 
 代码模板：
 ```java
-public void calculatePreSum(int[][] grid) {
+public int[][] calculatePreSum(int[][] grid) {
 	int m = grid.length, n = grid[0].length;
 	int[][] pre = new int[m][n];
-	for
+	for(int i = 0;i < m;++i) {
+		for(int j = 0;j < n;++j) {
+			pre[i+1][j+1] = pre[i+1][j] + pre[i][j+1] - pre[i][j] + grid[i][j];
+		}
+	}
+	return pre;
 }
 ```
 
