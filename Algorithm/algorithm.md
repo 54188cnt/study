@@ -646,6 +646,12 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 
 
 ## 14.2 位运算分治
+位运算：`>>, <<, >>>, <<<, &, |, ^`
+
+位运算常用用法：
+- `n & 1`: 判断n的奇偶性
+- 
+
 代码模板(以T190. 颠倒二进制位为例):  
 ```java
 public int reverseBits(int n) {
@@ -657,7 +663,7 @@ public int reverseBits(int n) {
 	n = n >>> 2 & M2 | (n & M2) << 2;
 	n = n >>> 4 & M4 | (n & M4) << 4;
 	n = n >>> 8 & M8 | (n & M8) << 8;
-	return n >>> 16 | n <<< 16;
+	return n >>> 16 | n << 16;
 }
 ```
 
