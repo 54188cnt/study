@@ -67,13 +67,15 @@ public int lengthOfLongestSubstring(String s) {
 	int n = chs.length;
 	int res = 0;
 	int[] cnt = new int[128];
-	// s[i,j)表示子串
+	// s[i,j]表示子串
 	int overload = 0;
 	for(int i = 0, j = 0;j < n;++j) {
-		cnt[chs[j]]++;
-		if(cnt[chs[j]] > 1) {
-			overload++;
+		while(cnt[chs[j]] > 0) {
+			cnt[chs[i]]--;
+			i++;
 		}
+		chs[j]++;
+		
 	}
 	return res;
 }
