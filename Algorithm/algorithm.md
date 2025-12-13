@@ -74,8 +74,8 @@ public int lengthOfLongestSubstring(String s) {
 			cnt[chs[i]]--;
 			i++;
 		}
-		chs[j]++;
-		
+		cnt[chs[j]]++;
+		res = Math.max(res, j - i + 1);
 	}
 	return res;
 }
