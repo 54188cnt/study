@@ -179,7 +179,7 @@ public int coinChange(int[] coins, int amount) {
 - [T322.零钱兑换](https://leetcode.cn/problems/coin-change/description/)
 
 ## 4.2 多维DP
-代码模板(以T. 188买卖股票的最佳时机IV)：
+代码模板(以T.188 买卖股票的最佳时机IV)：
 ```java
 
 ```
