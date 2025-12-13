@@ -184,7 +184,50 @@ public int coinChange(int[] coins, int amount) {
 代码模板(以T.188 买卖股票的最佳时机IV)：
 ![](assets/algorithm/T188.买卖股票的最佳时机IV.png)
 ```java
+public int maxProfit(int k, int[] prices) {
+    int n = prices.length;
+    // f[i][j][0] 表示第i天交易j次未持有股票
+    // f[i][j][1] 表示第i天交易k次持有股票
+    int[][][] f = new int[n+1][k+1][2];
+    for(int j = 0; j <= k;++j) {
+        // 第0天持有股票是非法的，设为一个极小值就好
+        f[0][j][1] = -3000;
+    }
+    for(int i = 0;i < n;++i) {
+        for(int j = 1;j <= k;++j) {
+            // 要么与昨天保持一致，要么在昨天的基础上卖出股票
+            // 卖出股票，交易次数不变(写在了买入)
+            f[i+1][j][0] = Math.max(f[i][j][0], f[i][j][1] + prices[i]);
+            // 要么与昨天保持一致，要么在昨天的基础上买入股票
+            // 购买股票，交易次数要+1
+            f[i+1][j][1] = Math.max(f[i][j][1], f[i][j-1][0] - prices[i]);
+        }
+    }
+    return f[n][k][0];
+}
 
+// 优化空间复杂度(同01背包一样需要逆序遍历)
+public int maxProfit(int k, int[] prices) {
+    int n = prices.length;
+    // f[i][j][0] 表示第i天交易j次未持有股票
+    // f[i][j][1] 表示第i天交易k次持有股票
+    int[][] f = new int[k+1][2];
+    for(int j = 0; j <= k;++j) {
+        // 第0天持有股票是非法的，设为一个极小值就好
+        f[j][1] = -3000;
+    }
+    for(int p: prices) {
+        for(int j = k;j > 0;--j) {
+            // 要么与昨天保持一致，要么在昨天的基础上卖出股票
+            // 卖出股票，交易次数不变(写在了买入)
+            f[j][0] = Math.max(f[j][0], f[j][1] + p);
+            // 要么与昨天保持一致，要么在昨天的基础上买入股票
+            // 购买股票，交易次数要+1
+            f[j][1] = Math.max(f[j][1], f[j-1][0] - p);
+        }
+    }
+    return f[k][0];
+}
 ```
 
 # 五、图
