@@ -86,7 +86,7 @@ public int lengthOfLongestSubstring(String s) {
 ## 2.3 相向双指针
 定义：两个指针分别指向数组的头和尾，通过移动指针，寻找满足条件结果。
 
-代码模板(以T42为例)：
+代码模板(以T42. 接雨水为例)：
 ```java
 /**
  * T42.接雨水
