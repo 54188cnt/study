@@ -154,6 +154,8 @@ private void dfs(int left, int right, StringBuilder sb, int n){
 # 四、动态规划
 定义：通过递推公式，将问题转化为子问题，得到结果。
 
+注：要学会寻找<font color="lightblue">状态转移机(DP)</font>
+
 ## 4.1 一维DP
 定义：一维DP数组，`dp[i]`表示组成i所需要的最小硬币数。
 
