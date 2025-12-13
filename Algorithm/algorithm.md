@@ -59,9 +59,16 @@ for (int i = 0; i < nums.length; i++) {
 ## 2.2 同向双指针
 定义：两个指针同时移动，一个指针比另一个指针先移动，寻找满足条件结果。  
 
-代码模板：
+代码模板(以T3. 无重复的最长字串)：
+![](assets/algorithm/T3.无重复字符的最长字串.png)
 ```java
-
+public int lengthOfLongestSubstring(String s) {
+	char[] chs = s.toCharArray();
+	int n = chs.length;
+	int res = 0;
+	
+	return res;
+}
 ```
 
 题目：
