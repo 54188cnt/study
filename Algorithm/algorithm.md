@@ -760,7 +760,87 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 ## 14.1 数组分治
 代码模板(以快排为例)：
 ```java
+private void sort(int[] nums, int l, int r) {
+    if(l == r) return ;
+    int partIdx = partition(nums, l, r);
+    if(l < partIdx - 1) sort(nums, l, partIdx - 1);
+    if(r > partIdx + 1) sort(nums, partIdx + 1, r);
+}
+// 快排划分区间，但是这个效率很低，将进行优化(覆盖写次数多)
+private int partition(int[] nums, int l, int r)  {
+    // 随机取pivot
+    Random rand = new Random();
+    int i = l + rand.nextInt(r - l + 1);
+    int pivot = nums[i];
+    swap(nums, l, i);
+    i = l;
+    int j = r;
+    while(i < j) {
+        while(i < j && nums[j] >= pivot) j--;
+        // 此时nums[j] < pivot
+        nums[i] = nums[j];
+        while(i < j && nums[i] <= pivot) i++;
+        // 此时nums[i] > pivot
+        nums[j] = nums[i];
+    }
+    nums[i] = pivot;
+    return i;
+}
+// 优化partition
+private int partition(int[] nums, int left, int right) {
+	// 随机选择基准元素 pivot
+	int i = left + rand.nextInt(right - left + 1);
+	int pivot = nums[i];
+	swap(nums, left, i);
+	i = left + 1;
+	int j = right;
+	// 子数组分布图解
+	// [ pivot | <= pivot | 尚未遍历 | >= pivot ]
+	//   ^                  ^      ^          ^
+	//   left               i      j          right
+	
+	// 根据pivot重排子数组[left, right]
+	// 重排后，<=pivot都在pivot左侧，>=pivot都在pivot右侧
+	// 返回pivot在数组中的下标
+	// 这样可以使得当子数组所有元素都等于pivot也能返回中心下标而不会退化
+	while(true) {
+		while(i <= j && nums[i] < pivot) i++;
+		// nums[i] >= pivot
+		while(i <= j && nums[j] > pivot) j--;
+		// nums[j] >= pivot
+		
+		// i, j分析
+		// i < j 还需继续遍历
+		// i > j 已经遍历完成, 此时nums[j] < pivot, nums[i] > pivot
+		// 由于还要把pivot放在相应的坐标处，所以i > j的时候应该与j交换
+		// i = j 此时nums[j] == pivot, 此时也可以结束
+		// 这个时候同样可以与j交换，不会影响数组的特性
+		if(i >= j) {
+			break;
+		}
+		swap(nums, i, j);
+		i++;
+		j--;
+	}
+	// 循环结束
+	// [ pivot | <=pivot | >=pivot ]
+	//   ^              ^  ^      ^
+	//    left          j  i      right
+	
+	// 为啥与j交换？
+	// 由于i可能会出现 i = right + 1而越界
+	// 如果nums[i] > pivot，与i交换破坏了我们设置的数组特性
+	// 与j交换不用担心j = left, 而且nums[j] <= pivot，可以正常交换
+	swap(nums, left, j); 
+	// 交换后j就应该是pivot的下标了
+	return j;
+}
 
+private void swap(int[] nums, int i, int j) {
+    int t = nums[i];
+    nums[i] = nums[j];
+    nums[j] = t;
+}
 ```
 ## 14.2 位运算分治
 位运算：`>>, <<, >>>, <<<, &, |, ^, ~`
