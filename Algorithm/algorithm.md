@@ -789,6 +789,7 @@ private int partition(int[] nums, int l, int r)  {
 // 优化partition
 private int partition(int[] nums, int left, int right) {
 	// 随机选择基准元素 pivot
+	Random rand = new Random();
 	int i = left + rand.nextInt(right - left + 1);
 	int pivot = nums[i];
 	swap(nums, left, i);
