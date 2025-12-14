@@ -804,7 +804,7 @@ ThreadLocal:
 
 作用域(<font color="YELLOW">@Scope("xxx")</font>)：
 - singleton(default，单例容器，所有对象都共享一个实例),在项目启动时创建  
-  <font color="YELLOW>@Lazy</font>会延时创建Bean实例  
+  <font color="YELLOW">@Lazy</font>会延时创建Bean实例  
   应用场景(绝大多数都是单例Bean)：无状态的Bean(不保存数据，Controller, Service, Dao均为这类Bean)  
 - prototype(多例容器，每次获取的实例都是新的)  
   应用场景：有状态的Bean(保存数据)
