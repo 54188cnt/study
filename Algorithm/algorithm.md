@@ -620,6 +620,7 @@ public int maxPoints(int[][] points) {
 	return res + 1;
 }
 ```
+
 # 九、字符串
 定义：字符串是一种数据结构，用于存储字符序列。  
 <font color="red">注：</font>Java中的字符串是一个不可变的对象，一旦创建，就不能被修改。  
@@ -820,6 +821,11 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 
 #  十三、差分数组
 
+
+## 13.1 一维差分数组
+
+
+## 13.2 二维差分数组 
 
 
 # 十四、分治
