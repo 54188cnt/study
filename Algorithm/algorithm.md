@@ -627,6 +627,11 @@ class FenwickTree {
 	}
 }
 ```
+
+题目：
+- [T3777. 使子字符串变交替的最少删除次数](https://leetcode.cn/problems/minimum-deletions-to-make-alternating-substring/)
+- 
+
 ### 7.3.2 线段树(无区间更新)
 定义：把任意区间用 `O(logn)` 个区间表示，线段树的每个节点记录对应区间的信息。
 - 询问：把询问区间拆分成 `O(logn)` 个区间，对应着线段树的 `O(logn)` 个节点，把这 `O(logn)` 个节点的信息合并，即为答案。
