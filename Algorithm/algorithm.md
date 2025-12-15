@@ -580,6 +580,7 @@ class Trie {
 
 代码示例(以求区间和为例)：
 ```java
+// 这里使用的是下表1-n，真实情景注意变换
 class FenwickTree {
 	// long只是为了更通用，数据小也可以int
 	private final long[] tree;
@@ -599,7 +600,8 @@ class FenwickTree {
 	}
 	
 	// 更新操作
-	// 当 a[i] 增加 val
+	// 这里要注意是变成val还是增加val
+	// 当 nums[i] 增加 val
 	// 1 <= i <= n
 	public void update(int i, long val) {
 		for(;i < tree.length; i += i & -i) {
@@ -614,6 +616,13 @@ class FenwickTree {
 		for(;i > 0; i &= i - 1) {
 			res += tree[i];
 		}
+		return res;
+	}
+	
+	// 求区间和
+	// 1 <= left <= right <= n
+	public long query(int left, int right) {
+		return pre(right) - pre(left - 1);
 	}
 }
 ```
