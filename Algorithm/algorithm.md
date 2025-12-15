@@ -590,7 +590,7 @@ class FenwickTree {
 		tree = new long[n + 1];
 		for(int i = 1;i <= n;++i) {
 			tree[i] += nums[i - 1];
-			
+			int nxt = i + (i & -i)
 		}
 	}
 	
