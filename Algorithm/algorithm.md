@@ -590,7 +590,11 @@ class FenwickTree {
 		tree = new long[n + 1];
 		for(int i = 1;i <= n;++i) {
 			tree[i] += nums[i - 1];
-			int nxt = i + (i & -i)
+			// 下一个关键区间右端点
+			int nxt = i + (i & -i);
+			if(nxt <= n) {
+				tree[nxt] += tree[i];
+			}
 		}
 	}
 	
@@ -605,6 +609,12 @@ class FenwickTree {
 	
 	// 求前缀和
 	// sum[1, i]
+	public long pre(int i) {
+		long res = 0;
+		for(;i > 0; i &= i - 1) {
+			res += tree[i];
+		}
+	}
 }
 ```
 ### 7.3.2 线段树(无区间更新)
