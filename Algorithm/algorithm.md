@@ -580,7 +580,30 @@ class Trie {
 
 代码示例(以求区间和为例)：
 ```java
-
+class FenwickTree {
+	// long只是为了更通用，数据小也可以int
+	private final long[] tree;
+	
+	public FenwickTree(long[] nums) {
+		// 下标使用 1 ~ n 更好计算
+		
+		tree = new long[n + 1];
+		for(int i = 0;i < n;++i) {
+		}
+	}
+	
+	// 更新操作
+	// 当 a[i] 增加 val
+	// 1 <= i <= n
+	public void update(int i, long val) {
+		for(;i < tree.length; i += i & -i) {
+			tree[i] += val;
+		}
+	}
+	
+	// 求前缀和
+	// sum[1, i]
+}
 ```
 ### 7.3.2 线段树(无区间更新)
 定义：把任意区间用 `O(logn)` 个区间表示，线段树的每个节点记录对应区间的信息。
