@@ -230,6 +230,39 @@ public int maxProfit(int k, int[] prices) {
 }
 ```
 
+## 4.3 多次DP
+<font color="red">注：</font>学会理解 <font color="lightblue">"正难则反"</font> 思想
+
+代码模板：
+![](assets/algorithm/T918.环形子数组的最大和.png)
+```java
+// 直接计算最大值maxS，此时只要数组没跨界就正确
+// 当数组跨界的时候只需要计算minS，这个必然不跨界
+// 所以两者只需要求max(maxS, sum - minS)
+// 特例：当数组全部小于0，此时会有maxS<0而sum-minS=0
+// 因此特里需要特殊处理
+public int maxSubarraySumCircular(int[] nums) {
+	int sum = 0;
+	// maxS和minS记录最大或最小子数组和
+	int maxS = Integer.MIN_VALUE;
+	int minS = 0;
+	// maxF和minF是动态规划单个变量
+	int maxF = 0, minF = 0;
+	for(int x: nums) {
+		sum += x;
+		maxF = Math.max(maxF, 0) + x;
+		maxS = Math.max(maxS, maxF);
+		minF = Math.min(minF, 0) + x;
+		minS = Math.min(minF, minS);
+	}
+	// maxS < 0 表示数组全部都是负数，sum-minS和maxS求最大值会出错，直接单独处理
+	if(maxS < 0) {
+		return maxS;
+	}
+	return Math.max(maxS, sum - minS);
+}
+```
+
 # 五、图
 定义：图是一组节点和边组成的数据结构。
 
@@ -555,7 +588,38 @@ class Trie {
 - `V merge(K, V, BiFunction<V, V, V>): 合并key对应的值, 返回合并后的值(新值)`
 - `static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, ...): 创建一个只包含指定键值对的Map（最多10个键值对）`
 
+Q: 什么时候可以用Double当key？
+A: 最大最小值插值不超过==6.7 * 10^7==
 
+代码模板（以T149. 直线上最多的点数为例）：
+![](assets/algorithm/T149.直线上最多的点数.png)
+```java
+public int maxPoints(int[][] points) {
+	int n = points.length, res = 0;
+	for(int i = 0;i < n - 1;++i) {
+		// 点P
+		int[] p = points[i];
+		// 避免重复计算
+		// 斜率k为键，值为斜率相当的数量
+		// map放在外层的话会重复累加，应当放里面固定一个点来避免重复叠加
+		Map<Double, Integer> cnt = new HashMap<>();
+		for(int j = i + 1;j < n;++j) {
+			// 点Q
+			int[] q = points[j];
+			int dx = q[0] - p[0];
+			int dy = q[1] - p[1];
+			// dx等于0的时斜率为+∞
+			double k = dx != 0 ? (double) dy / dx : Double.POSITIVE_INFINITY;
+			// Double中-0.0 != 0.0, 需要特殊处理
+			if(k == 0) k = 0;
+			int c = cnt.merge(k, 1, Integer::sum);
+			res = Math.max(res, c);
+		}
+	}
+	// 由于点数应当比斜率数多1
+	return res + 1;
+}
+```
 # 九、字符串
 定义：字符串是一种数据结构，用于存储字符序列。  
 <font color="red">注：</font>Java中的字符串是一个不可变的对象，一旦创建，就不能被修改。  
