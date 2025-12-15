@@ -942,6 +942,8 @@ private void swap(int[] nums, int i, int j) {
 }
 ```
 ## 14.2 位运算分治
+[从集合论到位运算](https://leetcode.cn/discuss/post/3571304/cong-ji-he-lun-dao-wei-yun-suan-chang-ji-enve/)
+
 位运算：`>>, <<, >>>, <<<, &, |, ^, ~`
 
 位运算常用用法：
