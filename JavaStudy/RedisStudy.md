@@ -481,7 +481,7 @@ local val = item_cache:get('key');
 - 同步双写：修改数据库时直接修改缓存  
 - 异步通知：当数据库发生变化时，相关服务监听到通知后修改缓存数据  
 
-[Spring Cache](JavaStudy/SpringCache.md): 基于注解的缓存功能
+[Spring Cache的使用](explanation/SpringCache.md): 基于注解的缓存功能
 
 [Canal](https://github.com/alibaba/canal): 主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费  
 <font color="yellow">@CanalTable("table_name")</font>表示监听的表  
