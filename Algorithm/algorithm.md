@@ -949,7 +949,6 @@ private void swap(int[] nums, int i, int j) {
 - `num & (-num)`: 提取num二进制中最右边的1
 - `num & (num - 1)`: 删除num二进制中最右边的1
 - `n & ~(1 << k)`: 将n第k位清0
-- 
 
 代码模板(以T190. 颠倒二进制位为例):  
 ```java
