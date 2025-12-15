@@ -573,7 +573,10 @@ class Trie {
 [灵神算法之数据结构](https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/)
 
 ### 7.3.1 树状数组
-定义：
+![](assets/algorithm/树状数组图解.png)
+定义：快速地计算任意一段连续子数组的元素和(数组可以时刻变化)，可以做到query和update均为O(logn)
+
+
 
 注：能用树状数组解决的题目，也能用线段树解决（反过来不一定）。但树状数组实现简单，代码短。
 
