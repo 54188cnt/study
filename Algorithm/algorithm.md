@@ -620,6 +620,7 @@ class FenwickTree {
 	}
 	
 	// 求区间和
+	// sum[left, right]
 	// 1 <= left <= right <= n
 	public long query(int left, int right) {
 		return pre(right) - pre(left - 1);
