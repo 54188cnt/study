@@ -73,7 +73,7 @@ public class JedisConnectionFactory {
     }
 }
 ```
-2.使用JedisConnectionFactory获取Jedis对象  
+2. 使用JedisConnectionFactory获取Jedis对象  
 3. 使用Jedis对象执行redis命令(指令同Redis指令)    
 
 ### 1.2.2 SpringDataRedis  
@@ -334,7 +334,7 @@ replicaof <masterip> <masterport>
 
 如何实现按故障转移：  
 - Sentinel会向选中的slave发送slaveof no one
-- Sentinel会向其他slave发送slaveof <newMasterIp> <newMasterPort>
+- Sentinel会向其他slave发送slaveof \<newMasterIp> \<newMasterPort>
 - 将故障节点标记为slave
 
 RedisTemplate配置读写分离：  
@@ -481,6 +481,8 @@ local val = item_cache:get('key');
 - 同步双写：修改数据库时直接修改缓存  
 - 异步通知：当数据库发生变化时，相关服务监听到通知后修改缓存数据  
 
+[Spring Cache](JavaStudy/SpringCache.md): 基于注解的缓存功能
+
 [Canal](https://github.com/alibaba/canal): 主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费  
 <font color="yellow">@CanalTable("table_name")</font>表示监听的表  
 实体与数据库映射：
@@ -553,8 +555,8 @@ BigKey危害: 网络阻塞、数据倾斜、Redis阻塞、CPU压力
 - Redis7.0之后弃用，使用listpack
 
 **ListPack:**  
-- 组成：<tot-bytes><num-entrys><entry...><listpack-end-byte>
-- Entry: <entry-encoding><entry-data><entry-tot-len>
+- 组成：\<tot-bytes>\<num-entrys><entry...>\<listpack-end-byte>
+- Entry: \<entry-encoding>\<entry-data>\<entry-tot-len>
 - entry-tot-len不包括自己的长度，只包含encoding和data的长度，
   且每个byte最高位(0表示结束，1表示为结束)，剩下7bits采用<font color="RED">大端存储</font>
 
