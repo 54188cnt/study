@@ -28,7 +28,7 @@ public User save(User user){
 
 ### @Cacheable
 ```java
-@Cacheable(cacheNames = "userCache", key = "#id")
+@Cacheable(cacheNames = "xxxCache", key = "#id")
 public User getById(Long id) {
 	User user = userMapper.getById(id);
 	return user;
@@ -37,5 +37,13 @@ public User getById(Long id) {
 
 ### @CacheEvict
 ```java
-@CacheEvict()
+@CacheEvict(cacheNames = "xxxCache", key = "#id")
+public void deleteById(Long id) {
+	userMapper.deleteById(id);
+}
+
+@CacheEvict(cacheNames = "xxxCache", allEntries = true)
+public void deleteAll() {
+	userMapper.deleteAll();
+}
 ```
