@@ -156,7 +156,8 @@ private void dfs(int left, int right, StringBuilder sb, int n){
 
 注：要学会寻找<font color="lightblue">状态转移机(DP)</font>
 
-## 4.1 一维DP
+## 4.1 DP类型
+### 4.1.1 一维DP
 定义：一维DP数组，`dp[i]`表示组成i所需要的最小硬币数。
 
 代码模板(以T322.零钱兑换为例):
@@ -180,7 +181,7 @@ public int coinChange(int[] coins, int amount) {
 题目:
 - [T322.零钱兑换](https://leetcode.cn/problems/coin-change/description/)
 
-## 4.2 多维DP
+### 4.1.2 多维DP
 代码模板(以T.188 买卖股票的最佳时机IV)：
 ![](assets/algorithm/T188.买卖股票的最佳时机IV.png)
 ```java
@@ -230,7 +231,7 @@ public int maxProfit(int k, int[] prices) {
 }
 ```
 
-## 4.3 多次DP
+### 4.1.3 多次DP
 <font color="red">注：</font>学会理解 <font color="lightblue">"正难则反"</font> 思想
 
 代码模板：
@@ -262,6 +263,15 @@ public int maxSubarraySumCircular(int[] nums) {
 	return Math.max(maxS, sum - minS);
 }
 ```
+
+### 4.1.4 树形DP
+
+
+## 4.2 背包问题
+
+
+
+
 
 # 五、图
 定义：图是一组节点和边组成的数据结构。
