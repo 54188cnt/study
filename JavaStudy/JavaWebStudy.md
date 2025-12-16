@@ -1732,7 +1732,14 @@ public class SmartAppliancesFacade {
 缺点：
 - 不符合开闭原则，修改麻烦
 
+源码应用：<font color="#b2a2c7">HttpServletRequest</font> 的实现类 <font color="#b2a2c7">RequestFacade</font> 和 <font color="#b2a2c7">Request</font>, RequestFacade 里面有私有成员对象request, 此时就算强制转换成RequestFacade类也无法访问Request里面的方法
+
 ### 12.2.6 组合模式
+定义：you
+
+
+
+
 
 ### 12.2.7 享元模式
 
