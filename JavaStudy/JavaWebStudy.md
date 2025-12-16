@@ -853,16 +853,17 @@ Maven的继承：
 > 当子类与与父类有相同依赖时，子类会覆盖父类的依赖   
 
 Maven版本锁定：
-> 在父工程内添加<dependencyManagement>标签，并添加<dependency>标签，锁定版本，子工程仍需引入该依赖但是可以不指定版本  
+> 在父工程内添加`<dependencyManagement>`标签，并添加`<dependency>`标签，锁定版本，子工程仍需引入该依赖但是可以不指定版本  
 
 Maven聚合：  
-> 聚合工程：一般就是项目的父工程  
-> 父工程中添加<modules>标签，并添加子工程名称  
+聚合工程：一般就是项目的父工程   
+父工程中添加`<modules>`标签，并添加子工程名称  
 
 私服：  
-> 1. 配置私服的访问用户名/密码(Settings.xml中的servers中配置)  
-> 2. settings.xml中配置mirror以及profile  
-> 3. 在父工程pom.xml中添加<distributionManagement>标签，并添加<repository>、<snapshotRepository>标签，指定私服地址  
+1. 配置私服的访问用户名/密码( Settings.xml 中的servers中配置)  
+2. settings.xml中配置mirror以及profile  
+3. 在父工程pom.xml中添加 `distributionManagement` 标签，并添加`repository`、`snapshotRepository` 标签，指定私服地址   
+
 
 # 十、前端工程化  
 
@@ -877,10 +878,10 @@ ElementPlus:[官网](https://element-plus.org/zh-CN/)
 > Button, Table, Pagination(分页条), Dialog(对话框), Form(表单), Date Picker(日期选择器), Container(布局容器), Layout(布局)  
 
 Vue Router:[官网](https://router.vuejs.org/zh/guide/)  
-> Vue Router是Vue官方的客户端路由解决方案。  
-> 客户端路由的作用是在单页应用(SPA)中将浏览器的URL和用户看到的内容绑定起来。
-> 当用户在应用中浏览不同页面时，URL会随之更新，但页面不需要从服务器重新加载。  
-> <font color="red">嵌套路由</font>: 强制嵌套路由(还可以默认一个子路由redirect)  
+- Vue Router是Vue官方的客户端路由解决方案。  
+- 客户端路由的作用是在单页应用(SPA)中将浏览器的URL和用户看到的内容绑定起来。
+- 当用户在应用中浏览不同页面时，URL会随之更新，但页面不需要从服务器重新加载。   
+- <font color="#c00000">嵌套路由</font>: 强制嵌套路由(还可以默认一个子路由redirect)
 
 动态URL和结果解析优化：
 > 步骤：新建utils/request.js; 添加url的动态配置(创建axios实例对象并添加baseURL和timeout, 同时添加响应拦截器);
@@ -1656,6 +1657,8 @@ public class Mac extends OperatingSystem{
   在抽象层建立一个关联关系。
 
 ### 12.2.5 外观模式
+
+
 
 ### 12.2.6 组合模式
 
