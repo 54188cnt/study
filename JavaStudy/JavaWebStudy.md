@@ -80,7 +80,7 @@ HTML用来控制页面结构，CSS用来控制页面样式，JS用来控制页�
 > 行内样式：写在标签的style属性中(配合JavaScript使用)  
 > 内部样式：写在head标签中(在head中加入\<style>\</style>)  
 > 外部样式：写在一个单独的.css文件中(需要通过link标签引入)  
->   ```<link rel="stylesheet" href="">```
+>   `<link rel="stylesheet" href="">`
 
 颜色表示方式：
 > 16进制: #000000  
@@ -1656,9 +1656,81 @@ public class Mac extends OperatingSystem{
 - 当一个系统需要在构件的抽象化角色和具体化角色之间增加更多的灵活性时。避免两个层次之间建立静态的继承联系，通过桥接模式可以使他们
   在抽象层建立一个关联关系。
 
-### 12.2.5 外观模式
+### 12.2.5 外观模式(Facade)
+定义：是一种通过为多个复杂的子系统提供一个一致的接口，而使这些子系统更加容易被访问的模式。
+外观模式是 <font color="#f79646">"迪米特法则"</font> 的典型应用。  
 
+示例：
+```java
+public class Light {
+	public void on(){
+		System.out.println("关闭电灯");
+	}
+	
+	public void off() {
+		System.out.println("打开电灯");
+	}
+}
 
+public class TV {
+	public void on(){
+		System.out.println("关闭电视");
+	}
+	
+	public void off() {
+		System.out.println("打开电视");
+	}
+}
+
+public class AirCondition {
+	public void on(){
+		System.out.println("关闭空调");
+	}
+	
+	public void off() {
+		System.out.println("打开空调");
+	}
+}
+
+public class SmartAppliancesFacade {
+	private Light light;
+	private TV tv;
+	private AirCondition airCondition;
+	public SmartAppliancesFacade(){
+		light = new Light();
+		tv = new TV();
+		airCondition = new AirCondition();
+	}
+	
+	public void say(Stirng msg) {
+		if(msg.contains("打开")) {
+			on();
+		} else if(msg.contains("关闭")) {
+			off();
+		} else {
+			System.out.println("我还听不懂你说的");
+		}
+	}
+	
+	private void on() {
+		light.on();
+		tv.on();
+		airCondition.on();
+	}
+	
+	private void off() {
+		light.off();
+		tv.off();
+		airCondition.off();
+	}
+}
+```
+
+优点：
+- 降低了子系统与客户端的耦合度，使得子系统变化不会用想调用它的客户类
+- 对客户屏蔽系统组件，减少客户处理的对象数目并使子系统使用起来更容易
+缺点：
+- 不符合开闭原则，修改麻烦
 
 ### 12.2.6 组合模式
 
