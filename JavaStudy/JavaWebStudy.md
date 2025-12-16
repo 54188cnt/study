@@ -1735,13 +1735,116 @@ public class SmartAppliancesFacade {
 源码应用：<font color="#b2a2c7">HttpServletRequest</font> 的实现类 <font color="#b2a2c7">RequestFacade</font> 和 <font color="#b2a2c7">Request</font>, RequestFacade 里面有私有成员对象request, 此时就算强制转换成RequestFacade类也无法访问Request里面的方法
 
 ### 12.2.6 组合模式
-定义：you
+定义：又名部分整体模式。用于把一组相似的对象当作单一的对象。组合模依据树形结构来组合对象，表示部分以及整体层次。
 
+组成：
+- 抽象根节点(Component)：定义系统各层次对象公有方法和属性
+- 树枝节点：定义树枝节点的行为，存储子节点，组合树枝节点和叶子节点形成一个树形结构
+- 叶子节点：叶子节点对象，其下再无分支，是系统层次遍历的最小单位
 
+示例：
+```java
+// 菜单组件
+public abstract class MenuComponent {
+	protected String name;
+	protected int level;
+	
+	// 添加子菜单
+	public void add(MenuComponent menuComponent) {
+		throw new UnsupportedOpeationException();
+	}
+	
+	// 移除子菜单
+	public void remove(MenuComponent menuComponent) {
+		throw new UnsupportedOpeationException();
+	}
+	
+	// 获取指定的子菜单
+	public MenuComponent getChild(int index) {
+		throw new UnsupportedOpeationException();
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	// 打印菜单名称的方法(包含子菜单和子菜单项)
+	public abstract void print();
+}
 
+// 菜单
+publci class Menu extends MenuComponent{
+	private List<MenuComponent> menuComponentList = new ArrayList<>();
+	
+	public Menu(String name, int leve) {
+		this.name = name;
+		this.level = level;
+	}
 
+	@Override
+	public void add(MenuComponent menuComponent) {
+		menuComponentList.add(menuComponent);
+	}
+	
+	@Override
+	public void remove(MenuComponent menuComponent) {
+		menuComponentList.remove(menuComponent);
+	}
+	
+	@Override
+	public MenuComponent getChild(int index) {
+		return menuComponentList.get(index);
+	}
+	
+	@Override
+	public void print() {
+		System.out.print(name);
+		for(MenuComponent component: menuComponentList) {
+			component.print();
+		}
+	}
+}
+
+public class MenuItem extends MenuComponent {
+	public MenuItem(String name, int level) {
+		this.name = name;
+		this.level = level;
+	}
+	
+	@Override
+	public void print() {
+		System.out.println(name);
+	}
+}
+```
+
+分类：
+- 透明组合模式(如上示例)
+    透明组合模式中对于所有构件类都有相同的接口，但是不够安全，叶子和容器有区别，且违背了接口隔离原则。
+- 安全组合模式
+    安全组合模式的抽象构件角色中没有声明任何用于管理成员对象的方法，而是在树枝节点里面是西安这些方法，但是缺点就是客户端<font color="#ff0000">不能完全针对抽象编程</font>，需要区别对待叶子构件和容器构件。
+
+优点：
+- 清晰定义层次的复杂对象，表示对象全部或部分层次，让客户端忽略层次差异
+- 客户端可以一致的操作一个组合结构或者其中的单个对象，不必进行细致区分
+- 新增树枝节点和叶子节点都很方便，符合 <font color="#f79646">"开闭原则"</font>
+- 组合模式为树形结构的面向对象是西安提供了一种灵活的解决方案，通过叶子节点和树枝节点的递归组合，可以形成复杂的树形结构，但对树形结构的控制很简单
+
+使用场景：出现树形结构的应用场景
 
 ### 12.2.7 享元模式
+定义：运用共享技术来有效地支持大量细粒度对象的复用。它通过共享已经存在的对象来大幅度减少需要创建的对象数量、避免大量相似对象的开销，提高系统资源利用率
+
+结构：
+- 两种状态：内部状态(共享部分)和外部状态(非共享部分)
+- 三种角色
+    - 抽象享元角色：一个接口或者抽象类，里面声明具体享元类公共方法，这些方法可以向外提供想元对象的内部数据（内部状态），同时也可以根据这些方法设置外部数据（外部状态）。
+    - 具体享元角色：实现抽象享元类，成为享元对象；为内部状态提供了存储空间，通常结合单例模式来设计具体享元类，为每一个具体享元类提供唯一的享元对象。
+    - 非享元角色：不能被共享的抽象享元类的子类可以设计为非共享具体享元类；需要这个类的对象直接实例化创建。
+    - 享元工厂角色：负责创建和管理享元角色。当对象请求一个享元对象是，享元工厂检查系统中是否存在符合要求的享元对象，有则提供，无则创建。
+
+ 
+
 
 
 ## 12.3 行为型模式
