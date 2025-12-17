@@ -2015,10 +2015,78 @@ public class Main {
 - 具体策略类：实现抽象策略定义的接口，提供具体算法实现
 - 环境类：持有一个策略类的引用供客户端调用
 
+```java
+// 策略接口
+public interface DisCountStrategy {
+    double discount(double price);
+}
 
+// 具体策略
+public class NormalDiscount implements DisCountStrategy {
+    public double discount(double price) {
+        return price;
+    }
+}public class VipDiscount implements DisCountStrategy {
+    public double discount(double price) {
+        return price * 0.8;
+    }
+}
+public class SuperDiscount implements DisCountStrategy {
+    public double discount(double price) {
+        return price * 0.66;
+    }
+}
 
-### 12.3.3 命令模式
+// Context 环境类
+public class PriceContext {
+    // 默认策略
+    private DisCountStrategy strategy = new NormalDiscount();
+    public void setStrategy(DisCountStrategy strategy) {
+        this.strategy = strategy;
+    }
+    
+    public double getPrice(double price) {
+        return strategy.discount(price);
+    }
+}
 
+// 客户端
+public class Main{
+    public static void main(String[] args) {
+        PriceContext ctx = new PriceContext();
+        double price = 100;
+        ctx.setStrategy(new VipDiscount());
+        System.out.println("会员价：" + ctx.getPrice(price));
+        ctx.setStrategy(new SuperDiscount());
+        System.out.println("超级会员价：" + ctx.getPrice(price));
+    }
+}
+```
+
+优点：
+- 策略类之间可以自由切换
+- 易于扩展：新增策略秩序加一个具体的策略类
+缺点：
+- 客户端必须知道所有策略类，并自行决定选择哪个策略
+- 策略模式会造成许多策略类，可以使用享元模式减少对象数量
+
+使用场景：
+- 系统需要动态的在几种算法中选择一种
+- 一个类定义了多种行为并且这些行为在类中以多个条件语句的形式出现
+- 各算法批次完全独立且要对客户端隐藏具体算法实现细节
+- 系统要求使用算法的客户不应该知道其操作的数据时可以使用策略模式隐藏与算法相关的数据结构
+- 多个类区别在于表现行为不同，可使用策略模式动语态选择执行的行为
+
+源码分析：<font color="#b2a2c7">Comparator</font> 中的策略模式（<font color="#b2a2c7">Arrays</font> 中的 `sort`，<font color="#b2a2c7">PriorityQueue</font> 的构造方法等等）
+
+### 12.3.3 命令模式(Command)
+定义：将一个请求封装为一个对象，使发出请求的责任和执行请求的责任分开。两者之间通过命令对象进行沟通
+
+角色：
+- 抽象命令角色：定义命令的接口，声明执行的方法
+- 具体命令角色：具体的命令，实现命令接口；通常会持有接收者，并调用接收者来完成命令
+- 实现者/接收者角色：真正执行命令的对象；任何一个类都是以是接收者，只要能实现命令要求的功能
+- 调用者/请求者角色：要求命令对象执行请求，通常会持有命令对象，可以持有很多的命令对象。这是客户端真正触发命令并要求执行的地方
 
 ### 12.3.4 职责链模式
 
