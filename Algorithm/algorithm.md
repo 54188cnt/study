@@ -197,13 +197,14 @@ public int maxProfit(int k, int[] prices) {
     int[][][] f = new int[n+1][k+2][2];
     // 设置非法值
     for(int[][] mat: f) {
-        for(int[] row: mat) {
-            Arrays.fill(row, -3000);
-        }
-    }
-    for(int j = 1;j <= k+1;++j) {
-	    f[0][j][0] = 0;
-    }
+        for(int[] row: mat) {
+            Arrays.fill(row, -3000);
+        }
+    }
+    // 设置初始值
+    for(int j = 1;j <= k+1;++j) {
+        f[0][j][0] = 0;
+    }
     for(int i = 0;i < n;++i) {
         for(int j = 1;j <= k+1;++j) {
             // 要么与昨天保持一致，要么在昨天的基础上卖出股票
@@ -276,8 +277,8 @@ public int maxSubarraySumCircular(int[] nums) {
 
 ### 4.1.4 树形DP(书上背包)
 题目：
-- [P1352没有上司的舞会](Algorithm/problem/P1352没有上司的舞会.md): 出自洛谷
-- [T3562.折扣价交易股票的最大利润](Algorithm/problem/T3562.折扣价交易股票的最大利润.md)
+- [P1352没有上司的舞会](problem/P1352没有上司的舞会.md): 出自洛谷
+- [T3562.折扣价交易股票的最大利润](problem/T3562.折扣价交易股票的最大利润.md)
 
 ## 4.2 背包问题
 

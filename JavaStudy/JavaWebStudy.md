@@ -1773,7 +1773,7 @@ public abstract class MenuComponent {
 }
 
 // 菜单
-publci class Menu extends MenuComponent{
+public class Menu extends MenuComponent{
 	private List<MenuComponent> menuComponentList = new ArrayList<>();
 	
 	public Menu(String name, int leve) {
@@ -1891,14 +1891,142 @@ public class Forest {
 
 优点：
 - 减少内存中相同对象数量，节约系统资源
-- 
+- 享元模式中外部状态相对独立且不影响内部状态
+缺点：
+- 为了使对象可以共享，需要将享元对象的部分状态外部化，分离内部状态和外部状态，使程序逻辑复杂
+
+使用场景：
+- 一个系统有大量相同或者相似的对象，造成内存大量消耗
+- 对象的大部分状态可以外部化，可以将这些外部状态传入对象
+- 使用享元模式需要维护一个存储享元对象的享元池，这需要耗费一定的系统资源，因此需要重复多次使用享元对象时才值得使用享元模式。
+
+源码运用：Integer的 $-128 \sim 127$ 
 
 ## 12.3 行为型模式
+定义：用于描述多个类或者对象之间怎样相互协作共同完成单个对象都无法完成的任务
+### 12.3.1 模板方法模式(Template)
+定义：定义一个操作中的算法骨架，而将算法的一些步骤延迟到子类中，使得子类可以不改变该算法结构的情况下重定义该算法的某些特定步骤。
+
+角色：
+- 抽象类：负责给出一个算法的轮廓和骨架，有一个模板方法和若干个基本方法构成
+    - 模板方法：定义了算法的骨架，按照某种顺序调用其包含的基本方法
+    - 基本方法：各个步骤的算法实现，是模板方法的组成部分
+        - 抽象方法：由抽象类声明，具体类实现
+        - 具体方法：抽象类或具体类声明并实现，子类可以覆盖也可以直接继承
+        - 钩子方法：抽象类中已经实现，包括判断逻辑和需要子类重写的方法
+            一般钩子方法是用于判断的逻辑方法，这类方法名一般是isXxx，返回值为 `boolean`
+- 具体子类：实现抽象类中所定义的抽象方法和钩子函数
+
+```java
+public abstract class DataMiner {
+    // 骨架被声明为 final，禁止子类改动
+    public final void mine(String path) {
+        openFile(path);
+        extractData();
+        parseData();
+        analyze();
+        if (wantReport()) {
+            sendReport();
+        }
+        closeFile();
+    }
+
+    /* === 以下步骤由子类按需填充 === */
+    protected abstract void openFile(String path);
+    protected abstract void extractData();
+    protected abstract void parseData();
+    
+    /* === 公共不变步骤 === */
+    private void analyze() {
+        System.out.println("通用算法：统计分析...");
+    }
+    
+    private void sendReport() {
+        System.out.println("发送分析报告...");
+    }
+
+    /* === 钩子：默认 true === */
+    protected boolean wantReport() { 
+        return true; 
+    }
+}
+
+// 2. 具体实现 —— 处理 CSV
+class CsvMiner extends DataMiner {
+    protected void openFile(String path) {
+        System.out.println("打开 CSV 文件：" + path);
+    }
+    protected void extractData() {
+        System.out.println("逐行读取 CSV");
+    }
+    protected void parseData() {
+        System.out.println("按逗号分割字段");
+    }
+    // 不需要报告就钩掉
+    @Override 
+    protected boolean wantReport(){ 
+        return false; 
+    }
+}
+
+// 3. 具体实现 —— 处理 PDF
+class PdfMiner extends DataMiner {
+    protected void openFile(String path) { 
+        System.out.println("加载 PDF 解析器"); 
+    }
+    protected void extractData() { 
+        System.out.println("提取 PDF 文本"); 
+    }
+    protected void parseData() { 
+        System.out.println("按正则抽取关键段落");
+    }
+}
+
+// 4. 客户端
+public class Main {
+    public static void main(String[] args) {
+        DataMiner m1 = new CsvMiner();
+        m1.mine("sales.csv");
+
+        DataMiner m2 = new PdfMiner();
+        m2.mine("paper.pdf");
+    }
+}
+```
+
+优点：
+- 提高代码复用性：相同代码抽取放到抽象父类，不同代码子类自己实现
+- 实现了[反向控制](explanation/NounExplanation.md#反向控制)：
+
+### 12.3.2 策略模式
 
 
 
 
+### 12.3.3 命令模式
 
 
+### 12.3.4 职责链模式
+
+
+### 12.3.5 状态模式
+
+
+### 12.3.6 观察者模式
+
+
+### 12.3.7 中介者模式
+
+
+### 12.3.8 迭代器模式
+
+
+### 12.3.9 访问者模式
+
+
+### 12.3.10 备忘录模式
+
+
+### 12.3.11 解释器模式
 
 
