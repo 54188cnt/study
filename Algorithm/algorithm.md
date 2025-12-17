@@ -189,13 +189,23 @@ public int maxProfit(int k, int[] prices) {
     int n = prices.length;
     // f[i][j][0] 表示第i天交易j次未持有股票
     // f[i][j][1] 表示第i天交易k次持有股票
-    int[][][] f = new int[n+1][k+1][2];
-    for(int j = 0; j <= k;++j) {
-        // 第0天持有股票是非法的，设为一个极小值就好
-        f[0][j][1] = -3000;
-    }
+    /*
+    Q: 为啥是k+2
+    A: 实际上是把f[i][0][status]作为哨兵了
+       实际f[i+1][j][status]表示第i天第j-1笔交易出于status状态时的最大利润
+    */
+    int[][][] f = new int[n+1][k+2][2];
+    // 设置非法值
+    for(int[][] mat: f) {
+        for(int[] row: mat) {
+            Arrays.fill(row, -3000);
+        }
+    }
+    for(int j = 1;j <= k+1;++j) {
+	    f[0][j][0] = 0;
+    }
     for(int i = 0;i < n;++i) {
-        for(int j = 1;j <= k;++j) {
+        for(int j = 1;j <= k+1;++j) {
             // 要么与昨天保持一致，要么在昨天的基础上卖出股票
             // 卖出股票，交易次数不变(写在了买入)
             f[i+1][j][0] = Math.max(f[i][j][0], f[i][j][1] + prices[i]);
@@ -204,7 +214,7 @@ public int maxProfit(int k, int[] prices) {
             f[i+1][j][1] = Math.max(f[i][j][1], f[i][j-1][0] - prices[i]);
         }
     }
-    return f[n][k][0];
+    return f[n][k+1][0];
 }
 
 // 优化空间复杂度(同01背包一样需要逆序遍历)
@@ -212,13 +222,13 @@ public int maxProfit(int k, int[] prices) {
     int n = prices.length;
     // f[i][j][0] 表示第i天交易j次未持有股票
     // f[i][j][1] 表示第i天交易k次持有股票
-    int[][] f = new int[k+1][2];
-    for(int j = 0; j <= k;++j) {
-        // 第0天持有股票是非法的，设为一个极小值就好
-        f[j][1] = -3000;
+    int[][] f = new int[k+2][2];
+    for(int j = 1;j <= k + 1;++j) {
+	    f[j][1] = -3000;
     }
+    f[0][0] = -3000;
     for(int p: prices) {
-        for(int j = k;j > 0;--j) {
+        for(int j = k+1;j > 0;--j) {
             // 要么与昨天保持一致，要么在昨天的基础上卖出股票
             // 卖出股票，交易次数不变(写在了买入)
             f[j][0] = Math.max(f[j][0], f[j][1] + p);
@@ -227,7 +237,7 @@ public int maxProfit(int k, int[] prices) {
             f[j][1] = Math.max(f[j][1], f[j-1][0] - p);
         }
     }
-    return f[k][0];
+    return f[k+1][0];
 }
 ```
 
