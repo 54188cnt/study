@@ -1843,9 +1843,55 @@ public class MenuItem extends MenuComponent {
     - 非享元角色：不能被共享的抽象享元类的子类可以设计为非共享具体享元类；需要这个类的对象直接实例化创建。
     - 享元工厂角色：负责创建和管理享元角色。当对象请求一个享元对象是，享元工厂检查系统中是否存在符合要求的享元对象，有则提供，无则创建。
 
+示例：
+```java
+// 1. 享元接口
+interface TreeType {
+    void display(int x, int y, int age);   // x,y,age 都是外部状态
+}
 
+// 2. 具体享元（只保存 intrinsic）
+class ConcreteTreeType implements TreeType {
+    private final String name;   // 树种名——固有
+    private final String color;  // 树叶颜色——固有
+    ConcreteTreeType(String name, String color) {
+        this.name = name; this.color = color;
+    }
+    public void display(int x, int y, int age) {
+        System.out.printf("%s[%s] @(%d,%d) age=%d%n", name, color, x, y, age);
+    }
+}
 
+// 3. 工厂 + 池
+class TreeFactory {
+    private static final Map<String, TreeType> POOL = new HashMap<>();
+    static TreeType getTreeType(String name, String color) {
+        String key = name + ":" + color;
+        TreeType t = POOL.get(key);
+        if (t == null) {
+            t = new ConcreteTreeType(name, color);
+            POOL.put(key, t);
+        }
+        return t;
+    }
+}
 
+// 4. 客户端：百万棵树，但 TreeType 只有几种
+public class Forest {
+    public static void main(String[] args) {
+        for (int i = 0; i < 1_000_000; i++) {
+            int x = random(), y = random(), age = random();
+            TreeType type = TreeFactory.getTreeType("Oak", "Green");
+            type.display(x, y, age);   // 外部状态临时传入
+        }
+    }
+}
+// 运行后内存里只有 1 个 TreeType 实例，却支撑了 100 万棵树的渲染。
+```
+
+优点：
+- 减少内存中相同对象数量，节约系统资源
+- 
 
 ## 12.3 行为型模式
 
