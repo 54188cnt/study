@@ -685,7 +685,51 @@ class SegmentTree {
         build(a, 1, 0, n - 1);
     }
     
+    // 合并两个val
+    private long mergeVal(long a, long b) {
+        // TODO 这里需要根据题目修改
+        return Math.max(a, b);
+    }
     
+    // 合并左右儿子的val到当前节点val
+    private void maintain(int node) {
+        // 左儿子：2 * node
+        // 右儿子：2 * node + 1
+        tree[node] = mergeVal(tree[node << 1], tree[node << 1 | 1]);
+    }
+    
+    // 构建线段树a[l,r], node表示当前树节点
+    private void build(long[] a, int node, int l, int r){
+        if(l == r) {
+            // 叶子节点
+            tree[node] = a[l];
+            return;
+        }
+        // 递归构造tree
+        int m = (l + r) / 2;
+        // 左子树 node * 2
+        build(a, node << 1, l, m);
+        // 右子树 node * 2 + 1
+        build(a, node << 1 | 1, m + 1, r);
+        // tree[node] = mergeVal(tree[node * 2], tree[node * 2 + 1])
+        maintain(node);
+    }
+    
+    // 对外开放接口 update, get, query
+    // 更新 a[i] 为 val
+    public void update(int i, long val) {
+        
+    }
+    
+    // 获取 a[i] 的值
+    public long get(int i) {
+        
+    }
+    
+    // 查询区间 [left, right] 的值
+    public long query(int left, int right) {
+        
+    }
 }
 ```
 
