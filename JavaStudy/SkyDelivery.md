@@ -17,7 +17,56 @@ Knife4j是为Java MVC框架集成的Swagger生成API文档的增强解决方案
 
 ### 清除购物车
 购物车的数据存储在 redis 里面，便于清理，但是清除购物车的时候就会出现BigKey问题
+```java
+// 解决方式：不使用 delete, 使用unlink
+public void clean() {  
+    String cartKey = RedisConstant.SHOPPING_CART_KEY + UserHolder.getCurrentId();  
+    // stringRedisTemplate.delete(cartKey);  
+    stringRedisTemplate.unlink(cartKey);
+}
+```
 
+### 添加商品到购物车
+使用Hash数据结构，以`[dishId ? 0]:[setmealId ? 0]:[dishFlavor ? none]` 作为 field , value 表示的是物品数量  
 
-### 添加购物车
-使用Hash数据结构，以`[dishId ? 0]:[setmealId ? 0]:[dishFlavor ? none]` 作为 field , value 表示的时物品数量
+### 删除购物车商品
+删除的时候数据变化与删除 field 是异步的，并发状态下会导致问题，可以使用 Lua 脚本进行优化
+```java
+public void sub(CartDTO cartDTO) {  
+    String cartKey = RedisConstant.SHOPPING_CART_KEY + UserHolder.getCurrentId();  
+    String field = buildField(cartDTO);   
+    // 下面这个会在高并发出现问题
+    /*
+    String val = (String) stringRedisTemplate.opsForHash().get(caryKey, field);
+    if(val == null) return ;
+    long num = Long.valueOf(val);
+    if(num > 1) {
+	    stringRedisTemplate.opsForHash().increment(cartKey, field, -1);
+    }else {
+	    stringRedisTemplate.opsForHash().delete(cartKey, field);
+    }
+    */
+    
+    Long res = stringRedisTemplate.opsForHash().increment(cartKey, field, -1); 
+    // TODO 若是redis出现问题会导致出现脏数据  
+    if(res <= 0) {  
+        stringRedisTemplate.opsForHash().delete(cartKey, field);  
+    }  
+}
+```
+
+Lua脚本：
+```lua
+local count = redis.call('HINCRBY', KEYS[1], ARGV[1], -1)
+if count <= 0 then
+	redis.call('HDEL', KEYS[1], ARGV[1])
+end
+return count
+```
+
+运行脚本：
+```java
+stringRedisTemplate.execute(
+	
+)
+```
