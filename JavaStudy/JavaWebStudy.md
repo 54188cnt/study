@@ -432,11 +432,10 @@ Controller路径：
 > 这个注解用于获取配置文件中的属性值  
 > 当使用这个注解太多可以创建一个实体类使用<font color="yellow">@ConfigurationProperties(prefix = "xxx")</font>注解
 
-全局异常处理：
-> 创建一个类GlobalExceptionHandler类并添加<font color="yellow">@ControllerAdvice</font>注解  
-> 添加方法时加上<font color="yellow">@ExceptionHandler</font>注解
-
-
+> 全局异常处理：
+> - 创建一个类 <font color="#b2a2c7">GlobalExceptionHandler</font> 类并添加<font color="yellow">@ControllerAdvice</font>注解
+> - 添加方法时加上<font color="yellow">@ExceptionHandler</font>注解
+> ^global-exception-handler
 # 六、MySQL
 DQL:
 > 完整句式：  
@@ -2090,11 +2089,107 @@ public class Main{
 
 示例：
 ```java
+//命令接口
+interface Command {
+    void execute();
+    void undo();
+}
+// Receiver
+class Light{
+    public void on() {
+        System.out.println("开灯");
+    }
+    public void off() {
+        System.out.println("关灯");
+    }
+}
+// 具体命令
+class LightOnCommand implements Command {
+    private Light light;
+    public LightOnCommand(Light light) {
+        this.light = light;
+    }
+    @Override
+    public void execute() {
+        light.on();
+    }
+    @Override
+    public void undo() {
+        light.off();
+    }
+}
+class LightOffCommand implements Command {
+    private Light light;
+    public LightOffCommand(Light light) {
+        this.light = light;
+    }
+    @Override
+    public void execute() {
+        light.off();
+    }
+    @Override
+    public void undo() {
+        light.on();
+    }
+}
 
+// Invoker
+class RemoteControl {
+    private Command lastCmd;
+    public void setCommand(Command cmd) {
+        lastCmd = cmd;
+    }
+    public void pressButton() {
+        lastCmd.execute();
+    }
+    public void pressUndo() {
+        lastCmd.undo();
+    }
+}
+
+// Client
+public class Main {
+    public static void main(String[] args) {
+        Light light = new Light();
+        Command on = new LightOnCommand(light);
+        Command off = new LightOffCommand(light);
+        RemoteControl remote = new RemoteControl();
+        remote.setCommand(on);
+        remote.pressButton();  // 开灯
+        remote.pressUndo();    // 关灯
+    }
+}
 ```
 
-### 12.3.4 职责链模式
+优点：
+- 降低系统耦合度：将调用操作对象和实现该操作的对象解耦( <font color="#b2a2c7">Invoker</font> 和 <font color="#b2a2c7">Receiver</font> )
+- 增加和删除命令方便：命令的增加删除不影响其他类，便于扩展
+- 可以实现宏命令：命令模式可以与组合模式结合，将多个命令装配成一个组合命令，即宏命令
+- 方便实现 `undo` 和 `redo` 操作：与备忘录模式结合实现命令的撤销与恢复   
 
+缺点：
+- 导致有过多具体命令类
+- 系统结构过于复杂
+
+使用场景：
+- 请求者和接收者解耦，是的调用者和接收者不直接交互
+- 系统可以在不同时间指定请求，将请求排队和执行请求
+- 支持命令的<font color="#c00000">撤销和重做</font>操作
+
+源码分析：<font color="#b2a2c7">Runnable</font> 是一个典型的命令模式，Runnable担当命令的角色，<font color="#b2a2c7">Thread</font> 充当调用者，<font color="#b2a2c7">start</font> 是其执行方法
+
+### 12.3.4 职责链模式(Handler)
+定义：又叫责任链模式。为避免请求发送者与多个请求处理者耦合在一起，将所有请求处理者连成链，记住上一级处理者，请求沿着这条链进行就可以了
+
+角色：
+- 抽象处理角色：定义一个处理请求的接口，包含抽象方法和一个后继链接
+- 具体处理角色：实现抽象处理者的处理方法，判断能否处理本次请求，如果可以处理请求则处理，否则抛给后继者
+- 客户类角色：创建处理链，并向链头的具体处理者对象提交请求，不关心处理细节和请求的传递过程
+
+
+
+源码分析：
+- [[JavaWebStudy#^global-exception-handler|全局异常处理器]] 
 
 ### 12.3.5 状态模式
 
