@@ -67,6 +67,8 @@ return count
 运行脚本：
 ```java
 stringRedisTemplate.execute(
-	
-)
+	new DefaultRedisScript<>(luaScript,Long.class),
+	Collections.singletonList(cartKey), 
+	field
+);
 ```
