@@ -729,7 +729,7 @@ class SegmentTree {
             update(node << 1, l, m, i, val);
         }else {
             // 在右子树
-            update(node << 1 | 1, m + 1, r, i, val)
+            update(node << 1 | 1, m + 1, r, i, val);
         }
         // 维护 node 节点 tree[node] = mergeVal(tree[node * 2], tree[node * 2 + 1])
         maintain(node);
