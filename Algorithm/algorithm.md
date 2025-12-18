@@ -687,7 +687,7 @@ class SegmentTree {
     
     // 合并两个val
     private long mergeVal(long a, long b) {
-        // TODO 这里需要根据题目修改
+        // TODO 这里需要根据题目修改这个合并逻辑(max, min, sum...)
         return Math.max(a, b);
     }
     
@@ -715,20 +715,61 @@ class SegmentTree {
         maintain(node);
     }
     
+    // 更新线段树
+    private void update(int node, int l, int r, int i, long val){
+        if(l == r) {
+            // 找到了i节点，叶子节点，a[i] = val;
+            // TODO 这里视情况而变
+            tree[node] = val;
+            return ;
+        }
+        int m = (l + r) / 2;
+        if(i <= m) {
+            // 在左子树
+            update(node << 1, l, m, i, val);
+        }else {
+            // 在右子树
+            update(node << 1 | 1, m + 1, r, i, val)
+        }
+        // 维护 node 节点 tree[node] = mergeVal(tree[node * 2], tree[node * 2 + 1])
+        maintain(node);
+    }
+    
+    // 查询区间[ql, qr]的值
+    private long query(int node, int l, int r, int ql, int qr) {
+        if(ql <= l && r <= qr) {
+            // 区间[ql, qr]大于等于[l, r]
+            return tree[node];
+        }
+        int m = (l + r) / 2;
+        // 完全在左子树
+        if(qr <= m) {
+            return query(node << 1, l, m, ql, qr);
+        }
+        // 完全在右子树
+        if(ql > m) {
+            return query(node << 1 | 1, m + 1, r, ql, qr);
+        }
+        // 此时表明ql <= m < qr
+        long leftRes = query(node << 1, l, m, ql, qr);
+        long rightRes = query(node << 1 | 1, m + 1, r, ql, qr);
+        return mergeVal(leftRes, rightRes);
+    }
+    
     // 对外开放接口 update, get, query
     // 更新 a[i] 为 val
     public void update(int i, long val) {
-        
+        update(1, 0, n-1, i, val);
     }
     
     // 获取 a[i] 的值
     public long get(int i) {
-        
+        return query(1, 0, n-1, i, i);
     }
     
     // 查询区间 [left, right] 的值
     public long query(int left, int right) {
-        
+        return query(1, 0, n-1, left, right);
     }
 }
 ```
