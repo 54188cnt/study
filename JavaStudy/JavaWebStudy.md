@@ -693,10 +693,10 @@ JWT令牌：[官网](https://jwt.io/)
 > 2. 注册拦截器: 新建包config并实现<font color="red">创建配置类WebConfig</font>(接口WebMvcConfigurer的实现类)
 > 3. WebConfig中添加方法addInterceptors()来添加拦截器  
 > 
-> /*只拦截以及路径，/**会拦截所有路径  
+> /* 只拦截一级路径，/** 会拦截所有路径  
 > <font color="lightblue">Filter和Interceptor区别</font>：  
-> - 接口规范不同：一个是实现接口Filter，一个实现接口HandlerInterceptor  
-> - 拦截范围不同：Filter是拦截所有请求，Interceptor是只拦截Spring环境中的资源  
+> 1. 接口规范不同：一个是实现接口Filter，一个实现接口HandlerInterceptor  
+> 2. 拦截范围不同：Filter是拦截所有请求，Interceptor是只拦截Spring环境中的资源  
 
 # 八、AOP编程  
 
@@ -1014,7 +1014,7 @@ DockerCompose:
 
 主要目的是创建对象，将对象的创建与使用分离，将对象的创建过程封装，将对象的创建过程与使用过程解耦。  
 
-### 12.1.1 单例模式
+### 12.1.1 单例模式(Singleton)
 最简单的设计模式之一， 单例模式保证一个类只有一个实例，并提供一个访问它的全局访问点。  
 分类： 
 - 饿汉式：类加载时创建对象
@@ -1158,7 +1158,7 @@ public class CoffeeFactory{
 }
 ```
 
-### 12.1.3 原型模式
+### 12.1.3 原型模式(Origin)
 原型模式：以一个创建的实例为原型，通过复制该对象，创建新的对象
 
 组成：抽象原型类(规定必须实现clone()方法)、具体原型类(实现clone()方法)、访问类(使用clone()方法)  
@@ -1733,7 +1733,7 @@ public class SmartAppliancesFacade {
 
 源码应用：<font color="#b2a2c7">HttpServletRequest</font> 的实现类 <font color="#b2a2c7">RequestFacade</font> 和 <font color="#b2a2c7">Request</font>, RequestFacade 里面有私有成员对象request, 此时就算强制转换成RequestFacade类也无法访问Request里面的方法
 
-### 12.2.6 组合模式
+### 12.2.6 组合模式(Component)
 定义：又名部分整体模式。用于把一组相似的对象当作单一的对象。组合模依据树形结构来组合对象，表示部分以及整体层次。
 
 组成：
@@ -2186,13 +2186,81 @@ public class Main {
 - 具体处理角色：实现抽象处理者的处理方法，判断能否处理本次请求，如果可以处理请求则处理，否则抛给后继者
 - 客户类角色：创建处理链，并向链头的具体处理者对象提交请求，不关心处理细节和请求的传递过程
 
+示例：
+```java
+// 发票报销案例
 
+// 抽象处理者
+abstract class Approver{
+    protected Approver next;
+    public void setNext(Approver next) {
+        this.next = next;
+    }
+    public abstract void handle(int amount);
+}
+// 具体处理者
+class GroupLeader extends Approver{
+    @Override
+    public void handle(int amount) {
+        if (amount <= 800) {
+            System.out.println("小组长审批");
+        }else {
+            next.handle(amount);
+        }
+    }
+}
+class DeptManager extends Approver{
+    @Override
+    public void handle(int amount) {
+        if (amount <= 3000) {
+            System.out.println("部门经理审批");
+        }else {
+            next.handle(amount);
+        }
+    }
+}
+class CEO extends Approver{
+    @Override
+    public void handle(int amount) {
+        System.out.println("CEO 审批");
+    }
+}
+
+// 客户端
+public class Main {
+    public static void main(String[] args) {
+        Approver leader = new GroupLeader();
+        Approver manager = new DeptManager();
+        Approver ceo = new CEO();
+        // 客户端手动组装链
+        leader.setNext(manager);
+        manager.setNext(ceo);
+        
+        leader.handle(500);
+        leader.handle(1500);
+        leader.handle(3500);
+    }
+}
+```
+
+优点：
+- 降低对象之间耦合度：发送者和请求接收者
+- 可扩展：可以增加/删除处理者，也可以修改链内次序
+- 简化对象之间的连接，一个对象只需要保持一个指向器后继者的引用，避免了众多的判断语句
+- 责任分担：每个处理类吃力自己的工作，明确各类的责任范围
+
+缺点：
+- 不能保证每个请求一定被处理，可能存在达到链末也无法处理的请求
+- 职责链较长会导致性能下降
+- 职责链需要客户端创建，增加了客户端复杂性，甚至出现循环链
 
 源码分析：
-- [[JavaWebStudy#^global-exception-handler|全局异常处理器]] 
+- [[JavaWebStudy#^global-exception-handler|全局异常处理器]] 不是职责链，但是看起来很像
+- <font color="#b2a2c7">FilterChain</font> 
+- <font color="#b2a2c7">HandlerInterceptor</font> 
 
-### 12.3.5 状态模式
-
+### 12.3.5 状态模式(State)
+定义：
 
 ### 12.3.6 观察者模式
 
