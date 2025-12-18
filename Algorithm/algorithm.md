@@ -662,7 +662,31 @@ class FenwickTree {
 
 代码：
 ```java
-
+class SegmentTree {
+    private final int n;
+    // long是为了更通用，数据小也可以int
+    private final long[] tree;
+    
+    // 线段树是为了维护一个初始长度为n（0~n-1）的数组，初始值设为initVal
+    public SegmentTree(int n, long initVal) {
+        this.n = n;
+        long[] a = new long[n];
+        Arrays.fill(a, initVal);
+        // 开辟线段树节点数(可以直接4n，也可以如下，可以减少节点数)
+        tree = new long[2 << (32 - Integer.numberOfLeadingZeros(n - 1))];
+        // 构建线段树
+        build(a, 1, 0, n - 1);
+    }
+    
+    // 初始化也可以直接维护那个给定数组
+    public SegmentTree(long[] a) {
+        n = a.length;
+        tree = new long[2 << (32 - Integer.numberOfLeadingZeros(n - 1))];
+        build(a, 1, 0, n - 1);
+    }
+    
+    
+}
 ```
 
 
