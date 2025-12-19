@@ -2267,7 +2267,7 @@ public class Main {
 - 抽象状态角色：定义一个接口，用以封装环境对象中的特定状态所对应的行为
 - 具体状态角色：实现抽象状态所对应的行为
 
-示例：
+示例（订单状态机）：
 ```java
 // 抽象状态角色
 interface OrderState {
@@ -2428,9 +2428,101 @@ class UnpaidState implements OrderState {
 - 抽象观察者：观察者的抽象类，定义一个更新接口，使得在得到主题更改通知时更新自己
 - 具体观察者：实现抽象观察者定义的更新接口，以便在得到主题更改通知时更新自己
 
+示例：
+```java
+// 抽象观察者类
+interface Observer {
+    void update(flaot temp, float humidity, float pressure);
+}
+// 抽象主题类
+interface Subject {
+    void attach(Observer o);
+    void detach(Observer o);
+    void notifyObservers();
+}
 
+// 具体主题者类
+class WeatherData implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+    private float temperature, humidity, pressure;
+    
+    public void attach(Observer o) {
+        observers.add(o);
+    }
+    
+    public void detach(Observer o) {
+        observers.remove(o);
+    }
+    
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(temperature, humidity, pressure);
+        }
+    }
+    
+    // 业务入口
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        measurementsChanged();
+    }
+    private void measurementsChanged() {
+        notifyObservers();
+    }
+}
 
+// 具体观察者类
+class CurrentConditionsDisplay implements Observer {
+    public void update(float temp, float humidity, float pressure) {
+        System.out.printf("当前面板：温度=%.1f℃ 湿度=%.1f%% 气压=%.1f\n", temp, humidity, pressure);
+    }
+}
+class StatisticsDisplay implements Observer {
+    public void update(float temp, float humidity, float pressure) {
+        System.out.printf("统计面板：平均温度=%.1f℃\n", temp); // 简化
+    }
+}
 
+// 客户端
+public class Main {
+    public static void main(String[] args) {
+        WeatherData weatherData = new WeatherData();
+        Observer current = new CurrentConditionsDisplay();
+        Observer stats = new StatisticsDisplay();
+        
+        weatherData.attach(current);
+        weatherData.attach(stats);
+        
+        weatherData.setMeasurements(25.3f, 65.2f, 30.4f);
+        weatherData.setMeasurements(26.5f, 60.4f, 29.2f);
+        
+        weatherData.detach(current);
+        weatherData.setMeasurements(27.8f, 59.9f, 28.5f);
+    }
+}
+```
+
+优缺点：
+1. 优点
+    - 降低了目标与观察者之间的耦合关系，属于抽象耦合关系
+    - 被观察者发送通知，所有注册的观察者都会接收到信息（可以实现广播机制）
+2. 缺点
+    - 观察者过多，发送消息耗时较长
+    - 被观察者若是有循环依赖会导致发送通知时观察者循环调用
+
+使用场景：
+- 对象之间存在一对多关系，一个对象的状态发生改变会影响其他对象
+- 当一个抽象模型有两个方面，其中一个方面依赖于另一方面
+
+源码分析：
+1. <font color="#b2a2c7">Observable</font> 类
+    - `addObserver(Observer o), setChange(), notifyObservers(Object arg)` 
+    - 抽象被观察者
+    - 后加入的观察者先接收到消息
+2. <font color="#b2a2c7">Observer</font> 接口
+    - 抽象观察者
+    - `update()`
 
 ### 12.3.7 中介者模式
 
