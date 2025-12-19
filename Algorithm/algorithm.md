@@ -290,8 +290,12 @@ public int maxSubarraySumCircular(int[] nums) {
 定义：图是一组节点和边组成的数据结构。
 
 两种表示形式：
-- 邻接矩阵 `int[][]`
-- 邻接表 `List<Integer>[]`
+- 邻接矩阵：`int[][]`
+- 邻接表1：`List<Integer>[]`
+- 邻接表2：`Map<Integer, List<Integer>>`
+
+注：邻接表2构图较为特殊，使用 <font color="#b2a2c7">Map</font> 的 <font color="#92cddc">computeIfAbsent</font>   
+写法：`g.computeIfAbsent(u, k -> new ArrayList<>()).add(v)` 
 
 ## 5.1 遍历方式
 两种遍历方式：
