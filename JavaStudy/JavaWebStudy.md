@@ -2524,8 +2524,76 @@ public class Main {
     - 抽象观察者
     - `update()`
 
-### 12.3.7 中介者模式
+### 12.3.7 中介者模式(Mediator)
+定义：又叫调停模式，定义一个中介角色封装一系列对象之间的交互，使原有对象之间的耦合松散，且可以独立地改变它们之间的交互
 
+角色：
+- 抽象中介角色：中介者接口，提供同事对象注册与转发信息的抽象方法
+- 具体中介角色：定义一个集合管理同事对象，协调各同时角色之间的交互
+- 抽象同事类：定义同事类接口，保存中介者对象，提供同事对象交互的抽象方法，实现有相互影响的同时类的公共功能
+- 具体同事类：抽象同事类的实现者，需要与其他同事交互交给中介者对象负责后续交互
+
+示例：
+```java
+// 抽象同事类
+abstract class Colleague {
+    protected Mediator mediator;
+    void setMediator(Mediator m) {
+        this.mediator = m;
+    }
+    abstract void receive(String msg);
+    abstract void send(String msg) {
+        mediator.send(msg, this);
+    }
+}
+// 抽象中介者类
+interface Mediator {
+    void register(Colleague colleague);
+    void send(String msg, Colleague from);
+}
+// 具体中介者类
+class ConcreteMediator implements Mediator {
+    private Map<String, Colleague> colleagues = new HashMap<>();
+    
+    public void register(Colleague c) {
+        // 这里使用的简单类名，每个同事类只会有一个对象
+        // TODO 根据业务去改变这里的代码
+        colleagues.put(c.getClass().getSimpleName(), c);
+        c.setMediator(this);
+    }
+    
+    public void send(String msg, Colleague from) {
+        
+    }
+}
+
+// 具体同事
+class ButtonColleague extends Colleague {
+    void click() {
+        System.out.println("Button: 我被点击");
+        send("buttonClicked");
+    }
+    public void receive(String event) {
+        System.out.println("Button: 收到广播 → " + event);
+    }
+}
+
+class TextBoxColleague extends Colleague {
+    public void receive(String event) {
+        if ("buttonClicked".equals(event)) {
+            System.out.println("TextBox: 清空内容");
+        }
+    }
+}
+
+class LabelColleague extends Colleague {
+    public void receive(String event) {
+        if ("listSelected".equals(event)) {
+            System.out.println("Label: 更新显示选中项");
+        }
+    }
+}
+```
 
 ### 12.3.8 迭代器模式
 
