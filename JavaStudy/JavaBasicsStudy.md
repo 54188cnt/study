@@ -613,8 +613,9 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > ArrayList是Java中最常用的动态数组实现类，属于List接口的实现类。
 > 构造方法：
 > ```
-> ArrayList<Type> list = new ArrayList<>(); // 创建一个空的ArrayList
+>  ArrayList< T> list = new ArrayList<>();  // 创建一个空的ArrayList
 > ```
+> 
 > 常用方法：
 > - add(Type element)：添加元素到ArrayList的末尾，返回true/false。
 > - remove(int index)：删除指定索引处的元素，返回被删除的元素。
@@ -1209,7 +1210,7 @@ JDK8新增时间对象是不可变的，线程安全。
 > ZoneId: 时区  
 > - static ZoneId of(String zoneId): 获取指定时区对象(e.g: "Asia/Shanghai")  
 > - static ZoneId systemDefault(): 获取系统默认时区  
-> - static Set<String> getAvailableZoneIds(): 获取所有时区  
+> - static Set< String> getAvailableZoneIds(): 获取所有时区  
 
 > Instant: 时间戳  
 > - static Instant now(): 获取当前时间戳
@@ -1307,7 +1308,7 @@ List，Collection是接口，ArrayList和LinkedList是接口实现类
 > 
 > 遍历方式：  
 > - 迭代器遍历: 
->   - Iterator<E> iterator(): 获取迭代器
+>   - Iterator< E> iterator(): 获取迭代器
 >   - iterator常用方法(类似于指针)：
 >     - boolean hasNext(): 判断当前元素有无元素
 >     - E next(): 获取当前元素并指向下一元素
@@ -1331,7 +1332,7 @@ List，Collection是接口，ArrayList和LinkedList是接口实现类
 >   ```
 >   注：增强for循环遍历时修改值无效
 > - Lambda表达式遍历：
->   - default void forEach(Consumer<? super E> action): 遍历集合
+>   - default void forEach(Consumer< ? super E> action): 遍历集合
 >   ```
 >   list.forEach(e -> System.out.println(e));
 >   list.forEach(System.out::println);
@@ -1347,7 +1348,7 @@ List，Collection是接口，ArrayList和LinkedList是接口实现类
 > 遍历方式：
 > - 迭代器遍历
 > - 列表迭代器遍历:  
->   - ListIterator<E> listIterator(): 获取列表迭代器,默认指向0索引
+>   - ListIterator< E> listIterator(): 获取列表迭代器,默认指向0索引
 >   ```
 >   for(ListIterator<E> listIterator = list.listIterator(); listIterator.hasNext();){
 >       E e = listIterator.next();
@@ -1401,11 +1402,11 @@ List，Collection是接口，ArrayList和LinkedList是接口实现类
 >   ```public class 类名<T/E/K/V>{}```
 > - 泛型方法
 >   当一个类只有一个方法的数据类型无法确定时，可以定义成泛型方法  
->   ```修饰符<T> 返回值类型 方法名(T t) {}```  
+>   ```修饰符< T> 返回值类型 方法名(T t) {}```  
 >   当无法确定某一类型参数的个数可以E... e表示参数
 > - 泛型接口
 >   当一个接口某个数据类型不确定时，可以定义成泛型接口
->   ```修饰符 interface 接口名<T> {}```
+>   ```修饰符 interface 接口名< T> {}```
 >
 > 泛型的继承和通配符:  
 > 泛型本身没有继承性，但是数据类型有继承性(就是在参数是有泛型其子类不一定能传进去，但是单纯的数据类型可以传子类)  
@@ -1488,13 +1489,13 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 > - boolean isEmpty(): 判断集合是否为空
 > - int size(): 获取集合大小
 > - V get(Object key): 获取指定key对应的value
-> - Set<K> keySet(): 获取所有键的集合
-> - Collection<V> values(): 获取所有值的集合
+> - Set< K> keySet(): 获取所有键的集合
+> - Collection< V> values(): 获取所有值的集合
 > - entrySet(): 获取所有键值对的集合
 > 
 > 遍历方式（迭代器，增强for，Lambda表达式）：
 > - 键找值：  
->   - 获取键的集合：```Set<E> keys = map.keySet();```
+>   - 获取键的集合：```Set< E> keys = map.keySet();```
 > - 键值对：
 >   - 获取键值对集合：```Set<Map.Entry<K, V>> entries = map.entrySet();```
 >   - 利用Entry内部接口的方法获取键值对：getKey(), getValue()
@@ -1548,16 +1549,16 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 ## 12.6 Collections
 > 集合的工具类，有许多方法来操作集合。  
 > 常用方法：  
-> - static void shuffle(List<?> list): 打乱集合顺序
-> - static <T> boolean addAll(Collection<? super T> c, T... elements): 向集合c中添加元素
-> - static <T> void sort(List<T> list): 排序
-> - static <T> void sort(List<T> list, Comparator<? super T> c): 按照指定规则排序
-> - static <T> int binarySearch(List<? extends Comparable<? super T>> list, T key): 二分查找
-> - static <T> void copy(List<T> dest, List<T> src): 拷贝集合
-> - static <T> int fill(List<T> list, T obj): 向list中填充元素
-> - static <T> void max/min(Collection<T> coll): 获取集合中的最大值/最小值
-> - static <T> void swap(List<T> list, int i, int j): 交换集合中两个指定位置的元素
-> - static <T> void reverse(List<T> list): 反转集合list
+> - `static void shuffle(List<?> list)`: 打乱集合顺序
+> - `static <T> boolean addAll(Collection< ? super T> c, T... elements)`: 向集合c中添加元素
+> - `static < T> void sort(List< T> list)` : 排序
+> - static < T> void sort(List< T> list, Comparator< ? super T> c): 按照指定规则排序
+> - static < T> int binarySearch(List< ? extends Comparable< ? super T>> list, T key): 二分查找
+> - static < T> void copy(List< T> dest, List< T> src): 拷贝集合
+> - static < T> int fill(List< T> list, T obj): 向list中填充元素
+> - static < T> void max/min(Collection< T> coll): 获取集合中的最大值/最小值
+> - static < T> void swap(List< T> list, int i, int j): 交换集合中两个指定位置的元素
+> - static < T> void reverse(List< T> list): 反转集合list
 
 ## 12.7 不可变集合
 > 理解：不想让别人修改集合中的内容  
@@ -1566,7 +1567,7 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 > - Set.of(E... e): 获取不可变Set集合
 > - Map.of(E... e): 获取不可变Map集合，最多传入10个键值对
 > - Map.ofEntries(Map.Entry<K, V>... entries): 获取不可变Map集合，可以传入任意个键值对
-> - Map.copyOf(Map<? extends K, ? extends V> map): 获取不可变Map集合，传入一个已有的Map集合
+> - Map.copyOf(Map< ? extends K, ? extends V> map): 获取不可变Map集合，传入一个已有的Map集合
 
 ## 12.8 Stream流
 > 结合Lambda表达式和链式编程简化集合操作  
@@ -1581,19 +1582,19 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 >   - 零散数据：Stream.of(T... values)，但是需要<font color="red">数据的类型统一</font>
 > - 对流进行操作（先中间方法，最后加上终止方法）：  
 >   - 中间方法：
->     - filter(Predicate<? super T> predicate): 过滤流中的元素(符合predict的元素会被保留)
+>     - filter(Predicate< ? super T> predicate): 过滤流中的元素(符合predict的元素会被保留)
 >     - limit(long maxSize): 限制(获取)流中的元素个数
 >     - skip(long n): 跳过流中的前n个元素
 >     - distinct(): 去重，依赖hashCode()和equals()方法
 >     - concat(Stream a, Streeam b): 合并两个流(Stream里面的<font color="red">静态方法</font>)
->     - map(Function<? super T, ? extends R> mapper): 对流中的元素进行映射  
+>     - map(Function< ? super T, ? extends R> mapper): 对流中的元素进行映射  
 >     - 注意：对流进行修改不影响原集合
 >   - 终止方法(一个流一旦使用了终止方法就不再存在了)：
->     - void forEach(Consumer<? super T> action): 遍历流中的元素
+>     - void forEach(Consumer< ? super T> action): 遍历流中的元素
 >     - long count(): 统计
 >     - toArray(): 收集流中的数据存入数组内
 >       ``` java
->       list.stream().toArray(IntFunction<? extends T[]> generator)
+>       list.stream().toArray(IntFunction< ? extends T[]> generator)
 >       // generator是一个函数式接口，传入一个int参数，返回一个数组
 >       list.stream().toArray(value -> new String[Value]);
 >       ```
@@ -1605,6 +1606,7 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 >       Set<E> newSet = list.stream().collect(Collectors.toSet());
 >       // Map: 
 >       Map<K, V> newMap = list.stream().collect(Collectors.toMap(F1, F2));
+>       // groupingBy
 >       ```
 >       注意：F1和F2是函数式接口，分别表示键和值的映射关系  
 >       每个接口重写一个函数public K apply(T s, K k)  
@@ -1769,8 +1771,8 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 
 > FileInputStream:
 > 1. 创建输入流：
->   - <font color="red>文件不存在会报错(空指针异常)</font>
-> 2. 读数据：
+>   - <font color="red">文件不存在会报错(空指针异常)</font>
+> 1. 读数据：
 >   - int read(): 读一个字节，返回字节值(对应的ASCII码值)，如果已读到末尾则返回-1
 >   - int read(byte[] b): 读一个字节数组，每次最多读b.length个字节，
 >     返回<font color="red">实际读的字节数</font>，如果已读到末尾则返回-1
@@ -1932,7 +1934,8 @@ JDK11之后FileReader和FileWriter已经包含了编码转换功能，不再需�
 >   - PrintWriter(Write/OutputStream/File/String): 创建打印流对象
 >   - 其他三个构造方法同PrintStream
 >   - 需要后动开启自动刷新(只有关联Write和OutputStream的构造方法含有自动刷新参数)
-> - 方法同PrintStream
+> - 方法同 `PrintStream`
+
 
 ### 14.2.6 解压缩流和压缩流
 解压缩流：独属于输入流，只能解压文件(ZipInputStream)  
@@ -2082,7 +2085,7 @@ java中只能识别zip文件
 >     获取当前线程对象：```Thread t = Thread.currentThread()```
 > 3. 实现类实现Callable接口并重写call()方法
 >   - 创建实现类对象：```实现类名 实现类对象 = new 实现类名();```
->   - 创建FutureTask的对象(作用是管理多线程运行的结果): ```FutureTask<V> ft = new FutureTask<>(实现类对象);```
+>   - 创建FutureTask的对象(作用是管理多线程运行的结果): ```FutureTask< V> ft = new FutureTask<>(实现类对象);```
 >   - 创建Thread对象并传入FutureTask的对象: ```Thread t = new Thread(ft);```
 >   - 获取线程的结果：```V res = ft.get();```
 > 4. 使用Lambda表达式或者匿名内部类创建线程(不咋用)  
@@ -2307,10 +2310,10 @@ B/S架构：浏览器/服务器
 
 ## 16.2 获取Class内部信息
 ### 16.2.1 获取构造方法(Constructor)
-- Constructor<?>[] getConstructors(): 获取当前类中所有公有构造方法
-- Constructor<?>[] getDeclaredConstructors(): 获取当前类中所有构造方法
-- Constructor<T> getConstructor(Class<?>... parameterTypes): 获取当前类中指定参数的公有构造方法
-- Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes): 获取当前类中指定参数的构造方法
+- Constructor< ?>[] getConstructors(): 获取当前类中所有公有构造方法
+- Constructor< ?>[] getDeclaredConstructors(): 获取当前类中所有构造方法
+- Constructor< T> getConstructor(Class< ?>... parameterTypes): 获取当前类中指定参数的公有构造方法
+- Constructor< T> getDeclaredConstructor(Class< ?>... parameterTypes): 获取当前类中指定参数的构造方法
 
 Constructor常用方法：
 - setAccessible(boolean flag): 设置是否允许访问(临时)
@@ -2327,7 +2330,7 @@ Constructor常用方法：
 Field常用方法：
 - setAccessible(boolean flag): 临时设置访问权限
 - int getModifiers(): 获取当前类成员变量的访问权限修饰符
-- Class<?> getType(): 获取当前类成员变量的类型
+- Class< ?> getType(): 获取当前类成员变量的类型
 - String getName(): 获取当前类成员变量的名称
 - Object get(Object obj): 获取当前类成员变量的值（已知类型可以直接强转）
 - void s et(Object obj, Object value): 设置当前类成员变量的值
@@ -2335,21 +2338,21 @@ Field常用方法：
 ### 16.2.3 获取成员方法(Method)
 - Method[] getMethods(): 获取当前类中所有公有成员方法，包括继承的
 - Method[] getDeclaredMethods(): 获取当前类中所有成员方法，不包括继承的
-- Method getMethod(String name, Class<?>... parameterTypes): 获取当前类中指定名称的公有成员方法
-- Method getDeclaredMethod(String name, Class<?>... parameterTypes): 获取当前类中指定名称的成员方法
+- Method getMethod(String name, Class< ?>... parameterTypes): 获取当前类中指定名称的公有成员方法
+- Method getDeclaredMethod(String name, Class< ?>... parameterTypes): 获取当前类中指定名称的成员方法
 
 Method常用方法：
 - setAccessible(boolean flag): 临时设置访问权限
 - int getModifiers(): 获取当前类成员方法访问权限修饰符
-- Class<?> getReturnType(): 获取当前类成员方法返回值类型
-- Class<?>[] getParameterTypes(): 获取当前类成员方法参数列表
+- Class< ?> getReturnType(): 获取当前类成员方法返回值类型
+- Class< ?>[] getParameterTypes(): 获取当前类成员方法参数列表
 - Parameter[] getParameters(): 获取当前类成员方法参数列表
 - String getName(): 获取当前类成员方法名称
 - Object invoke(Object obj, Object... args): 调用方法并得到返回值
 
 ## 16.3 动态代理
 Proxy类提供了为对象产生代理对象的方法  
-方法：```public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)```  
+方法：`public static Object newProxyInstance(ClassLoader loader, Class< ?>[] interfaces, InvocationHandler h)`   
 创建方法：  
 ``` java
 Star star = (Star)Proxy.newProxyInstance(
