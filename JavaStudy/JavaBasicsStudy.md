@@ -1610,6 +1610,7 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 >       Map<K, V> newMap = list.stream.collect(Collectors.groupingBy(Function, Supplier, Collector));
 >       // 相当于就是把一个列对象列表按照对象的某个属性就行分组
 >       ```
+>       [Colletors学习](Java进阶学习/Collectors)  
 >       注意：F1和F2是函数式接口，分别表示键和值的映射关系  
 >       每个接口重写一个函数public K apply(T s, K k)  
 >       第一个参数表示流中的元素类型，第二个参数表示键/值的类型(

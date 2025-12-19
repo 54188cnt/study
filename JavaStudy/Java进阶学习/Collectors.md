@@ -59,5 +59,16 @@ Map<Boolean, List<Person>> isAdult = persons.stream()
 
 ### 自定义容器：toMap 三兄弟
 
+三个方法：
+- `toMap(keyMapper, valueMapper)` --> 键重复抛 `IllegalStateException`
+- `toMap(keyMapper, valueMapper, mergeFn)` --> 键冲突时自定义合并
+- `toMap(keyMapper, valueMapper, mergeFn, mapSupplier)` --> 指定 Map 实现
 
-
+示例：
+```java
+Map<String, Person> name2Person =
+    persons.stream()
+	    .collect(Collectors.toMap(Person::getName,
+            Function.identity(),
+            (p1, p2) -> p2));
+```
