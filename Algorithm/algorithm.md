@@ -829,7 +829,14 @@ public int maxPoints(int[][] points) {
 
 ## 8.2 集合
 ### 8.2.1 普通集合(Set)
+集合：常用于去重或者标记
 
+常用方法：
+- `Map.of()`
+- `add(), addAll()`
+- `contains(), containsAll()`
+- `isEmpty(), size()`
+- `remove(), removeAll(), clear()`
 
 ### 8.2.2 并查集(UnionFind)
 
