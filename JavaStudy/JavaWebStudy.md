@@ -2269,8 +2269,127 @@ public class Main {
 
 示例：
 ```java
+// 抽象状态角色
+interface OrderState {
+	// 支付
+	void pay(OrderContext ctx);
+    // 退款
+	void refund(OrderContext ctx);
+    // 发货
+	void ship(OrderContext ctx);
+    // 收货
+	void receive(OrderContext ctx);
+}
 
+// 具体状态角色
+class UnpaidState implements OrderState {
+    public void pay(OrderContext ctx) {
+        System.out.println("[UNPAID] 付款成功，订单进入已支付状态");
+        ctx.setState(new PaidState());
+    }
+    public void refund(OrderContext ctx) {
+        throw new IllegalStateException("[UNPAID] 未付款不能退款");
+    }
+    public void ship(OrderContext ctx) {
+        throw new IllegalStateException("[UNPAID] 未付款不能发货");
+    }
+    public void receive(OrderContext ctx) {
+        throw new IllegalStateException("[UNPAID] 未发货不能收货");
+    }
+}
+class PaidState implements OrderState {
+    public void pay(OrderContext ctx) {
+        throw new IllegalStateException("[PAID] 已支付，请勿重复付款");
+    }
+    public void refund(OrderContext ctx) {
+        System.out.println("[PAID] 申请退款 → 进入退款中状态");
+        ctx.setState(new RefundingState());
+    }
+    public void ship(OrderContext ctx) {
+        System.out.println("[PAID] 已发货 → 进入已发货状态");
+        ctx.setState(new ShippedState());
+    }
+    public void receive(OrderContext ctx) {
+        throw new IllegalStateException("[PAID] 未发货不能收货");
+    }
+}
+class RefundingState implements OrderState {
+    public void pay(OrderContext ctx) {
+        throw new IllegalStateException("[REFUNDING] 退款中不能付款");
+    }
+    public void refund(OrderContext ctx) {
+        throw new IllegalStateException("[REFUNDING] 已在退款中，请耐心等待");
+    }
+    public void ship(OrderContext ctx) {
+        throw new IllegalStateException("[REFUNDING] 退款中不能发货");
+    }
+    public void receive(OrderContext ctx) {
+        throw new IllegalStateException("[REFUNDING] 退款中不能收货");
+    }
+}
+class ShippedState implements OrderState {
+    public void pay(OrderContext ctx) {
+        throw new IllegalStateException("[SHIPPED] 已发货不能再次付款");
+    }
+    public void refund(OrderContext ctx) {
+        System.out.println("[SHIPPED] 发货后退款 → 进入退款中状态");
+        ctx.setState(new RefundingState());
+    }
+    public void ship(OrderContext ctx) {
+        throw new IllegalStateException("[SHIPPED] 已经发货了，别重复发货");
+    }
+    public void receive(OrderContext ctx) {
+        System.out.println("[SHIPPED] 确认收货 → 进入已完成状态");
+        ctx.setState(new CompletedState());
+    }
+}
+class CompletedState implements OrderState {
+    public void pay(OrderContext ctx) {
+        throw new IllegalStateException("[COMPLETED] 订单已完成，不能再次付款");
+    }
+    public void refund(OrderContext ctx) {
+        System.out.println("[COMPLETED] 完成后退款 → 进入退款中状态");
+        ctx.setState(new RefundingState());
+    }
+    public void ship(OrderContext ctx) {
+        throw new IllegalStateException("[COMPLETED] 订单已完成，不能发货");
+    }
+    public void receive(OrderContext ctx) {
+        throw new IllegalStateException("[COMPLETED] 订单已完成，不能重复收货");
+    }
+}
+// 环境角色
+class OrderContext { 
+    private OrderState state = new UnpaidState();
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+    public void pay() {
+        state.pay(this);
+    }
+    public void refund() {
+        state.refund(this);
+    }
+    public void ship() {
+        state.ship(this);
+    }
+    public void receive() {
+        state.receive(this);
+    }
+}
+// 客户端
+public class Main {
+    public static void main(String[] args) {
+        OrderContext ctx = new OrderContext();
+        ctx.pay();
+        ctx.ship();
+        ctx.receive();
+        ctx.refund();
+    }
+}
 ```
+
+
 
 ### 12.3.6 观察者模式
 
