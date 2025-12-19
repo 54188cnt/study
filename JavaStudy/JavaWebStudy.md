@@ -2563,7 +2563,25 @@ class ConcreteMediator implements Mediator {
     }
     
     public void send(String msg, Colleague from) {
-        
+        String fromType = from.getClass().getSimpleName();
+        switch (fromType) {
+            case "ButtonColleague" -> {
+                // 广播发送
+                System.out.println("[Med] 收到按钮点击，通知所有同事");
+                colleagues.values().forEach(c -> { if (c != from) c.receive(msg); });
+            }
+            case "TextBoxColleague" -> {
+                // 只给label
+                System.out.println("[Med] 来自文本框，发送给Label");
+                Colleague label = colleagues.get("LabelColleague");
+                if(label != null) {
+                    label.receive(msg);
+                }
+            }
+            default -> colleagues.values.forEach(c -> {
+                if (c != from) c.receive(msg);
+            });
+        }
     }
 }
 
@@ -2577,7 +2595,6 @@ class ButtonColleague extends Colleague {
         System.out.println("Button: 收到广播 → " + event);
     }
 }
-
 class TextBoxColleague extends Colleague {
     public void receive(String event) {
         if ("buttonClicked".equals(event)) {
@@ -2585,7 +2602,6 @@ class TextBoxColleague extends Colleague {
         }
     }
 }
-
 class LabelColleague extends Colleague {
     public void receive(String event) {
         if ("listSelected".equals(event)) {
@@ -2593,9 +2609,39 @@ class LabelColleague extends Colleague {
         }
     }
 }
+
+// 客户端
+public class Main {
+    public static void main(String[] args) {
+        ConcreteMediator med = new ConcreteMediator();
+
+        ButtonColleague button = new ButtonColleague();
+        TextBoxColleague textBox = new TextBoxColleague();
+        LabelColleague label = new LabelColleague();
+
+        med.register(button);
+        med.register(textBox);
+        med.register(label);
+
+        button.click();              // 广播
+        label.receive("listSelected"); // 定向
+    }
+}
 ```
 
-### 12.3.8 迭代器模式
+优缺点：
+1. 优点
+    - 松散耦合：松散同事之间的耦合，某个同时改变只用处理中介者
+    - 集中控制交互：便于行为发生变化后集中修改
+    - 一对多的关联变为一对一的关联，便于理解
+2. 缺点
+    - 同事类过多会导致中介者过于复杂庞大，难以维护
+
+使用场景：
+- 对象之间存在复杂的引用关系
+- 创建一个运行于多个类之间的对象但不想生成新的子类
+
+### 12.3.8 迭代器模式(Iterator)
 
 
 ### 12.3.9 访问者模式
