@@ -57,6 +57,7 @@ Map<Boolean, List<Person>> isAdult = persons.stream()
     .collect(Collectors.partitioningBy(p -> p.getAge() >= 18));
 ```
 
+### 自定义容器：toMap 三兄弟
 
 
 
