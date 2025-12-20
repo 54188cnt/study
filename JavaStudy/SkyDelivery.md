@@ -77,7 +77,7 @@ stringRedisTemplate.execute(
 由于商品很多，一个一个的去查会浪费大量时间，可以分为查询菜品和查询套餐，通过集合查询去一次性拉出来，最后在逐个处理
 [Collectors学习](Java进阶学习/Collectors.md) 
 
-
+## 2.2
 
 
 
