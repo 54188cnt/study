@@ -2676,9 +2676,112 @@ public class Main {
 - 具体元素角色：提供接受访问方法的具体实现，通常是使用访问者提供的访问该元素类的方法
 - 对象结构角色：定义当中所提到的对象结构，对象结构是一个抽象表述，可以理解为一个具有容器类挥着复合对象特性得嘞，他会包含一组元素，并且可以迭代这些元素供访问者访问
 
+示例：
+```java
+// 抽象访问者
+interface ComputerPartVisitor {
+    // 这个类的性质决定了访问元素类型的个数不能更改
+    // 否则需要修改大量代码
+    void visit(Keyboard keyboard);
+    void visit(Monitor monitor);
+}
+// 抽象元素
+abstract class AbstractComputerPart {
+    private double price;
+    public AbstractComputerPart(double price) {
+        this.price = price;
+    }
+    public double getPrice() {
+        return price;
+    }
+    // 核心入口
+    public abstract void accept(ComputerPartVisitor computerPartVisitor);
+}
+// 具体元素
+class Keyboard extends AbstractComputerPart {
+    public Keyboard(double price) {
+        super(price);
+    }
+    @Override
+    public void accept(ComputerPartVisitor computerPartVisitor) {
+        computerPartVisitor.visit(this);
+    }
+}
+class Monitor extends AbstractComputerPart {
+    public Monitor(double price) {
+        super(price);
+    }
+    @Override
+    public void accept(ComputerPartVisitor computerPartVisitor) {
+        computerPartVisitor.visit(this);
+    }
+}
+// 具体访问者
+class DisplayVisitor implements ComputerPartVisitor {
+    public void visit(Keyboard k) { 
+        System.out.println("Displaying Keyboard."); 
+    }
+    public void visit(Monitor m) { 
+        System.out.println("Displaying Monitor."); 
+    }
+}
+class BillVisitor implements ComputerPartVisitor {
+    private double total = 0;
+    public void visit(Keyboard k) {
+        System.out.println("【账单】键盘 - 单价: " + k.getPrice());
+        total += k.getPrice();
+    }
+    public void visit(Monitor m) {
+        System.out.println("【账单】显示器 - 单价: " + m.getPrice());
+        total += m.getPrice();
+    }
+    public double getTotal() {
+        return total;
+    }
+}
+// 对象结构
+class ComputerStructure {
+    private List<AbstractComputerPart> parts = new ArrayList<>();
+    public void addPart(AbstractComputerPart part) {
+        parts.add(part);
+    }
+    
+    // 统一接受访问者
+    public void accept(ComputerPartVisitor computerPartVisitor) {
+        for(AbstractComputerPart part : parts) {
+            part.accept(computerPartVisitor);
+        }
+    }
+}
+// 客户端
+public class Main{
+    public static void main(String[] args) {
+        ComputerStructure computer = new ComputerStructure();
+        computer.addPart(new Keyboard(100));
+        computer.addPart(new Monitor(200));
+        
+        BillVisitor billVisitor = new BillVisitor();
+        computer.accept(billVisitor);
+        System.out.println("【账单】总价: " + billVisitor.getTotal());
+    }
+}
+```
 
+优缺点：
+- 优点
+    - **优秀的扩展性**：增加新的操作非常简单，只需增加一个新的访问者类，不需要修改元素类。
+    - **功能集中**：将相关的行为聚集在一个访问者中，而不是分散在多个元素类中。
+    - **灵活性**：访问者可以跨越不同的等级结构访问对象。
+- 缺点
+    - **增加新元素很困难**：如果增加一个 `Mouse` 类，所有的访问者接口和实现类都要修改。
+    - **破坏封装**：访问者往往需要访问元素的内部属性，这要求元素必须暴露一些细节。
+    - **复杂性高**：结构比较绕，理解成本较高。
 
+使用场景：
+- **数据结构稳定，操作易变**：当你的类结构（Element）基本不再变动，但经常需要定义新的操作时。
+- **需要对集合对象进行多种不相关的操作**：避免在类中污染这些逻辑。
 
+扩展：访问者模式使用到了一种双[[explanation/NounExplanation#分派|分派]]的技术
 
 ### 12.3.10 备忘录模式
 
