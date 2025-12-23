@@ -2799,37 +2799,187 @@ public class Main{
 
 备忘录模式有两种：白箱模式 和 <font color="#ff0000">黑箱模式</font> 
 白箱模式：
+
 ```java
 // 数据完全公开
 // 备忘录
 record WhiteMemento(String content, int cursor) { }
+
 // 发起人
 class Document {
     private String content = "";
     private int cursor = 0;
-    
+
     public void setState(String content, int cursor) {
         this.content = content;
         this.cursor = cursor;
     }
-    
+
+    public void show() {
+        StringBuilder sb = new StringBuilder(content);
+        sb.insert(cursor, "|"); // 用竖线模拟光标位置
+        System.out.println("文档状态: " + sb.toString());
+    }
+
+    public void write(String txt) {
+        content = content.substring(0, cursor) + txt + content.substring(cursor);
+        cursor += txt.length();
+    }
+
+    public void delete() {
+        if (cursor > 0) {
+            content = content.substring(0, cursor - 1) + content.substring(cursor);
+            cursor--;
+        }
+    }
+
+    public void moveCursor(int pos) {
+        cursor = Math.max(0, Math.min(pos, content.length()));
+    }
+
+    // 备忘录 API
     public WhiteMemento save() {
         return new WhiteMemento(content, cursor);
     }
-    
+
     public void restore(WhiteMemento memento) {
         this.content = memento.content();
         this.cursor = memento.cursor();
     }
-    
-    public void show() {
-        System.out.println("当前内容: " + content);
+}
+
+// 管理者角色
+class Caretaker {
+    private final Deque<WhiteMemento> mementos = new ArrayDeque<>();
+    public void save(WhiteteMemento memento) {
+        mementos.push(memento);
+    }
+    public WhiteMemento restore() {
+        return mementos.isEmpty() ? Optional.empty() : Optional.of(mementos.pop());
     }
 }
+// 客户端
+public class Main {
+    public static void main(String[] args) {
+        // 1. 初始化
+        Document doc = new Document();
+        Caretaker caretaker = new Caretaker();
+
+        System.out.println("--- 开始操作 ---");
+
+        // 2. 第一次操作：写下 "Hello"
+        doc.write("Hello");
+        doc.show(); // 文档状态: Hello|
+        caretaker.save(doc.save()); // 保存状态 1
+
+        // 3. 第二次操作：移动光标并插入内容
+        doc.moveCursor(2); // 移动到 He|llo
+        doc.write("XXX");
+        doc.show(); // 文档状态: HeXXX|llo
+        caretaker.save(doc.save()); // 保存状态 2
+
+        // 4. 第三次操作：删除一个字符
+        doc.delete();
+        doc.show(); // 文档状态: HeXX|llo
+        // 注意：这里我们没有 save，所以这个删除操作是可以被“撤销”掉的
+
+        System.out.println("\n--- 开始撤销 ---");
+
+        // 5. 第一次撤销：回到状态 2
+        System.out.println("执行撤销...");
+        caretaker.restore().ifPresent(doc::restore);
+        doc.show(); // 文档状态: HeXXX|llo
+
+        // 6. 第二次撤销：回到状态 1
+        System.out.println("再次撤销...");
+        caretaker.restore().ifPresent(doc::restore);
+        doc.show(); // 文档状态: Hello|
+
+        // 7. 额外测试：在初始状态写新内容
+        doc.moveCursor(0);
+        doc.write("Fixed: ");
+        doc.show(); // 文档状态: Fixed: |Hello
+    }
+}
+// 白箱模式会存在空指针异常
 ```
 黑箱模式：
 ```java
+import java.util.*;
 
+// 1. 窄接口
+interface Memento {}
+
+class BlackBoxDocument {
+    private String content = "";
+    private int cursor = 0;
+
+    // 2. 私有内部 Record：外部完全看不见字段
+    private record DocMemento(String content, int cursor) implements Memento {}
+
+    public void write(String txt) {
+        content = content.substring(0, cursor) + txt + content.substring(cursor);
+        cursor += txt.length();
+    }
+    
+    public void moveCursor(int pos) {
+        cursor = Math.max(0, Math.min(pos, content.length()));
+    }
+
+    public void delete() {
+        if (cursor > 0) {
+            content = content.substring(0, cursor - 1) + content.substring(cursor);
+            cursor--;
+        }
+    }
+    
+    public void show() {
+        String res = content.substring(0, cursor) + "|" + content.substring(cursor);
+        System.out.println("当前状态: " + res);
+    }
+    
+    // 备忘录 API
+    public Memento save() {
+        return new DocMemento(content, cursor);
+    }
+    // 3. 安全的恢复方法：处理 null 或错误的类型
+    public void restore(Memento memento) {
+        if (memento instanceof DocMemento m) { // 模式匹配，自动处理了 null 检查
+            this.content = m.content();
+            this.cursor = m.cursor();
+        }
+    }
+}
+
+class History {
+    private final Deque<Memento> stack = new ArrayDeque<>();
+    public void push(Memento m) { if (m != null) stack.push(m); }
+    
+    // 如果为空则返回 null
+    public Memento pop() { return stack.isEmpty() ? null : stack.pop(); }
+}
+
+public class BlackBoxSafeDemo {
+    public static void main(String[] args) {
+        BlackBoxDocument doc = new BlackBoxDocument();
+        History history = new History();
+
+        doc.write("Hello");
+        history.push(doc.save()); // 存入状态 1
+
+        doc.write(" World");
+        doc.show(); // Hello World|
+
+        // 第一次撤销：回到 Hello|
+        doc.restore(history.pop());
+        doc.show();
+
+        // 第二次撤销：此时栈已经空了，history.pop() 会返回 null
+        // 但由于 doc.restore 里面使用了 instanceof，它不会报 NPE，而是安全地跳过
+        doc.restore(history.pop()); 
+        doc.show(); // 依然维持在 Hello|
+    }
+}
 ```
 
 ### 12.3.11 解释器模式
