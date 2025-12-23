@@ -79,7 +79,176 @@ stringRedisTemplate.execute(
 
 ## 2.2 订单相关功能
 
+### 生成唯一订单ID
+```java
+public class SnowflakeIdGenerator {  
+  
+    // 起始时间戳 (例如：2023-01-01)，一旦确定不可修改  
+    private final long twepoch = 1672531200000L;  
+  
+    // 各部分占用的位数  
+    private final long workerIdBits = 5L;   // 机器标识占用的位数  
+    private final long datacenterIdBits = 5L; // 数据中心占用的位数  
+    private final long sequenceBits = 12L;  // 序列号占用的位数  
+  
+    // 各部分最大值 (位运算计算)  
+    private final long maxWorkerId = ~(-1L << workerIdBits);  
+    private final long maxDatacenterId = ~(-1L << datacenterIdBits);  
+    private final long sequenceMask = ~(-1L << sequenceBits);  
+  
+    // 各部分向左移位的位数  
+    private final long workerIdShift = sequenceBits;  
+    private final long datacenterIdShift = sequenceBits + workerIdBits;  
+    private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;  
+  
+    private long workerId;        // 工作机器ID  
+    private long datacenterId;    // 数据中心ID  
+    private long sequence = 0L;   // 毫秒内序列  
+    private long lastTimestamp = -1L; // 上次生成ID的时间戳  
+  
+    public SnowflakeIdGenerator(long workerId, long datacenterId) {  
+        if (workerId > maxWorkerId || workerId < 0) {  
+            throw new IllegalArgumentException("worker Id can't be greater than maxWorkerId");  
+        }  
+        if (datacenterId > maxDatacenterId || datacenterId < 0) {  
+            throw new IllegalArgumentException("datacenter Id can't be greater than maxDatacenterId");  
+        }  
+        this.workerId = workerId;  
+        this.datacenterId = datacenterId;  
+    }  
+  
+    // 核心方法：生成ID (线程安全)  
+    public synchronized long nextId() {  
+        long timestamp = timeGen();  
+  
+        // 检查时钟回拨  
+        if (timestamp < lastTimestamp) {  
+            throw new RuntimeException("时钟回拨，拒绝生成ID");  
+        }  
+  
+        // 如果是同一毫秒内生成的，则进行毫秒内序列自增  
+        if (lastTimestamp == timestamp) {  
+            sequence = (sequence + 1) & sequenceMask;  
+            // 毫秒内序列溢出  
+            if (sequence == 0) {  
+                // 阻塞到下一个毫秒,获得新的时间戳  
+                timestamp = tilNextMillis(lastTimestamp);  
+            }  
+        } else {  
+            // 时间戳改变，毫秒内序列重置  
+            sequence = 0L;  
+        }  
+  
+        lastTimestamp = timestamp;  
+  
+        // 通过位运算拼装成 64 位 ID        
+        return ((timestamp - twepoch) << timestampLeftShift) // 时间戳差值左移  
+                | (datacenterId << datacenterIdShift)         // 数据中心左移  
+                | (workerId << workerIdShift)                 // 机器ID左移  
+                | sequence;                                   // 序列号  
+    }  
+  
+    protected long tilNextMillis(long lastTimestamp) {  
+        long timestamp = timeGen();  
+        while (timestamp <= lastTimestamp) {  
+            timestamp = timeGen();  
+        }  
+        return timestamp;  
+    }  
+  
+    protected long timeGen() {  
+        return System.currentTimeMillis();  
+    }  
+}
+```
 
+### RedisUtils
+```java
+public class RedisUtils {  
+    private StringRedisTemplate redisTemplate;  
+    private ObjectMapper objectMapper;  
+  
+    /**  
+     * 写入缓存（永久有效）  
+     */  
+    public void set(String key, Object value) {  
+        set(key, value, -1, TimeUnit.SECONDS);  
+    }  
+  
+    /**  
+     * 写入缓存（设置过期时间）  
+     */  
+    public void set(String key, Object value, long timeout, TimeUnit unit) {  
+        try {  
+            String val = toJson(value);  
+            if (timeout > 0) {  
+                redisTemplate.opsForValue().set(key, val, timeout, unit);  
+            } else {  
+                redisTemplate.opsForValue().set(key, val);  
+            }  
+        } catch (Exception e) {  
+            log.error("Redis set error! key: {}, error: {}", key, e.getMessage());  
+        }  
+    }  
+  
+    /**  
+     * 获取对象  
+     */  
+    public <T> T get(String key, Class<T> clazz) {  
+        String val = redisTemplate.opsForValue().get(key);  
+        if (!StringUtils.hasText(val)) return null;  
+        return fromJson(val, clazz);  
+    }  
+  
+    /**  
+     * 获取复杂类型（如 List<User>）  
+     * 调用示例：List<User> list = redisUtils.get("userList", new TypeReference<List<User>>(){});  
+     */    
+     public <T> T get(String key, TypeReference<T> typeReference) {  
+        String val = redisTemplate.opsForValue().get(key);  
+        if (!StringUtils.hasText(val)) return null;  
+        try {  
+            return objectMapper.readValue(val, typeReference);  
+        } catch (JsonProcessingException e) {  
+            log.error("Redis get error! key: {}, error: {}", key, e.getMessage());  
+            return null;  
+        }  
+    }  
+  
+    /**  
+     * 删除 key  
+     */    
+     public Boolean delete(String key) {  
+        return redisTemplate.delete(key);  
+    }  
+  
+    /**  
+     * 设置过期时间  
+     */  
+    public Boolean expire(String key, long timeout, TimeUnit unit) {  
+        return redisTemplate.expire(key, timeout, unit);  
+    }  
+  
+    // --- 内部辅助转换方法 ---  
+    private String toJson(Object value) throws JsonProcessingException {  
+        if (value == null) return null;  
+        if (value instanceof String) return (String) value;  
+        return objectMapper.writeValueAsString(value);  
+    }  
+  
+    private <T> T fromJson(String json, Class<T> clazz) {  
+        try {  
+            if (clazz == String.class) {  
+                return clazz.cast(json);  
+            }  
+            return objectMapper.readValue(json, clazz);  
+        } catch (JsonProcessingException e) {  
+            log.error("Json parse error! error: {}", e.getMessage());  
+            return null;  
+        }  
+    }  
+}
+```
 
 
 
