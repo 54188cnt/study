@@ -151,7 +151,7 @@ public int trap(int[] height) {
 
 
 # 三、回溯
-定义：使用递归，配合剪枝并恢复现场得到所有结果。
+定义：使用递归，配合剪枝并恢复现场得到所有结果。通常需要配合剪枝。
 
 代码模板(以括号生成为例):
 ```java
@@ -181,7 +181,8 @@ private void dfs(int left, int right, StringBuilder sb, int n){
 ```
 
 题目:  
-- [T22.括号生成](https://leetcode.cn/problems/generate-parentheses/description/)
+- [T22. 括号生成](https://leetcode.cn/problems/generate-parentheses/description/) 
+- [T77. 组合](https://leetcode.cn/problems/combinations/description/) 
 
 # 四、动态规划
 定义：通过递推公式，将问题转化为子问题，得到结果。
