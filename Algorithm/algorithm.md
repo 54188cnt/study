@@ -441,6 +441,9 @@ private int binarySearch(int[] nums, int target) {
 
 代码模板见基本代码模板。
 
+题目：
+- [T4. 寻找两个正序数组的中位数](problem/T4.寻找两个正序数组的中位数.md) 
+
 ## 6.2 数值二分查找
 定义：通过直接在数值区间进行二分。  
 
