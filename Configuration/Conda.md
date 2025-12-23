@@ -9,3 +9,9 @@ conda activate env_name
 # 退出环境
 conda deactivate env_name
 ```
+
+## 安装torch
+[去这里]([Previous PyTorch Versions](https://pytorch.org/get-started/previous-versions/)) 
+
+
+
