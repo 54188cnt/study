@@ -2803,6 +2803,29 @@ public class Main{
 // 数据完全公开
 // 备忘录
 record WhiteMemento(String content, int cursor) { }
+// 发起人
+class Document {
+    private String content = "";
+    private int cursor = 0;
+    
+    public void setState(String content, int cursor) {
+        this.content = content;
+        this.cursor = cursor;
+    }
+    
+    public WhiteMemento save() {
+        return new WhiteMemento(content, cursor);
+    }
+    
+    public void restore(WhiteMemento memento) {
+        this.content = memento.content();
+        this.cursor = memento.cursor();
+    }
+    
+    public void show() {
+        System.out.println("当前内容: " + content);
+    }
+}
 ```
 黑箱模式：
 ```java
