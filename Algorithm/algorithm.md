@@ -30,18 +30,50 @@ for (int i = 0; i < nums.length; i++) {
 ```
 
 题目：
-- [T42.接雨水](https://leetcode.cn/problems/trapping-rain-water/description/)
+- [T42.接雨水](https://leetcode.cn/problems/trapping-rain-water/description/) 
 
 ### 1.1.2 单调递增栈
 定义：栈中存放的是<font color="red">单调递增的元素</font>，栈顶的元素比栈内元素都小。
 
-代码模板：
+代码模板(以T2054. 两个最好的不重叠活动为例)：
 ```java
-
+public int maxTwoEvents(int[][] events) {  
+    Arrays.sort(events, (a, b) -> a[1] - b[1]);  
+    int res = 0;  
+    // st 存储{end, value}  
+    List<int[]> st = new ArrayList<>();  
+    st.add(new int[] {0, 0}); // 哨兵  
+    for(int[] e: events) {  
+        int start = e[0];  
+        int value = e[2];  
+        int end = e[1];  
+        int i = search(st, start);  
+        res = Math.max(res, value + st.get(i)[1]);  
+        // 价值高要入栈(保证栈顶元素价值永远最大)  
+        if(value > st.getLast()[1]) {  
+            st.add(i + 1, new int[] {end, value});  
+        }  
+    }  
+    return res;  
+}  
+// 开区间二分查找(< target -> return l  >= target -> return r)
+private int search(List<int[]> st, int start) {  
+    // search the first i make st[i][0] < target  
+    int l = -1, r = st.size();  
+    while(l + 1 < r) {  
+        int m = l + (r - l) / 2;  
+        if(st.get(m)[0] >= start) {  
+            r = m;  
+        }else {  
+            l = m;  
+        }  
+    }  
+    return l;  
+}
 ```
 
 题目：
-
+- [T2054. 两个最好的不重叠活动](https://leetcode.cn/problems/two-best-non-overlapping-events/description/) 
 # 二、双指针
 定义：用两个指针指向数组元素，移动指针，寻找满足条件的元素。
 
