@@ -389,7 +389,7 @@ Spring: [官网](https://spring.io/)
 <font color="red">三层架构</font>：Controller - Service - DAO  
 > Controller：类要加上@RestController注解, 方法要加上@RequestMapping("/xxx")注解  
 > 拆分后使用接口以及接口实现类(XxxxImpl)来进行模块化  
-> 分层解耦：使用容器管理各个对象(控制反转IOC和依赖注入DI)，IOC创建和管理的对象称为Bean对象  
+> 分层解耦：使用容器管理各个对象(控制反转 IOC 和依赖注入 DI)，IOC 创建和管理的对象称为Bean对象  
 > 分层解耦要管理的类加上注解@Component,管理的对象添加@Autowired注解   
 > 依赖注入(@Autowired注解)有三种方法：   
 > - 构造器注入(10%)
@@ -799,7 +799,7 @@ ThreadLocal:
 命令行参数 > Java属性 > 配置文件
 
 ## 9.2 Bean管理
-[//]: # (Bean管理：Spring容器管理Bean，将Bean交给Spring容器管理，Spring容器会自动创建Bean实例并管理Bean的生命周期  )  
+Bean管理：Spring容器管理Bean，将Bean交给Spring容器管理，Spring容器会自动创建Bean实例并管理Bean的生命周期
 
 作用域(<font color="YELLOW">@Scope("xxx")</font>)：
 - singleton(default，单例容器，所有对象都共享一个实例),在项目启动时创建  
@@ -3080,7 +3080,6 @@ public class InterpreterDemo {
 - 语言文法较为简单，且执行效率不是关键问题
 - 问题重复出现且可以用一种简单的语言来进行表达时
 - 当一个语言需要解释执行并且语言中的句子可以表示为一个抽象语法树的时候
-
 
 
 
