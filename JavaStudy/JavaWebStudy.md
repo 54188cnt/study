@@ -3006,3 +3006,63 @@ public class BlackBoxSafeDemo {
 - 环境角色：通常包含各个解释器需要的数据或是公共的功能，一般用来传递被所有解释器共享的数据，后面的解释器可以从这里获取这些值
 - 客户端：将需要分析的句子或表达式转换成使用解释器对象描述的抽象语法树，然后调用解释器的解释方法当然也可以通过环境角色间接访问解释器的解释方法
 
+示例：
+```java
+import java.util.*;
+
+// 1. 上下文（变量真假池）
+class Context {
+    private Map<String, Boolean> vars = new HashMap<>();
+    void set(String var, boolean val) { vars.put(var, val); }
+    boolean get(String var) { return vars.getOrDefault(var, false); }
+}
+
+// 2. 抽象表达式
+interface Expression {
+    boolean interpret(Context ctx);
+}
+
+// 3. 终结符 —— 变量
+class Variable implements Expression {
+    private String name;
+    Variable(String name) { this.name = name; }
+    public boolean interpret(Context ctx) { return ctx.get(name); }
+}
+
+// 4. 非终结符 —— AND
+class AndExpression implements Expression {
+    private Expression left, right;
+    AndExpression(Expression l, Expression r) { this.left = l; this.right = r; }
+    public boolean interpret(Context ctx) {
+        return left.interpret(ctx) && right.interpret(ctx);
+    }
+}
+
+// 5. 非终结符 —— OR
+class OrExpression implements Expression {
+    private Expression left, right;
+    OrExpression(Expression l, Expression r) { this.left = l; this.right = r; }
+    public boolean interpret(Context ctx) {
+        return left.interpret(ctx) || right.interpret(ctx);
+    }
+}
+
+// 6. Client 构建 AST 并解释
+public class InterpreterDemo {
+    public static void main(String[] args) {
+        Context ctx = new Context();
+        ctx.set("java", true);
+        ctx.set("spring", false);
+        ctx.set("kotlin", true);
+
+        // 手工构造 AST： (java AND spring) OR kotlin
+        Expression expr = new OrExpression(
+                new AndExpression(new Variable("java"), new Variable("spring")),
+                new Variable("kotlin")
+        );
+
+        boolean result = expr.interpret(ctx);
+        System.out.println("(java AND spring) OR kotlin = " + result); // true
+    }
+}
+```
