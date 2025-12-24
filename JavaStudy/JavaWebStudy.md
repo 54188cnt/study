@@ -2997,5 +2997,12 @@ public class BlackBoxSafeDemo {
 扩展：Java 中的 [[JavaStudy/Java进阶学习/Record.md|record]] 
 
 ### 12.3.11 解释器模式
+定义：给定一个语言，定义它的文法表示，并定义一个解释器，这个解释器使用该标识来解释语言中的句子
 
+角色：
+- 抽象表达式角色：定义解释器接口，约定解释器解释操作，包含解释方法 <font color="#92cddc">interpret()</font> 
+- 终结符表达式角色：
+- 非终结符表达式角色：
+- 环境角色：
+- 客户端：
 
