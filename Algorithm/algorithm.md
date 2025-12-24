@@ -1213,5 +1213,7 @@ public int reverseBits(int n) {
 ```
 
 ## 14.3 链表分治
+代码模板(以T148. 排序链表为例)：
+```java
 
-
+```
