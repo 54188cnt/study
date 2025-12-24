@@ -163,7 +163,7 @@ public class SnowflakeIdGenerator {
 ```
 
 ### RedisUtils
-这个代码只针对string类型，一般都
+这个代码只针对 string 类型，一般 hash 和 string 两种类型用 <font color="#b2a2c7">StringRedisTemplate</font> 
 ```java
 public class RedisUtils {  
     private StringRedisTemplate redisTemplate;  
