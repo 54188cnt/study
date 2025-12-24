@@ -1215,5 +1215,48 @@ public int reverseBits(int n) {
 ## 14.3 链表分治
 代码模板(以T148. 排序链表为例)：
 ```java
-
+// 本质就是归并排序
+public ListNode sortList(ListNode head) {  
+    if(head == null || head.next == null) {  
+        return head;  
+    }  
+    // 寻找中间节点
+    ListNode mid = findMiddleNode(head);  
+    // 分治排序左右两个列表
+    head = sortList(head);  
+    mid = sortList(mid);  
+    // 合并两个升序列表
+    return mergeTwoLists(head, mid);  
+}  
+private ListNode findMiddleNode(ListNode head) {   
+	// 使用了快慢指针思想
+    ListNode slow = head, fast = head.next;  
+    while(fast != null && fast.next != null) {  
+        slow = slow.next;  
+        fast = fast.next.next;  
+    }  
+    ListNode mid = slow.next;  
+    slow.next = null;  
+    return mid;  
+}  
+private ListNode mergeTwoLists(ListNode l1, ListNode l2) {  
+	// 合并两个升序列表
+	// 头结点的思想在链表或者树里面用的还是比较多的
+    ListNode dummy = new ListNode();  
+    ListNode cur = dummy;  
+    // 有一个遍历完了就结束循环
+    while(l1 != null && l2 != null) {  
+        if(l1.val < l2.val) {  
+            cur.next = l1;  
+            l1 = l1.next;  
+        }else {  
+            cur.next = l2;  
+            l2 = l2.next;  
+        }  
+        cur = cur.next;  
+    }  
+    // 把未遍历完的直接接在尾部
+    cur.next = l1 == null ? l2 : l1;  
+    return dummy.next;  
+}
 ```
