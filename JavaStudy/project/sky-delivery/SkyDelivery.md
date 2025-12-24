@@ -163,6 +163,7 @@ public class SnowflakeIdGenerator {
 ```
 
 ### RedisUtils
+这个代码只针对string类型，一般都
 ```java
 public class RedisUtils {  
     private StringRedisTemplate redisTemplate;  
@@ -250,6 +251,44 @@ public class RedisUtils {
 }
 ```
 
-
+### RedisConfig
+```java
+public class RedisConfig {  
+  
+    @Bean  
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {  
+        RedisTemplate<String, Object> template = new RedisTemplate<>();  
+        template.setConnectionFactory(factory);  
+  
+        // 1. 使用 JSON 序列化器  
+        GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();  
+  
+        // 2. Key 始终使用 String 序列化  
+        StringRedisSerializer stringSerializer = new StringRedisSerializer();  
+  
+        // 全局配置：Key 和 HashKey 用 String        template.setKeySerializer(stringSerializer);  
+        template.setHashKeySerializer(stringSerializer);  
+  
+        // 全局配置：Value 和 HashValue 用 JSON        // 这样你存 List<User> 或 Map<String, Dish> 都能自动转 JSON 并带上类型  
+        template.setValueSerializer(jsonSerializer);  
+        template.setHashValueSerializer(jsonSerializer);  
+  
+        template.afterPropertiesSet();  
+        return template;  
+    }  
+  
+    // 专门为 Spring Cache 注解配置序列化  
+    @Bean  
+    public RedisCacheConfiguration redisCacheConfiguration() {  
+        return RedisCacheConfiguration.defaultCacheConfig()  
+                .entryTtl(Duration.ofHours(1)) // 设置默认过期时间  
+                // 设置 Key 的序列化  
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))  
+                // 设置 Value 的序列化（使用带类型的 JSON，这样拿出来不用手动转）  
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))  
+                .disableCachingNullValues(); // 不缓存空值  
+    }  
+}
+```
 
 
