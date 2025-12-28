@@ -348,6 +348,27 @@ class Solution {
         int lo = limitLow && i >= diff ? lowS[i - diff] - '0' : 0;
         // 上界受 limitHigh 限制
         int hi = limitHigh ? highS[i] - '0' : 9;
+        
+        long res = 0;
+        int d = lo;
+        // 通过 limitLow 和 i 可以判断能否不填数字，无需 isNum 参数
+        // 如果前导零不影响答案，去掉这个 if block
+        if(limitLow && i < diff) {
+            res = dfs(i + 1, cnt0, true, false, lowS, highS, target, memo);
+            d = 1;
+        }
+        
+        for(;d <= hi;++d) {
+            res += dfs(i + 1,
+                    cnt0 + (d == 0 ? 1 : 0),
+                    limitLow && d == lo,
+                    limitHigh && d == hi,
+                    lowS, highS, target, memo);
+        }
+        if(!limitLow && !limitHigh) {
+            memo[i][cnt0] = res;
+        }
+        return res;
     }
 }
 ```
