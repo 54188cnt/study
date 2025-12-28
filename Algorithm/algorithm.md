@@ -334,6 +334,7 @@ class Solution {
     }
     private long dfs(int i, int cnt0, boolean limitLow, boolean limitHigh, char[] lowS, char[] highS, int target, long[][] memo) { 
         if(cnt0 > target) {
+            // 不合法
             return 0;
         }
         if(i == highS.length) {
@@ -342,7 +343,9 @@ class Solution {
         if(!limitLow && !limitHigh && memo[i][cnt0] >= 0) {
             return memo[i][cnt0];
         }
-        
+        int diff = highS.length - lowS.length;
+        int lo = limitLow && i >= diff ? lowS[i - diff] - '0' : 0;
+        int hi = limitHigh ? highS[i] - '0' : 9;
     }
 }
 ```
