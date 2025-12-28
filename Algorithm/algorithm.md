@@ -346,6 +346,7 @@ class Solution {
         int diff = highS.length - lowS.length;
         // 如果还没到 low 开始的位数，下界视为 0
         int lo = limitLow && i >= diff ? lowS[i - diff] - '0' : 0;
+        // 上界受 limitHigh 限制
         int hi = limitHigh ? highS[i] - '0' : 9;
     }
 }
