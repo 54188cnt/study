@@ -332,7 +332,18 @@ class Solution {
         }
         return dfs(0, 0, true, true, lowS, highS, target, memo);
     }
-    private long dfs(int i, int cnt0, boolean limitLow, boolean limitHigh, char[] lowS, char[] highS, int target, long[][] memo) { }
+    private long dfs(int i, int cnt0, boolean limitLow, boolean limitHigh, char[] lowS, char[] highS, int target, long[][] memo) { 
+        if(cnt0 > target) {
+            return 0;
+        }
+        if(i == highS.length) {
+            return cnt0 == target ? 1 : 0;
+        }
+        if(!limitLow && !limitHigh && memo[i][cnt0] >= 0) {
+            return memo[i][cnt0];
+        }
+        
+    }
 }
 ```
 
