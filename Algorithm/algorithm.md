@@ -314,6 +314,29 @@ public int maxSubarraySumCircular(int[] nums) {
 - [P1352没有上司的舞会](problem/P1352没有上司的舞会.md): 出自洛谷
 - [T3562.折扣价交易股票的最大利润](problem/T3562.折扣价交易股票的最大利润.md)
 
+### 4.1.5 数位DP
+代码模板：
+```java
+// 代码示例：返回 [low, high] 中的恰好包含 target 个 0 的数字个数
+// 比如 digitDP(0, 10, 1) == 2
+// 要点：我们统计的是 0 的个数，需要区分【前导零】和【数字中的零】，前导零不能计入，而数字中的零需要计入
+class Solution {
+    public long digitDP(int low, int high, int target) {
+        char[] lowS = String.valueOf(low).toCharArray();
+        char[] highS = String.valueOf(high).toCharArray();
+        
+        int n = highS.length;
+        long[][] memo = new long[n][target + 1];
+        for(long[] row: memo) {
+            Arrays.fill(row, -1);
+        }
+        return dfs(0, 0, true, true, lowS, highS, target, memo);
+    }
+    private long dfs(int i, int cnt0, boolean limitLow, boolean limitHigh, char[] lowS, char[] highS, int target, long[][] memo) { }
+}
+```
+
+
 ## 4.2 背包问题
 
 
