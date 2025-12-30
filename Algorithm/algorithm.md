@@ -947,8 +947,17 @@ public int maxPoints(int[][] points) {
 - `remove(), removeAll(), clear()`
 
 ### 8.2.2 并查集(UnionFind)
+#### 普通并查集
+代码模板：
+```java
 
+```
 
+#### 带权并查集
+代码模板：
+```java
+
+```
 
 # 九、字符串
 定义：字符串是一种数据结构，用于存储字符序列。  
