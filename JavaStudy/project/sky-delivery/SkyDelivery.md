@@ -302,10 +302,414 @@ public class RedisConfig {
 ### 微信支付
 [平台](https://pay.weixin.qq.com/static/product/product_index.shtml) 
 
-流程：
+流程时序图：
 ![](../../assets/project/sky-delivery/微信小程序支付时序图.png)
 
+配置修改：
+```java
+@Component  
+@ConfigurationProperties(prefix = "sky.wechat")  
+@Data  
+public class WeChatProperties {  
+    private String appid; //小程序的appid  
+    private String secret; //小程序的秘钥  
+    private String mchid; //商户号  
+    private String mchSerialNo; //商户API证书的证书序列号  
+    private String privateKeyFilePath; //商户私钥文件  
+    private String apiV3Key; //证书解密的密钥  
+    private String weChatPayCertFilePath; //平台证书  
+    private String notifyUrl; //支付成功的回调地址  
+    private String refundNotifyUrl; //退款成功的回调地址  
+}
+```
+配置文件修改：
+```yml
+wechat:  
+  appid: ${sky.wechat.appid}  
+  secret: ${sky.wechat.secret}  
+  mchid : ${sky.wechat.mchid}  
+  mchSerialNo: ${sky.wechat.mchSerialNo}  
+  privateKeyFilePath: ${sky.wechat.privateKeyFilePath}  
+  apiV3Key: ${sky.wechat.apiV3Key}  
+  weChatPayCertFilePath: ${sky.wechat.weChatPayCertFilePath}  
+  notifyUrl: ${sky.wechat.notifyUrl}  
+  refundNotifyUrl: ${sky.wechat.refundNotifyUrl}
+  
+sky:  
+  wechat:  
+    appid: wxffb3637a228223b8  
+    secret: 84311df9199ecacdf4f12d27b6b9522d  
+    mchid : 1561414331  
+    mchSerialNo: 4B3B3DC35414AD50B1B755BAF8DE9CC7CF407606  
+    privateKeyFilePath: D:\pay\apiclient_key.pem  
+    apiV3Key: CZBK51236435wxpay435434323FFDuv3  
+    weChatPayCertFilePath: D:\pay\wechatpay_166D96F876F45C7D07CE98952A96EC980368ACFC.pem  
+    notifyUrl: https://58869fb.r2.cpolar.top/notify/paySuccess  
+    refundNotifyUrl: https://58869fb.r2.cpolar.top/notify/refundSuccess
+```
+完整代码：
+```java
+// Controller层
+@PutMapping("/payment")  
+@ApiOperation("订单支付")  
+public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {  
+    log.info("订单支付：{}", ordersPaymentDTO);  
+    OrderPaymentVO orderPaymentVO = orderService.payment(ordersPaymentDTO);  
+    log.info("生成预支付交易单：{}", orderPaymentVO);  
+    return Result.success(orderPaymentVO);  
+}
 
+
+// Service
+public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {  
+    // 当前登录用户id  
+    Long userId = BaseContext.getCurrentId();  
+    User user = userMapper.getById(userId);  
+  
+    //调用微信支付接口，生成预支付交易单  
+    JSONObject jsonObject = weChatPayUtil.pay(  
+            ordersPaymentDTO.getOrderNumber(), //商户订单号  
+            new BigDecimal(0.01), //支付金额，单位 元  
+            "苍穹外卖订单", //商品描述  
+            user.getOpenid() //微信用户的openid  
+    );  
+  
+    if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {  
+        throw new OrderBusinessException("该订单已支付");  
+    }  
+  
+    OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);  
+    vo.setPackageStr(jsonObject.getString("package"));  
+  
+    return vo;  
+}  
+public void paySuccess(String outTradeNo) {  
+    // 当前登录用户id  
+    Long userId = BaseContext.getCurrentId();  
+  
+    // 根据订单号查询当前用户的订单  
+    Orders ordersDB = orderMapper.getByNumberAndUserId(outTradeNo, userId);  
+  
+    // 根据订单id更新订单的状态、支付方式、支付状态、结账时间  
+    Orders orders = Orders.builder()  
+            .id(ordersDB.getId())  
+            .status(Orders.TO_BE_CONFIRMED)  
+            .payStatus(Orders.PAID)  
+            .checkoutTime(LocalDateTime.now())  
+            .build();  
+  
+    orderMapper.update(orders);  
+  
+    //通过websocket向客户端浏览器推送消息 type orderId content    Map map = new HashMap();  
+    map.put("type",1); // 1表示来单提醒 2表示客户催单  
+    map.put("orderId",ordersDB.getId());  
+    map.put("content","订单号：" + outTradeNo);  
+  
+    String json = JSON.toJSONString(map);  
+    webSocketServer.sendToAllClient(json);  
+}
+
+
+// WechatPayUtil
+@Component  
+public class WeChatPayUtil {  
+  
+    //微信支付下单接口地址  
+    public static final String JSAPI = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";  
+  
+    //申请退款接口地址  
+    public static final String REFUNDS = "https://api.mch.weixin.qq.com/v3/refund/domestic/refunds";  
+  
+    @Autowired  
+    private WeChatProperties weChatProperties;  
+  
+    /**  
+     * 获取调用微信接口的客户端工具对象  
+     *  
+     * @return  
+     */  
+    private CloseableHttpClient getClient() {  
+        PrivateKey merchantPrivateKey = null;  
+        try {  
+            //merchantPrivateKey商户API私钥，如何加载商户API私钥请看常见问题  
+            merchantPrivateKey = PemUtil.loadPrivateKey(new FileInputStream(new File(weChatProperties.getPrivateKeyFilePath())));  
+            //加载平台证书文件  
+            X509Certificate x509Certificate = PemUtil.loadCertificate(new FileInputStream(new File(weChatProperties.getWeChatPayCertFilePath())));  
+            //wechatPayCertificates微信支付平台证书列表。你也可以使用后面章节提到的“定时更新平台证书功能”，而不需要关心平台证书的来龙去脉  
+            List<X509Certificate> wechatPayCertificates = Arrays.asList(x509Certificate);  
+  
+            WechatPayHttpClientBuilder builder = WechatPayHttpClientBuilder.create()  
+                    .withMerchant(weChatProperties.getMchid(), weChatProperties.getMchSerialNo(), merchantPrivateKey)  
+                    .withWechatPay(wechatPayCertificates);  
+  
+            // 通过WechatPayHttpClientBuilder构造的HttpClient，会自动的处理签名和验签  
+            CloseableHttpClient httpClient = builder.build();  
+            return httpClient;  
+        } catch (FileNotFoundException e) {  
+            e.printStackTrace();  
+            return null;  
+        }  
+    }  
+  
+    /**  
+     * 发送post方式请求  
+     *  
+     * @param url  
+     * @param body  
+     * @return  
+     */  
+    private String post(String url, String body) throws Exception {  
+        CloseableHttpClient httpClient = getClient();  
+  
+        HttpPost httpPost = new HttpPost(url);  
+        httpPost.addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());  
+        httpPost.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());  
+        httpPost.addHeader("Wechatpay-Serial", weChatProperties.getMchSerialNo());  
+        httpPost.setEntity(new StringEntity(body, "UTF-8"));  
+  
+        CloseableHttpResponse response = httpClient.execute(httpPost);  
+        try {  
+            String bodyAsString = EntityUtils.toString(response.getEntity());  
+            return bodyAsString;  
+        } finally {  
+            httpClient.close();  
+            response.close();  
+        }  
+    }  
+  
+    /**  
+     * 发送get方式请求  
+     *  
+     * @param url  
+     * @return  
+     */  
+    private String get(String url) throws Exception {  
+        CloseableHttpClient httpClient = getClient();  
+  
+        HttpGet httpGet = new HttpGet(url);  
+        httpGet.addHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_JSON.toString());  
+        httpGet.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());  
+        httpGet.addHeader("Wechatpay-Serial", weChatProperties.getMchSerialNo());  
+  
+        CloseableHttpResponse response = httpClient.execute(httpGet);  
+        try {  
+            String bodyAsString = EntityUtils.toString(response.getEntity());  
+            return bodyAsString;  
+        } finally {  
+            httpClient.close();  
+            response.close();  
+        }  
+    }  
+  
+    /**  
+     * jsapi下单  
+     *  
+     * @param orderNum    商户订单号  
+     * @param total       总金额  
+     * @param description 商品描述  
+     * @param openid      微信用户的openid  
+     * @return  
+     */  
+    private String jsapi(String orderNum, BigDecimal total, String description, String openid) throws Exception {  
+        JSONObject jsonObject = new JSONObject();  
+        jsonObject.put("appid", weChatProperties.getAppid());  
+        jsonObject.put("mchid", weChatProperties.getMchid());  
+        jsonObject.put("description", description);  
+        jsonObject.put("out_trade_no", orderNum);  
+        jsonObject.put("notify_url", weChatProperties.getNotifyUrl());  
+  
+        JSONObject amount = new JSONObject();  
+        amount.put("total", total.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP).intValue());  
+        amount.put("currency", "CNY");  
+  
+        jsonObject.put("amount", amount);  
+  
+        JSONObject payer = new JSONObject();  
+        payer.put("openid", openid);  
+  
+        jsonObject.put("payer", payer);  
+  
+        String body = jsonObject.toJSONString();  
+        return post(JSAPI, body);  
+    }  
+  
+    /**  
+     * 小程序支付  
+     *  
+     * @param orderNum    商户订单号  
+     * @param total       金额，单位 元  
+     * @param description 商品描述  
+     * @param openid      微信用户的openid  
+     * @return  
+     */  
+    public JSONObject pay(String orderNum, BigDecimal total, String description, String openid) throws Exception {  
+        //统一下单，生成预支付交易单  
+        String bodyAsString = jsapi(orderNum, total, description, openid);  
+        //解析返回结果  
+        JSONObject jsonObject = JSON.parseObject(bodyAsString);  
+        System.out.println(jsonObject);  
+  
+        String prepayId = jsonObject.getString("prepay_id");  
+        if (prepayId != null) {  
+            String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);  
+            String nonceStr = RandomStringUtils.randomNumeric(32);  
+            ArrayList<Object> list = new ArrayList<>();  
+            list.add(weChatProperties.getAppid());  
+            list.add(timeStamp);  
+            list.add(nonceStr);  
+            list.add("prepay_id=" + prepayId);  
+            //二次签名，调起支付需要重新签名  
+            StringBuilder stringBuilder = new StringBuilder();  
+            for (Object o : list) {  
+                stringBuilder.append(o).append("\n");  
+            }  
+            String signMessage = stringBuilder.toString();  
+            byte[] message = signMessage.getBytes();  
+  
+            Signature signature = Signature.getInstance("SHA256withRSA");  
+            signature.initSign(PemUtil.loadPrivateKey(new FileInputStream(new File(weChatProperties.getPrivateKeyFilePath()))));  
+            signature.update(message);  
+            String packageSign = Base64.getEncoder().encodeToString(signature.sign());  
+  
+            //构造数据给微信小程序，用于调起微信支付  
+            JSONObject jo = new JSONObject();  
+            jo.put("timeStamp", timeStamp);  
+            jo.put("nonceStr", nonceStr);  
+            jo.put("package", "prepay_id=" + prepayId);  
+            jo.put("signType", "RSA");  
+            jo.put("paySign", packageSign);  
+  
+            return jo;  
+        }  
+        return jsonObject;  
+    }  
+  
+    /**  
+     * 申请退款  
+     *  
+     * @param outTradeNo    商户订单号  
+     * @param outRefundNo   商户退款单号  
+     * @param refund        退款金额  
+     * @param total         原订单金额  
+     * @return  
+     */  
+    public String refund(String outTradeNo, String outRefundNo, BigDecimal refund, BigDecimal total) throws Exception {  
+        JSONObject jsonObject = new JSONObject();  
+        jsonObject.put("out_trade_no", outTradeNo);  
+        jsonObject.put("out_refund_no", outRefundNo);  
+  
+        JSONObject amount = new JSONObject();  
+        amount.put("refund", refund.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP).intValue());  
+        amount.put("total", total.multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP).intValue());  
+        amount.put("currency", "CNY");  
+  
+        jsonObject.put("amount", amount);  
+        jsonObject.put("notify_url", weChatProperties.getRefundNotifyUrl());  
+  
+        String body = jsonObject.toJSONString();  
+  
+        //调用申请退款接口  
+        return post(REFUNDS, body);  
+    }  
+}
+
+
+// notify的Controller
+// 微信后台回调通知
+@RestController  
+@RequestMapping("/notify")  
+@Slf4j  
+public class PayNotifyController {  
+    @Autowired  
+    private OrderService orderService;  
+    @Autowired  
+    private WeChatProperties weChatProperties;  
+  
+    /**  
+     * 支付成功回调  
+     *  
+     * @param request  
+     */  
+    @RequestMapping("/paySuccess")  
+    public void paySuccessNotify(HttpServletRequest request, HttpServletResponse response) throws Exception {  
+        //读取数据  
+        String body = readData(request);  
+        log.info("支付成功回调：{}", body);  
+  
+        //数据解密  
+        String plainText = decryptData(body);  
+        log.info("解密后的文本：{}", plainText);  
+  
+        JSONObject jsonObject = JSON.parseObject(plainText);  
+        String outTradeNo = jsonObject.getString("out_trade_no");//商户平台订单号  
+        String transactionId = jsonObject.getString("transaction_id");//微信支付交易号  
+  
+        log.info("商户平台订单号：{}", outTradeNo);  
+        log.info("微信支付交易号：{}", transactionId);  
+  
+        //业务处理，修改订单状态、来单提醒  
+        orderService.paySuccess(outTradeNo);  
+  
+        //给微信响应  
+        responseToWeixin(response);  
+    }  
+  
+    /**  
+     * 读取数据  
+     *  
+     * @param request  
+     * @return  
+     * @throws Exception  
+     */    private String readData(HttpServletRequest request) throws Exception {  
+        BufferedReader reader = request.getReader();  
+        StringBuilder result = new StringBuilder();  
+        String line = null;  
+        while ((line = reader.readLine()) != null) {  
+            if (result.length() > 0) {  
+                result.append("\n");  
+            }  
+            result.append(line);  
+        }  
+        return result.toString();  
+    }  
+  
+    /**  
+     * 数据解密  
+     *  
+     * @param body  
+     * @return  
+     * @throws Exception  
+     */    private String decryptData(String body) throws Exception {  
+        JSONObject resultObject = JSON.parseObject(body);  
+        JSONObject resource = resultObject.getJSONObject("resource");  
+        String ciphertext = resource.getString("ciphertext");  
+        String nonce = resource.getString("nonce");  
+        String associatedData = resource.getString("associated_data");  
+  
+        AesUtil aesUtil = new AesUtil(weChatProperties.getApiV3Key().getBytes(StandardCharsets.UTF_8));  
+        //密文解密  
+        String plainText = aesUtil.decryptToString(associatedData.getBytes(StandardCharsets.UTF_8),  
+                nonce.getBytes(StandardCharsets.UTF_8),  
+                ciphertext);  
+  
+        return plainText;  
+    }  
+  
+    /**  
+     * 给微信响应  
+     * @param response  
+     */  
+    private void responseToWeixin(HttpServletResponse response) throws Exception{  
+        response.setStatus(200);  
+        HashMap<Object, Object> map = new HashMap<>();  
+        map.put("code", "SUCCESS");  
+        map.put("message", "SUCCESS");  
+        response.setHeader("Content-type", ContentType.APPLICATION_JSON.toString());  
+        response.getOutputStream().write(JSONUtils.toJSONString(map).getBytes(StandardCharsets.UTF_8));  
+        response.flushBuffer();  
+    }  
+}
+```
 
 
 ### Http工具类
