@@ -950,7 +950,69 @@ public int maxPoints(int[][] points) {
 #### 普通并查集
 代码模板：
 ```java
+class UnionFind{
+    private final int[] fa;  // 代表元
+    private final int[] size; // 集合大小
+    public int cc; // 连通块个数
+    public UnionFind(int n) { 
+        // 一开始有 n 个集合 {0}, {1}, ... , {n-1}
+        // 集合 i 的代表元初始化为自己，结合大小为1，连通块个数为n
+        fa = new int[n];
+        size = new int[n];
+        for(int i = 0;i < n;++i) {
+            fa[i] = i;
+        }
+        Arrays.fill(size, 1);
+        cc = n;
+    }
+    // 寻找 x 所在集合的代表元
+    // 这里最好做路径压缩，后续寻找更快
+    public int find(int x) {
+        // fa[x] == x 表示 x 的代表元就是fa[x]
+        if(fa[x] != x) {
+            // 这里进行修改代表元从而实现路径压缩
+            fa[x] = find(fa[x]);
+        }
+        return fa[x];
+    }
 
+    /**
+     * 判断 x 和 y 是否在同一个集合中
+     * @return true 表示 x 和 y 在同一个集合中
+     */
+    public boolean isSame(int x, int y) {
+        // 从这里就知道了代表元的作用就是快速判断 x 和 y 是否在同一个集合中
+        return find(x) == find(y);
+    }
+    /**
+     * 合并 from 和 to 所在的集合
+     * @return 返回值表示是否合并成功
+     */
+    public boolean union(int from, int to) {
+        int x = find(from);
+        int y = find(to);
+        if(x == y) {
+            // from 和 to本身就在一个集合则无需合并
+            return false;
+        }
+        // 这里是吧x集合合并到y集合中
+        fa[x] = y;
+        // 合并后集合元素大小也需要变
+        size[y] += size[x];
+        // 无需更新 size[x]，因为我们不用 size[x] 而是用 size[find(x)] 获取集合大小，
+        // 但 find(x) == y，我们不会再访问 size[x]
+        
+        // 合并成功后需要修改联通块个数
+        cc--;
+        return true;
+    }
+    
+    // 返回 x 所在集合的大小
+    public int getSize(int x) {
+        // 确保在 x 所在集合的代表元上查找集合大小
+        return size[find(x)];
+    }
+}
 ```
 
 #### 带权并查集
