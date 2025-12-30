@@ -66,11 +66,19 @@ return count
 
 运行脚本：
 ```java
-stringRedisTemplate.execute(
-	new DefaultRedisScript<>(luaScript,Long.class),
-	Collections.singletonList(cartKey), 
-	field
-);
+// 避免重复解析脚本
+private static final DefaultRedisScript<Long> DECREMENT_CART_SCRIPT;
+
+static { 
+	DECREMENT_CART_SCRIPT = new DefaultRedisScript<>();
+	DECREMENT_CART_SCRIPT.setScriptText(luaScript);
+	DECREMENT_CART_SCRIPT.setResultType(Long.class); 
+}
+
+Long remaining = stringRedisTemplate.execute(
+		DECREMENT_CART_SCRIPT, 
+		Collections.singletonList(cartKey), 
+		productId);
 ```
 
 ### 查看购物车商品
@@ -290,5 +298,19 @@ public class RedisConfig {
     }  
 }
 ```
+
+### 微信支付
+[平台](https://pay.weixin.qq.com/static/product/product_index.shtml) 
+
+流程：
+![](../../assets/project/sky-delivery/微信小程序支付时序图.png)
+
+
+
+
+
+
+
+
 
 
