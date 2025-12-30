@@ -660,7 +660,8 @@ public class PayNotifyController {
      * @param request  
      * @return  
      * @throws Exception  
-     */    private String readData(HttpServletRequest request) throws Exception {  
+     */    
+     private String readData(HttpServletRequest request) throws Exception {  
         BufferedReader reader = request.getReader();  
         StringBuilder result = new StringBuilder();  
         String line = null;  
@@ -679,7 +680,8 @@ public class PayNotifyController {
      * @param body  
      * @return  
      * @throws Exception  
-     */    private String decryptData(String body) throws Exception {  
+     */    
+     private String decryptData(String body) throws Exception {  
         JSONObject resultObject = JSON.parseObject(body);  
         JSONObject resource = resultObject.getJSONObject("resource");  
         String ciphertext = resource.getString("ciphertext");  
