@@ -1049,9 +1049,16 @@ class UnionFind{
     // 这需要 from 和 to 出于同一个集合
     public int getRelativeDistance(int from, int to) {
         // to - from = (from - x) - (to - x) = dis[from] - dis[to]
+        find(from);
+        find(to);
+        return dis[from] - dis[to];
+    }
+    // 合并 from 和 to，新增信息 to - from = value
+    // 其中 to 和 from 表示未知量，下文的 x 和 y 也表示未知量
+    // 如果 from 和 to 不在同一个集合，返回 true，否则返回是否与已知信息矛盾
+    public boolean merge(int from, int to, int value) {
         
     }
-    
 }
 ```
 
