@@ -1018,7 +1018,41 @@ class UnionFind{
 #### 带权并查集
 代码模板：
 ```java
-
+class UnionFind{
+    // 代表元
+    private final int[] fa;
+    // dis[x] 表示 x 到 x所在集合的代表元的距离
+    private final int[] dis;
+    
+    public UnionFind(int n) {
+        // 初始化代表元和距离
+        fa = new int[n];
+        dis = new int[n];
+        for(int i = 0;i < n;++i) {
+            fa[i] = i;
+        }
+    }
+    // 寻找 x 代表元并做路径压缩
+    public int find(int x) {
+        if(fa[x] != x) {
+            int root = find(fa[x]);
+            fa[x] = root;
+            dis[x] += dis[fa[x]];
+        }
+        return fa[x];
+    }
+    // 判断是不是同一个集合
+    public boolean isSame(int x, int y){
+        return find(x) == find(y);
+    }
+    // 计算 from 到 to 的相对距离
+    // 这需要 from 和 to 出于同一个集合
+    public int getRelativeDistance(int from, int to) {
+        // to - from = (from - x) - (to - x) = dis[from] - dis[to]
+        
+    }
+    
+}
 ```
 
 # 九、字符串
