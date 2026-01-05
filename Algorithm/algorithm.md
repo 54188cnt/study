@@ -1048,7 +1048,7 @@ class UnionFind{
     // 计算 from 到 to 的相对距离
     // 这需要 from 和 to 出于同一个集合
     public int getRelativeDistance(int from, int to) {
-        // to - from = (from - x) - (to - x) = dis[from] - dis[to]
+        // to - from = (x - from) - (x - to) = dis[from] - dis[to]
         find(from);
         find(to);
         return dis[from] - dis[to];
@@ -1057,7 +1057,17 @@ class UnionFind{
     // 其中 to 和 from 表示未知量，下文的 x 和 y 也表示未知量
     // 如果 from 和 to 不在同一个集合，返回 true，否则返回是否与已知信息矛盾
     public boolean merge(int from, int to, int value) {
-        
+        int x = find(from), y = find(to);
+        if(x == y) {
+            return dis[from] - dis[to] == value;
+        }
+        // 计算 x 到 y 的距离 y - x
+        // y - to = dis[to]
+        // x - from = dis[from]
+        // y - x = (y - to) - (x - from) = 
+        dis[x] = 
+        fa[x] = y;
+        return true;
     }
 }
 ```
