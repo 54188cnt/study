@@ -901,9 +901,10 @@ class SegmentTree {
 - `size(), isEmpty(), containsKey(K, key)`
 - `V merge(K, V, BiFunction<V, V, V>): 合并key对应的值, 返回合并后的值(新值)`
 - `static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, ...): 创建一个只包含指定键值对的Map（最多10个键值对）`
+- `V computeIfAbsent(K key, Function<? super K, ? extends V> func)`：如果指定的键尚未与值关联（或映射到`null`），则尝试使用给定的映射函数计算其值，并将其输入到此映射中，除非`为 null`。
 
 Q: 什么时候可以用Double当key？
-A: 最大最小值插值不超过==6.7 * 10^7==
+A: 最大最小值差值不超过 ==6.7 * 10^7== 
 
 代码模板（以T149. 直线上最多的点数为例）：
 ![](assets/algorithm/T149.直线上最多的点数.png)
