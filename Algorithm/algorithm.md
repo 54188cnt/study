@@ -757,7 +757,7 @@ class FenwickTree {
 ```
 
 题目：
-- [T3777. 使子字符串变交替的最少删除次数](https://leetcode.cn/problems/minimum-deletions-to-make-alternating-substring/)
+- [T3777. 使子字符串变交替的最少删除次数](https://leetcode.cn/problems/minimum-deletions-to-make-alternating-substring/) 
 - 
 
 ### 7.3.2 线段树(无区间更新)
@@ -1064,13 +1064,17 @@ class UnionFind{
         // 计算 x 到 y 的距离 y - x
         // y - to = dis[to]
         // x - from = dis[from]
-        // y - x = (y - to) - (x - from) = 
-        dis[x] = 
+        // y - from = (y - x) + (x - from) = (y - to) + (to - from) 
+        // y - x = (to - from) + (y - to) - (x - from)
+        dis[x] = value + dis[to] - dis[from];
         fa[x] = y;
         return true;
     }
 }
 ```
+
+题目：
+- [T399. 除法求值]() 
 
 # 九、字符串
 定义：字符串是一种数据结构，用于存储字符序列。  
