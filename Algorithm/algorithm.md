@@ -944,11 +944,34 @@ class LcaBinaryLifting {
     }
     
     public int getKthAncestor(int node, int k) {
-        
+        for(;k > 0 && node >= 0; k &= k - 1) {
+            node = pa[Integer.numberOfTrailingZeros(k)][node];
+        }
+        return node;
     }
     // 返回 x 和 y 的最近公共祖先(编号从0开始)
     public int getLCA(int x, int y) {
-        
+        if(depth[x] > depth[y]) {
+            int t = x;
+            x = y;
+            y = t;
+        }
+        y = getKthAncestor(y, depth[y] - depth[x]);
+        if(x == y) {
+            return x;
+        }
+        // 这里的思想很巧妙，优点类似贪心，先往大了跳
+        // 因为后续要跳的步数一定小于当前跳的步数，如果从小往大的话就不好操作了
+        for(int i = pa.length - 1;i >= 0;--i) {
+            int px = pa[i][x], py = pa[i][y];
+            if(px != py) {
+                // 同时往上跳 2^i 步
+                x = px;
+                y = py;
+            }
+        }
+        // 跳到最后一定是当前 x 或者 y 的父亲就是最近的公共祖先
+        return pa[0][x];
     }
     // 返回 x 和 y 的距离(最短长度)
     public long getDis(int x, int y) {
