@@ -886,7 +886,19 @@ class SegmentTree {
 代码模板：
 ```java
 // 这里以带权树为例，无权树直接用depth就可以
-
+class LcaBinaryLifting {
+    private final int[] depth;
+    private final long[] dis;
+    // pa[x][i] 表示 x 的第 2^i 个祖先节点
+    // pa[x][0] 表示 x 的父节点
+    // pa[x][1] = pa[pa[x][0]][0] 表示爷爷节点
+    private final int[][] pa;
+    
+    public LcaBinaryLifting(int[][] edges) { 
+        int n = edges.legnth + 1;
+        int m = 32 - Integer.numberOfLeadingZeros(n);
+    }
+}
 ```
 
 # 八、哈希表与集合
