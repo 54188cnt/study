@@ -884,7 +884,11 @@ class SegmentTree {
 
 ## 7.4 最近公共祖先(LCA)
 代码模板：
+
 ```java
+import java.util.ArrayList;
+import java.util.Arrays;
+
 // 这里以带权树为例，无权树直接用depth就可以 
 // 节点编号从 0 开始
 class LcaBinaryLifting {
@@ -894,13 +898,44 @@ class LcaBinaryLifting {
     // pa[0][x] 表示 x 的父节点
     // pa[1][x] = pa[0][pa[x][0]] 表示爷爷节点
     private final int[][] pa;
-    
-    public LcaBinaryLifting(int[][] edges) { 
+
+    public LcaBinaryLifting(int[][] edges) {
         int n = edges.legnth + 1;
         int m = 32 - Integer.numberOfLeadingZeros(n);
+        List<int[]>[] g = new ArrayList[n];
+        Arrays.setAll(g, i -> new ArrayList<>());
+        for(int[] e: edges) {
+            int x = e[0], y = e[1], w = e[2];
+            g[x].add(new int[]{y, w});
+            g[y].add(new int[]{x, w});
+        }
         
+        depth = new int[n];
+        dis = new long[n];
         // pa[m][n]是为了预处理的时候由于内存访问模式可以连续访问，速度更快
         pa = new int[m][n];
+        
+        // 以 0 为根节点
+        dfs(g, 0, -1);
+        // x 的第 2^{i+1} 个祖先，就是 x 的第 2^i 个祖先的第 2^i 个祖先
+        for(int i = 0;i < m - 1;++i) {
+            for(int x = 0;x < n;++x) {
+                int p = pa[i][x];
+                pa[i + 1][x] = pa[i][p];
+            }
+        }
+    }
+    // 设置父节点和计算 depth和 dis
+    private void dfs(List<int[]>[] g, int x, int fa) {
+        pa[0][x] = fa;
+        for(int[] e: g[x]) {
+            int y = e[0], w = e[1];
+            if(y != fa) {
+                depth[y] = depth[x] + 1;
+                dis[y] = dis[x] + w;
+                dfs(g, y, x);
+            }
+        }
     }
 }
 ```
