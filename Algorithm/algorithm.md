@@ -885,7 +885,8 @@ class SegmentTree {
 ## 7.4 最近公共祖先(LCA)
 代码模板：
 ```java
-// 这里以带权树为例，无权树直接用depth就可以
+// 这里以带权树为例，无权树直接用depth就可以 
+// 节点编号从 0 开始
 class LcaBinaryLifting {
     private final int[] depth;
     private final long[] dis;
@@ -897,6 +898,7 @@ class LcaBinaryLifting {
     public LcaBinaryLifting(int[][] edges) { 
         int n = edges.legnth + 1;
         int m = 32 - Integer.numberOfLeadingZeros(n);
+        
     }
 }
 ```
