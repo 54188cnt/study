@@ -942,6 +942,18 @@ class LcaBinaryLifting {
             }
         }
     }
+    
+    public int getKthAncestor(int node, int k) {
+        
+    }
+    // 返回 x 和 y 的最近公共祖先(编号从0开始)
+    public int getLCA(int x, int y) {
+        
+    }
+    // 返回 x 和 y 的距离(最短长度)
+    public long getDis(int x, int y) {
+        return dis[x] + dis[y] - 2 * dis[getLCA(x, y)];
+    }
 }
 ```
 
