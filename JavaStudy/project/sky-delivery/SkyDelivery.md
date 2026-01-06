@@ -877,6 +877,28 @@ public class HttpClientUtil {
 ```
 
 
+### 分布式锁
+以订单退款为例：
+```java
+String key = RedisConstant.ORDER_CANCEL_LOCK_KEY + id;  
+boolean isLock = Boolean.TRUE.equals(
+		stringRedisTemplate.opsForValue()
+		.setIfAbsent(key, "1", 10, TimeUnit.SECONDS));  
+if(!isLock) {  
+    throw new ValidationException(MessageConstant.ORDER_CANCEL_LOCK);  
+}  
+try {  
+    if(orders.getStatus().equals(StatusConstant.ORDER_STATUS_PENDING_ACCEPT)) {  
+        // TODO: 退款(第三方退款会有幂等性)  
+        log.info("订单退款，id = {}", id);  
+        // 更新支付状态(payStatus)  
+        orders.setPayStatus(StatusConstant.PAY_STATUS_REFUNDED);  
+    }  
+}finally {  
+    stringRedisTemplate.delete(key);  
+}
+```
+
 
 
 
