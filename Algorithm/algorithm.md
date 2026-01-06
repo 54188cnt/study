@@ -890,9 +890,9 @@ class SegmentTree {
 class LcaBinaryLifting {
     private final int[] depth;
     private final long[] dis;
-    // pa[x][i] 表示 x 的第 2^i 个祖先节点
-    // pa[x][0] 表示 x 的父节点
-    // pa[x][1] = pa[pa[x][0]][0] 表示爷爷节点
+    // pa[i][x] 表示 x 的第 2^i 个祖先节点
+    // pa[0][x] 表示 x 的父节点
+    // pa[1][x] = pa[0][pa[x][0]] 表示爷爷节点
     private final int[][] pa;
     
     public LcaBinaryLifting(int[][] edges) { 
