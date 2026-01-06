@@ -398,7 +398,7 @@ class Solution {
 - DFS: 深度优先搜索
 - BFS: 广度优先搜索
 
-## 5.1.1 DFS
+### 5.1.1 DFS
 代码模板(以T200.岛屿数量为例):  
 ```java
 private int m, n;
@@ -432,7 +432,7 @@ private int m, n;
     }
 ```
 
-## 5.1.2 BFS
+### 5.1.2 BFS
 
 
 ## 5.2 拓扑排序
