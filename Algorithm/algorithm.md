@@ -899,6 +899,8 @@ class LcaBinaryLifting {
         int n = edges.legnth + 1;
         int m = 32 - Integer.numberOfLeadingZeros(n);
         
+        // pa[m][n]是为了预处理的时候由于内存访问模式可以连续访问，速度更快
+        pa = new int[m][n];
     }
 }
 ```
