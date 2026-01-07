@@ -1426,13 +1426,42 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 ```
 
 #  十三、差分数组
-
+差分与前缀和的关系，类似 **导数** 与 **积分** 的关系。
+数组 `a` 的差分的前缀和就是数组 `a`（不变）。
 
 ## 13.1 一维差分数组
-
+代码模板(以T1854. 人口最多的年份)：
+```java
+public int maximumPopulation(int[][] logs) {
+    // log[i] = [birth_i, death_i]
+    // 人口定义在 [birth, death - 1] 里面
+    // 返回人口最多且最早的年份
+    // 数组 d 就是差分数组
+    int[] d = new int[101];
+    for(int[] log: logs) {
+        int birth = log[0], death = log[1];
+        d[birth - 1950]++;
+        d[death - 1950]--;
+    }
+    int res = 1949, maxSum = 0, s = 0;
+    for(int i = 0;i < 101;++i) {
+        s += d[i];
+        if(s > maxSum) {
+            maxSum = s;
+            res = i + 1950;
+        }
+    }
+    return res;
+}
+```
 
 ## 13.2 二维差分数组 
+![](assets/algorithm/二位差分数组图解.png)
 
+代码模板：
+```java
+
+```
 
 # 十四、分治
 定义：分治是把一个大问题拆分成各个小问题去解决和再合并。
