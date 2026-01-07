@@ -1237,6 +1237,9 @@ public int kmpSearch(String origin, String target) {
 
 方法：`boolean offer(e), E poll(), E peek()`
 
+双端队列：`Deque`  
+方法：``
+
 ## 10.1 优先队列
 定义：优先队列其实就是堆，一般默认都是小顶堆。  
 
@@ -1266,6 +1269,19 @@ public ListNode mergeKLists(ListNode[] lists) {
     }
         return dummy.next;
     }
+```
+
+## 10.2 单调队列
+### 10.2.1 单调递减队列
+代码模板
+```java
+
+```
+
+### 10.2.2 单调递增队列
+代码模板：
+```java
+
 ```
 
 # 十一、滑动窗口
@@ -1318,6 +1334,29 @@ public List<Integer> findSubstring(String s, String[] words) {
         return res;
     }
 ```
+
+## 11.2 边长滑动窗口
+代码模板(T3. 无重复字符的最长字串)：
+```java
+public int lengthOfLongestSubstring(String S) {
+        boolean[] vis = new boolean[128];
+        char[] s = S.toCharArray();
+        int l = 0;
+        int res = 0;
+        for(int r = 0;r < s.length;++r) {
+            char ch = s[r];
+            while(vis[ch]) {
+                vis[s[l]] = false;
+                l++;
+            }
+            vis[ch] = true;
+            res = Math.max(res, r - l + 1);
+        }
+        return res;
+    }
+```
+
+题目：
 
 # 十二、前缀和
 定义：前缀和可以快速计算区间内的元素和。
