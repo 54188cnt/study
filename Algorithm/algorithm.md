@@ -1238,7 +1238,7 @@ public int kmpSearch(String origin, String target) {
 方法：`boolean offer(e), E poll(), E peek()`
 
 双端队列：`Deque`  
-方法：``
+方法：![](assets/algorithm/双端队列方法.png) 
 
 ## 10.1 优先队列
 定义：优先队列其实就是堆，一般默认都是小顶堆。  
