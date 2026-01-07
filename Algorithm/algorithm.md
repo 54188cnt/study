@@ -115,7 +115,7 @@ public int lengthOfLongestSubstring(String s) {
 
 题目：
 - [T283. 移动零](https://leetcode.cn/problems/move-zeroes/description) 
-- 
+- [T15. 三数之和]
 
 ## 2.3 相向双指针
 定义：两个指针分别指向数组的头和尾，通过移动指针，寻找满足条件结果。
@@ -1275,7 +1275,25 @@ public ListNode mergeKLists(ListNode[] lists) {
 ### 10.2.1 单调递减队列
 代码模板
 ```java
-
+public int[] maxSlidingWindow(int[] nums, int k) {
+    int n = nums.length;
+    int[] res = new int[n - k + 1];
+    Deque<Integer> dq = new ArrayDeque<>();
+    for(int i = 0;i < n;++i) {
+        while(!dq.isEmpty() && dq.peekLast() < nums[i]) {
+            dq.pollLast();
+        }
+        dq.offerLast(nums[i]);
+        int left = i - k + 1;
+        if(left >= 0) {
+            res[left] = dq.peekFirst();
+            if(dq.peekFirst() == nums[left]) {
+                dq.pollFirst();
+            }
+        }
+    }
+    return res;
+}
 ```
 
 ### 10.2.2 单调递增队列
