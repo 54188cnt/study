@@ -872,10 +872,8 @@ public class HttpClientUtil {
                 .setConnectionRequestTimeout(TIMEOUT_MSEC)  
                 .setSocketTimeout(TIMEOUT_MSEC).build();  
     }  
-  
 }
 ```
-
 
 ### 分布式锁
 以订单退款为例：
