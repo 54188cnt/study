@@ -1180,8 +1180,12 @@ class UnionFind{
 常用方法：
 - `int indexOf(String str): 返回str在当前字符串中第一次出现的索引，如果没有则返回-1`
 
+[StringBuilder技巧](../JavaStudy/Java进阶学习/StringBuilder.md) 
+
+题目：
+- [T394. 字符产解码](./problem/T394.字符产解码.md) 
 ## 9.1 字符串匹配(KMP)
-定义：- KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。
+定义：KMP 是一个解决模式串在文本串是否出现过，如果出现过，最早出现的位置的经典算法。
 
 代码模板：
 ```java
