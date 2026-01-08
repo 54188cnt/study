@@ -1,15 +1,15 @@
 # 一、清单
 
-- [JVM 内存结构](JavaStudy/JVM/01-jvm-memory-structure.md)
-- [HotSpot 虚拟机对象探秘](JavaStudy/JVM/02-hotspot-jvm-object.md)
-- [垃圾收集策略与算法](JavaStudy/JVM/03-gc-algorithms.md)
-- [HotSpot 垃圾收集器](JavaStudy/JVM/04-hotspot-gc.md)
-- [内存分配与回收策略](JavaStudy/JVM/05-memory-allocation-gc.md)
-- [JVM 性能调优](JavaStudy/JVM/06-jvm-performance-tuning.md)
-- [类文件结构](JavaStudy/JVM/07-class-structure.md)
-- [类加载的时机](JavaStudy/JVM/08-load-class-time.md)
-- [类加载的过程](JavaStudy/JVM/09-load-class-process.md)
-- [类加载器](JavaStudy/JVM/10-class-loader.md)
+- [JVM 内存结构](./JVM/01-jvm-memory-structure.md)
+- [HotSpot 虚拟机对象探秘](./JVM/02-hotspot-jvm-object.md)
+- [垃圾收集策略与算法](./JVM/03-gc-algorithms.md)
+- [HotSpot 垃圾收集器](./JVM/04-hotspot-gc.md)
+- [内存分配与回收策略](./JVM/05-memory-allocation-gc.md)
+- [JVM 性能调优](./JVM/06-jvm-performance-tuning.md)
+- [类文件结构](./JVM/07-class-structure.md)
+- [类加载的时机](./JVM/08-load-class-time.md)
+- [类加载的过程](./JVM/09-load-class-process.md)
+- [类加载器](./JVM/10-class-loader.md)
 
 # 二、基础篇
 
@@ -43,19 +43,19 @@ JVM功能
 	类的属性，比如源码的文件名内部类的列表等
 
 #### 基础信息
-<font color="#92cddc">Magic魔数</font>：
+<font color="#92cddc">Magic魔数</font>：  
 文件是无法通过文件扩展名来确定文件类型的，文件扩展名可以随意修改，不影响文件的内容。  
 软件使用文件的头几个字节(文件头)去校验文件的类型，如果软件不支持该种类型就会出错。  
 Java字节码文件中，将文件头称为magic魔数。  
 
-<font color="#92cddc">主副版本号</font>：
+<font color="#92cddc">主副版本号</font>：  
 主副版本号指的是编译字节码文件的3DK版本号，主版本号用来标识大版本号，JDK1.0-1.1使用了45.0-45.3，JDK1.2是46之后每升级一个大版本就加1；副版本号是当主版本号相同时作为区分不同版本的标识，一般只需要关心主版本号。  
 版本号的作用主要是判断当前字节码的版本和运行时的3DK是否兼容。  
 
-<font color="#92cddc">访问标识</font>：
+<font color="#92cddc">访问标识</font>：  
 标识是类还是接口、注解、枚举、模块标识public，final，abstract  
 
-<font color="#92cddc">类、父类、接口索引</font>：
+<font color="#92cddc">类、父类、接口索引</font>：  
 通过这些索引可以找到类、父类、接口的信息  
 
 #### 常量池
@@ -63,6 +63,18 @@ Java字节码文件中，将文件头称为magic魔数。
 字节码指令中通过编号引用到常量池的过程称之为符号引用。  
 
 #### 方法
+操作数栈是临时存放数据的地方，局部变量表是存放方法中的局部变量的位置。
+
+
+### 字节码常用工具
+
+- `javap -v`命令
+    javap是JDK自带的反编译工具，可以通过控制台查看字节码文件的内容。<font color="#ff0000">适合在服务器上查看字节码文件内容</font> 。  
+    直接输入 `javap` 查看所有参数。  
+    输入 `javap -v 字节码文件名称` 查看具体的字节码信息。(如果jar包需要先使用 `jar -xvf` 命令解压)  
+- jclasslib 插件 
+- 阿里 arthas
+
 
 
 # 三、实战篇
