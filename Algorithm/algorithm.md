@@ -1470,7 +1470,12 @@ public int maximumPopulation(int[][] logs) {
 代码模板(T2536. 子矩阵元素加1)：
 ![](assets/algorithm/problem/T2536.子矩阵元素加1.png)
 ```java
-
+public int[][] rangeAddQueries(int n, int[][] queries) {
+    int[][] res = new int[n][n];
+    // 
+    int[][] d = new int[n+2][n+2];
+    return res;
+}
 ```
 
 # 十四、分治
