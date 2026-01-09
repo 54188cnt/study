@@ -886,6 +886,9 @@ class SegmentTree {
 }
 ```
 
+### 7.3.3 ST表
+
+
 
 ## 7.4 最近公共祖先(LCA)
 代码模板：
@@ -1435,8 +1438,9 @@ public int getSum(int[][] pre, int r1, int c1, int r2, int c2) {
 ```
 
 #  十三、差分数组
-差分与前缀和的关系，类似 **导数** 与 **积分** 的关系。
-数组 `a` 的差分的前缀和就是数组 `a`（不变）。
+差分与前缀和的关系，类似 **导数** 与 **积分** 的关系。  
+数组 `a` 的差分的前缀和就是数组 `a`（不变）。  
+<font color="#ff0000">注意</font>：差分数组的构造需要先判断题目所给的范围是闭区间还是开区间，这决定了何时减去相应值。
 
 ## 13.1 一维差分数组
 代码模板(以T1854. 人口最多的年份)：
@@ -1472,8 +1476,27 @@ public int maximumPopulation(int[][] logs) {
 ```java
 public int[][] rangeAddQueries(int n, int[][] queries) {
     int[][] res = new int[n][n];
-    // 
+    // 便于计算前缀和，需要左边和上面各家一行/列填充0
     int[][] d = new int[n+2][n+2];
+    for(int[] q: queries) {
+        int r1 = q[0], c1 = q[1], r2 = q[2], c2 = q[3];
+        // 在 d 中填充应当坐标加一
+        // 左上角 (r1+1, c1+1) 
+        // 右下角 (r2+1, c2+1)
+        d[r1 + 1][c1 + 1]++;
+        d[r2 + 2][c1 + 1]--;
+        d[r1 + 1][c2 + 2]--;
+        // d 中 (r2+2,c2+2) 之后的数据多减1了
+        d[r2 + 2][c2 + 2]++;
+    }
+    
+    // 现在就是计算二维前缀和了
+    for(int i = 0;i < n;++i) {
+        for(int j = 0;j < n;++j) {
+            d[i+1][j+1] += d[i+1][j] + d[i][j+1] - d[i][j];
+            res[i][j] = d[i+1][j+1];
+        }
+    }
     return res;
 }
 ```
