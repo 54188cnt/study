@@ -1365,7 +1365,7 @@ public List<Integer> findSubstring(String s, String[] words) {
     }
 ```
 
-## 11.2 边长滑动窗口
+## 11.2 变长滑动窗口
 代码模板(T3. 无重复字符的最长字串)：
 ```java
 public int lengthOfLongestSubstring(String S) {
