@@ -92,7 +92,7 @@ private int search(List<int[]> st, int start) {
 定义：两个指针同时移动，一个指针比另一个指针先移动，寻找满足条件结果。  
 
 代码模板(以T3. 无重复的最长字串)：
-![](assets/algorithm/T3.无重复字符的最长字串.png)
+![](assets/algorithm/problem/T3.无重复字符的最长字串.png)
 ```java
 public int lengthOfLongestSubstring(String s) {
 	char[] chs = s.toCharArray();
@@ -219,7 +219,7 @@ public int coinChange(int[] coins, int amount) {
 
 ### 4.1.2 多维DP
 代码模板(以T.188 买卖股票的最佳时机IV)：
-![](assets/algorithm/T188.买卖股票的最佳时机IV.png)
+![](assets/algorithm/problem/T188.买卖股票的最佳时机IV.png)
 ```java
 public int maxProfit(int k, int[] prices) {
     int n = prices.length;
@@ -285,7 +285,7 @@ public int maxProfit(int k, int[] prices) {
 <font color="red">注：</font>学会理解 <font color="lightblue">"正难则反"</font> 思想
 
 代码模板：
-![](assets/algorithm/T918.环形子数组的最大和.png)
+![](assets/algorithm/problem/T918.环形子数组的最大和.png)
 ```java
 // 直接计算最大值maxS，此时只要数组没跨界就正确
 // 当数组跨界的时候只需要计算minS，这个必然不跨界
@@ -602,6 +602,8 @@ private void morrisPostorderTraversal(TreeNode root) {
 }
 ```
 
+题目(后续遍历思想)：
+- [T1123. 最深叶节点的最近公共祖先](./problem/T1123.最深叶节点的最近公共祖先.md) 
 
 ### 7.1.4 层序遍历
 基本代码块：
@@ -1003,7 +1005,7 @@ Q: 什么时候可以用Double当key？
 A: 最大最小值差值不超过 ==6.7 * 10^7== 
 
 代码模板（以T149. 直线上最多的点数为例）：
-![](assets/algorithm/T149.直线上最多的点数.png)
+![](assets/algorithm/problem/T149.直线上最多的点数.png)
 ```java
 public int maxPoints(int[][] points) {
 	int n = points.length, res = 0;
@@ -1465,7 +1467,8 @@ public int maximumPopulation(int[][] logs) {
 ## 13.2 二维差分数组 
 ![](assets/algorithm/二位差分数组图解.png)
 
-代码模板：
+代码模板(T2536. 子矩阵元素加1)：
+![](assets/algorithm/problem/T2536.子矩阵元素加1.png)
 ```java
 
 ```
