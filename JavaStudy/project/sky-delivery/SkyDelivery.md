@@ -913,7 +913,9 @@ cron表达式：
 - 日和周不能同时出现，星期可以填 <font color="#ff0000">?</font> 
 - cron表达式在线生成器：[https://cron.qqe2.com/](https://cron.qqe2.com/) 
 
-
+注解：
+- 启动类加上 <font color="#ffff00">@EnableScheduling</font> 
+- `task` 类加上 <font color="#ffff00">@Scheduled(cron = "0/5 * * * * ?")</font> 
 
 #### Redisson延迟队列
 
