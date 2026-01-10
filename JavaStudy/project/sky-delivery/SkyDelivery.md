@@ -907,7 +907,8 @@ try {
 | <font color="#92d050">Redisson 延迟队列</font> | 高       </font> | 中               | 中       | 中型项目，不想加 MQ 时的首选 |
 | <font color="#92d050">消息队列 (MQ)</font>     | **极高**          | **极高**  </font> | **高**   | **中大型互联网项目标配**   |
 #### Spring Task
-
+cron表达式：  
+分成6或七个域
 
 
 #### Redisson延迟队列
