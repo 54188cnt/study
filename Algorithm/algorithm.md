@@ -33,7 +33,7 @@ for (int i = 0; i < nums.length; i++) {
 - [T42.接雨水](https://leetcode.cn/problems/trapping-rain-water/description/) 
 
 ### 1.1.2 单调递增栈
-定义：栈中存放的是<font color="red">单调递增的元素</font>，栈顶的元素比栈内元素都小。
+定义：栈中存放的是<font color="red">单调递增的元素</font>，栈顶的元素比栈内元素都大。
 
 代码模板(以T2054. 两个最好的不重叠活动为例)：
 ```java
