@@ -12,7 +12,7 @@
 
 ## 1.1 单调栈
 ### 1.1.1 单调递减栈
-定义：栈中存放的是<font color="red">单调递减的元素</font>，栈顶的元素比栈内元素都大。  
+定义：栈中存放的是<font color="red">单调递减的元素</font>，栈顶的元素比栈内元素都小。  
 
 代码模板(以int为例)：
 ```  java
@@ -74,6 +74,8 @@ private int search(List<int[]> st, int start) {
 
 题目：
 - [T2054. 两个最好的不重叠活动](https://leetcode.cn/problems/two-best-non-overlapping-events/description/) 
+- [T84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 
+
 # 二、双指针
 定义：用两个指针指向数组元素，移动指针，寻找满足条件的元素。
 
