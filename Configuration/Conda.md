@@ -11,11 +11,26 @@ conda deactivate env_name
 ```
 
 ## 安装torch
-[去这里]([Previous PyTorch Versions](https://pytorch.org/get-started/previous-versions/)) 
+[去这里](https://pytorch.org/get-started/previous-versions/) 
 
+### cuda
+```bash
+# 查看cuda版本
+nvidia-smi
+
+nvcc --version
+
+```
+
+### pip
 ```bash
 # pip临时指定镜像源
 pip install [包名] -i [镜像源URL]
+
+# pip换源
+pip config set site.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 镜像源URL：
