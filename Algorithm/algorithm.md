@@ -984,8 +984,28 @@ class LazySegmentTree {
         spread(node, l, r);
         int m = (l + r) / 2;
         if(ql <= m) {
-            
+            update(node * 2, l, m, ql, qr, f);
         }
+        if(qr > m) {
+            update(node * 2 + 1, m + 1, r, ql, qr,f);
+        }
+    }
+    
+    private long query(int node, int l, int r, int ql, int qr) {
+        if(ql <= r && l <= qr) {
+            return tree[node].val;
+        }
+        spread(node, l, r);
+        int m = (r + l) / 2;
+        if(qr <= m) {
+            return query(node * 2, l, m, ql, qr);
+        }
+        if(ql > m) {
+            return query(node * 2 + 1, m + 1, r, ql, qr);
+        }
+        long lRes = query(node * 2, l, m, ql, qr);
+        long rRes = query(node * 2 + 1, m + 1, r, ql, qr);
+        return mergeVal(lRes, rRes);
     }
     
     // 开放 api
@@ -993,7 +1013,7 @@ class LazySegmentTree {
     // 0 <= ql <= qr <= n-1
     // 时间复杂度 O(log n)
     public long query(int ql, int qr) {
-        return 
+        return query(1, 0, n-1, ql, qr);
     }
     
     // 用 f 更新 [ql, qr] 中的每个 a[i]
