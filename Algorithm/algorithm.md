@@ -944,6 +944,35 @@ class LazySegmentTree {
         
     }
     
+    // 
+    private void spread(int node, int l, int r) {
+        
+    }
+    
+    private void maintain(int node) {
+        tree[node].val = mergeVal(tree[node * 2].val, tree[node * 2 + 1].val);
+    }
+    
+    // 使用数组 a 构建线段树  O(n)
+    private void build(long[] a, int node, int l, int r) {
+        tree[node] = new Node();
+        tree[node].todo = TODO_INIT;
+        if(l == r) {
+            // 叶子节点
+            tree[node].val = a[l];
+            return ;
+        }
+        int m = (l + r) / 2;
+        build(a, node * 2, l, m);
+        build(a, node * 2 + 1, m + 1, r);
+        maintain(node);
+    }
+    
+    // 线段树更新区间 [ql, qr] 的值
+    private void update(int node, int l, int r, int ql, int qr, long f) {
+        
+        
+    }
     
     // 开放 api
     // 返回用 mergeVal 合并所有 a[i] 的计算结果，其中 i 在闭区间 [ql, qr] 中
@@ -956,8 +985,8 @@ class LazySegmentTree {
     // 用 f 更新 [ql, qr] 中的每个 a[i]
     // 0 <= ql <= qr <= n-1
     // 时间复杂度 O(log n)
-    public void update(int ql, int qr, long val) {
-        
+    public void update(int ql, int qr, long f) {
+        update(1, 0, n-1, ql, qr, f);
     }
 } 
 ```
