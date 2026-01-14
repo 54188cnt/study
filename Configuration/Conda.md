@@ -8,6 +8,9 @@ conda activate env_name
 
 # 退出环境
 conda deactivate env_name
+
+# 查看虚拟环境列表
+conda env list
 ```
 
 ## 安装torch
