@@ -888,7 +888,7 @@ class SegmentTree {
 }
 ```
 
-### 7.3.3 Lazy线段树
+### 7.3.3 Lazy线段树(有区间更新)
 
 
 
