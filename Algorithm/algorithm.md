@@ -895,7 +895,9 @@ class SegmentTree {
 
 代码模板：
 ```java
-class
+class LazySegmentTree {
+
+}
 ```
 
 
