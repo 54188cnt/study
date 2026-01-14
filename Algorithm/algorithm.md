@@ -944,9 +944,13 @@ class LazySegmentTree {
         
     }
     
-    // 
+    // 把当前节点的懒标记下传给左右儿子
     private void spread(int node, int l, int r) {
-        
+        long todo = tree[node].todo;
+        if(todo == TODO_INIT) {
+            return ;
+        }
+        int m = (l + r) / m;
     }
     
     private void maintain(int node) {
@@ -970,8 +974,10 @@ class LazySegmentTree {
     
     // 线段树更新区间 [ql, qr] 的值
     private void update(int node, int l, int r, int ql, int qr, long f) {
-        
-        
+        if(ql <= l && r <= qr) {
+            aooly(node, l, r, f);
+        }
+        spread(node, l, r);
     }
     
     // 开放 api
