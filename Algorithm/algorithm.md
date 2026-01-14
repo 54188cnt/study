@@ -896,8 +896,27 @@ class SegmentTree {
 代码模板：
 ```java
 class LazySegmentTree {
-
-}
+	// TODO 根据题目修改
+	private static final long TODO_INIT = 0;
+	
+	private static final class Node {
+		// 根据题目修改
+		long val;
+		long todo;
+	}
+	
+	// 合并两个val
+	private long mergeVal(long a, long b) {
+		// TODO 根据题目修改
+		return a + b;
+	}
+	
+	// 合并两个懒标记
+	private long mergeTodo(long a, long b) {
+		// TODO 根据题目修改
+		return a + b;
+	}
+} 
 ```
 
 
