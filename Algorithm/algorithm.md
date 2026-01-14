@@ -938,7 +938,10 @@ class LazySegmentTree {
     
     // 把懒标记作用到 node 子树 (模板操作是区间加)
     private void apply(int node, int l, int r, long todo) { 
-        Node cur = tree[node]
+        Node cur = tree[node];
+        // 根据题目修改
+        cur.val += todo * (r - l + 1);
+        
     }
     
     
