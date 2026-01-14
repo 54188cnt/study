@@ -941,7 +941,7 @@ class LazySegmentTree {
         Node cur = tree[node];
         // 根据题目修改
         cur.val += todo * (r - l + 1);
-        
+        cur.todo = mergeTodo(cur.todo, todo);
     }
     
     // 把当前节点的懒标记下传给左右儿子
@@ -950,7 +950,10 @@ class LazySegmentTree {
         if(todo == TODO_INIT) {
             return ;
         }
-        int m = (l + r) / m;
+        int m = (l + r) / 2;
+        apply(node * 2, l, m, todo);
+        apply(node * 2 + 1, m + 1, r, todo);
+        tree[node].todo = TODO_INIT;
     }
     
     private void maintain(int node) {
@@ -975,9 +978,14 @@ class LazySegmentTree {
     // 线段树更新区间 [ql, qr] 的值
     private void update(int node, int l, int r, int ql, int qr, long f) {
         if(ql <= l && r <= qr) {
-            aooly(node, l, r, f);
+            apply(node, l, r, f);
+            return ;
         }
         spread(node, l, r);
+        int m = (l + r) / 2;
+        if(ql <= m) {
+            
+        }
     }
     
     // 开放 api
