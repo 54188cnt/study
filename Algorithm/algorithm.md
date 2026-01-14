@@ -898,12 +898,31 @@ class SegmentTree {
 class LazySegmentTree {
 	// TODO 根据题目修改
 	private static final long TODO_INIT = 0;
+    
+    private final int n;
+    private final Node[] tree;
 	
 	private static final class Node {
 		// 根据题目修改
 		long val;
 		long todo;
-	}
+	}   
+    
+    // 维护一个数组长度为 n 且初始值为 initVal 的数组
+    public LazySegmentTree(int n, long initVal) {
+        this.n = n;
+        long[] a = new long[n];
+        Arrays.fill(a, initVal);
+        tree = new Node[2 << (32 - Integer.numberOfLeadingZeros(n - 1))];
+        build(a, 1, 0, n-1);
+    }
+    
+    // 线段树维护数组 a
+    public LazySegmentTree(long[] a) {
+        n = a.length;
+        tree = new Node[2 << (32 - Integer.numberOfLeadingZeros(n - 1))];
+        build(a, 1, 0, n-1);
+    }
 	
 	// 合并两个val
 	private long mergeVal(long a, long b) {
@@ -919,10 +938,24 @@ class LazySegmentTree {
     
     // 把懒标记作用到 node 子树 (模板操作是区间加)
     private void apply(int node, int l, int r, long todo) { 
-        
+        Node cur = tree[node]
     }
     
     
+    // 开放 api
+    // 返回用 mergeVal 合并所有 a[i] 的计算结果，其中 i 在闭区间 [ql, qr] 中
+    // 0 <= ql <= qr <= n-1
+    // 时间复杂度 O(log n)
+    public long query(int ql, int qr) {
+        return 
+    }
+    
+    // 用 f 更新 [ql, qr] 中的每个 a[i]
+    // 0 <= ql <= qr <= n-1
+    // 时间复杂度 O(log n)
+    public void update(int ql, int qr, long val) {
+        
+    }
 } 
 ```
 
