@@ -550,7 +550,7 @@ private int binarySearch(int[] nums, int target) {
 ### 7.1.1 先序遍历
 递归模板：
 ```java
-private void recursivePreorderTraversal(TreeNode root) { 
+public void recursivePreorderTraversal(TreeNode root) { 
     
 }
 ```
@@ -558,7 +558,7 @@ private void recursivePreorderTraversal(TreeNode root) {
 
 迭代模板：
 ```java
-private void iterativePreorderTraversal(TreeNode root) { 
+public void iterativePreorderTraversal(TreeNode root) { 
     
 }
 ```
@@ -566,7 +566,7 @@ private void iterativePreorderTraversal(TreeNode root) {
 
 morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
 ```java
-private void morrisPreorderTraversal(TreeNode root) { 
+public void morrisPreorderTraversal(TreeNode root) { 
     
 }
 ```
@@ -575,24 +575,71 @@ private void morrisPreorderTraversal(TreeNode root) {
 ### 7.1.2 中序遍历
 递归模板：
 ```java
-private void recursiveInorderTraversal(TreeNode root) { 
-    
+public void recursiveInorderTraversal(TreeNode root) { 
+    List<Integer> res = new ArrayList<>();
+    inorder(root, res);
+    return res;
+}
+
+private void inorder(TreeNode node, List<Integer> res) {
+	if(node == null) return ;
+	inorder(node.left);
+	res.add(node.val);
+	inorder(node.right);
 }
 ```
 
 
 迭代模板：
 ```java
-private void iterativeInorderTraversal(TreeNode root) { 
+public void iterativeInorderTraversal(TreeNode root) { 
+    List<Integer> res = new ArrayList<>();
     
+    Deque<TreeNode> st = new ArrayDeque<>();
+    while(root != null || !st.isEmpty()) {
+		while(root != null) {
+			st.push(root);
+			root = root.left;
+		}
+		root = st.pop();
+		res.add(root.val);
+		root = root.right;
+	}
+    
+    return res;
 }
 ```
 
 
 morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
 ```java
-private void morrisInorderTraversal(TreeNode root) { 
+public void morrisInorderTraversal(TreeNode root) { 
+    List<Integer> res = new ArrayList<>();
     
+    TreeNode predecessor = null;
+    while(root != null) {
+	    if(root.left != null) {
+		    predecessor = root.left;
+		    // 寻找 root 左子树的最右边节点
+		    while(predecessor.right != null && predecessor.right != root) {
+			    predecessor = predecessor.right;
+		    }
+		    if(predecessor.right == null) {
+			    // 第一次遍历到这个点 建立连接(下一个点为root)
+			    predecessor.right = root;
+			    // 重复处理root.left的左子树
+			    root = root.left;
+		    }else {
+			    // 第二次遍历这个点需要恢复连接
+			    predecessor.right = null;
+		    }
+	    }else {
+		    res.add(root.val);
+		    root = root.right;
+	    }
+    }
+    
+    return res;
 }
 ```
 
@@ -600,7 +647,7 @@ private void morrisInorderTraversal(TreeNode root) {
 ### 7.1.3 后序遍历
 递归模板：
 ```java
-private void recursivePostorderTraversal(TreeNode root) { 
+public void recursivePostorderTraversal(TreeNode root) { 
     
 }
 ```
@@ -608,7 +655,7 @@ private void recursivePostorderTraversal(TreeNode root) {
 
 迭代模板：
 ```java
-private void iterativePostorderTraversal(TreeNode root) { 
+public void iterativePostorderTraversal(TreeNode root) { 
     
 }
 ```
@@ -616,7 +663,7 @@ private void iterativePostorderTraversal(TreeNode root) {
 
 morris遍历模板(将空间复杂度降为O(1)的迭代遍历)：
 ```java
-private void morrisPostorderTraversal(TreeNode root) { 
+public void morrisPostorderTraversal(TreeNode root) { 
     
 }
 ```
