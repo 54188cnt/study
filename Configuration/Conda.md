@@ -43,3 +43,5 @@ pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 - 清华源： https://pypi.tuna.tsinghua.edu.cn/simple 
 - 阿里源： https://mirrors.aliyun.com/pypi/simple/
 
+### cudnn
+[去这里](https://developer.nvidia.com/rdp/cudnn-archive) 

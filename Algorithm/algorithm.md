@@ -632,6 +632,8 @@ public void morrisInorderTraversal(TreeNode root) {
 		    }else {
 			    // 第二次遍历这个点需要恢复连接
 			    predecessor.right = null;
+			    res.add(root.val);
+			    root = root.right;
 		    }
 	    }else {
 		    res.add(root.val);
