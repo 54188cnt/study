@@ -1251,10 +1251,17 @@ JDK8新增时间对象是不可变的，线程安全。
 ## 11.9 包装类
 JDK5以后增加了自动拆箱和自动装箱
 > Integer: 
-> - static parseInt(String s): 字符串转int
-> - static String toXxxString(int i): int转字符串(二进制、八进制、十六进制)  
+> - `static parseInt(String s)`: 字符串转int
+> - `static String toXxxString(int i)`: int转字符串(二进制、八进制、十六进制)  
+> - `static Integer valueOf(int/String v)`: 转换为包装类对象
 
-注：除了Character都有parseXxx()的方法
+注：除了Character都有 `parseXxx()` 的方法
+
+包装类的缓存机制：
+- `Byte`,`Short`,`Integer`,`Long` 这 4 种包装类默认创建了数值 $[-128，127]$ 的相应类型的缓存数据
+- `Character` 创建了数值在 $[0,127]$ 范围的缓存数据
+- `Boolean` 直接返回 `TRUE` or `FALSE` 
+- <font color="#ff0000">只有 valueOf 和 自动装箱才会走缓存</font>，新建对象不会走缓存 
 
 # 十二 集合进阶
 二分查找改进：  
