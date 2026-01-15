@@ -83,9 +83,26 @@ private int search(List<int[]> st, int start) {
 快慢指针：快指针每次移动两步，慢指针每次移动一步，当快慢指针相遇时，慢指针所在位置就是结果。  
 场景：常用于寻找链表环的入口或者判断链表有没有环。
 
-代码模板：
+代码模板(以T142. 环形链表II为例)：
 ```java
-
+public ListNode detectCycle(ListNode head) {
+	ListNode slow = head, fast = head;
+	while(fast != null && fast.next != null) {
+		slow = slow.next;
+		fast = fast.next.next;
+		if(slow == fast) {
+			// 此时表示有环，节点为u
+			// 数推导知道 head -> u 等于 slow -> u
+			fast = head;
+			while(slow != fast) {
+				fast = fast.next;
+				slow = slow.next;
+			}
+			return slow;
+		}
+	}
+	return null;
+}
 ```
 
 题目：
@@ -216,7 +233,7 @@ public int coinChange(int[] coins, int amount) {
 ```
 
 题目:
-- [T322.零钱兑换](https://leetcode.cn/problems/coin-change/description/)
+- [T322.零钱兑换](https://leetcode.cn/problems/coin-change/description/) 
 - [T960.删序造列III](problem/T960.删列造序III.md) 
 
 ### 4.1.2 多维DP
