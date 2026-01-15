@@ -31,6 +31,7 @@ for (int i = 0; i < nums.length; i++) {
 
 题目：
 - [T42.接雨水](https://leetcode.cn/problems/trapping-rain-water/description/) 
+- [T739. 每日温度](https://leetcode.cn/problems/daily-temperatures/description) 
 
 ### 1.1.2 单调递增栈
 定义：栈中存放的是<font color="red">单调递增的元素</font>，栈顶的元素比栈内元素都大。
