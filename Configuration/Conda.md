@@ -11,6 +11,9 @@ conda deactivate env_name
 
 # 查看虚拟环境列表
 conda env list
+
+# 删除环境
+conda remove -n env_name --all
 ```
 
 ## 安装torch
