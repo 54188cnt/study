@@ -335,7 +335,7 @@ public int maxSubarraySumCircular(int[] nums) {
 }
 ```
 
-### 4.1.4 树形DP(书上背包)
+### 4.1.4 树形DP(树上背包)
 题目：
 - [P1352没有上司的舞会](problem/P1352没有上司的舞会.md): 出自洛谷
 - [T3562.折扣价交易股票的最大利润](problem/T3562.折扣价交易股票的最大利润.md) 
