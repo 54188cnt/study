@@ -136,6 +136,7 @@ public int lengthOfLongestSubstring(String s) {
 题目：
 - [T283. 移动零](https://leetcode.cn/problems/move-zeroes/description) 
 - [T15. 三数之和](https://leetcode.cn/problems/3sum/description/) 
+- [T19. 删除链表的倒数第N个节点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/description) 
 
 ## 2.3 相向双指针
 定义：两个指针分别指向数组的头和尾，通过移动指针，寻找满足条件结果。
