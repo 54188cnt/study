@@ -339,6 +339,7 @@ public int maxSubarraySumCircular(int[] nums) {
 题目：
 - [P1352没有上司的舞会](problem/P1352没有上司的舞会.md): 出自洛谷
 - [T3562.折扣价交易股票的最大利润](problem/T3562.折扣价交易股票的最大利润.md) 
+- [T543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree) 
 
 ### 4.1.5 数位DP
 代码模板：
