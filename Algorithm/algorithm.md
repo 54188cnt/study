@@ -237,6 +237,7 @@ public int coinChange(int[] coins, int amount) {
 题目:
 - [T322.零钱兑换](https://leetcode.cn/problems/coin-change/description/) 
 - [T960.删序造列III](problem/T960.删列造序III.md) 
+- [T416. 分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum) 
 
 ### 4.1.2 多维DP
 代码模板(以T.188 买卖股票的最佳时机IV)：
