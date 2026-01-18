@@ -76,6 +76,7 @@ private int search(List<int[]> st, int start) {
 题目：
 - [T2054. 两个最好的不重叠活动](https://leetcode.cn/problems/two-best-non-overlapping-events/description/) 
 - [T84. 柱状图中最大的矩形](https://leetcode.cn/problems/largest-rectangle-in-histogram/) 
+- [T3814. 预算下的最大总容量](https://leetcode.cn/problems/maximum-capacity-within-budget) 
 
 # 二、双指针
 定义：用两个指针指向数组元素，移动指针，寻找满足条件的元素。
