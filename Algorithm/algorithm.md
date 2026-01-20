@@ -1816,6 +1816,7 @@ private void swap(int[] nums, int i, int j) {
 - `num & (-num)`: 提取num二进制中最右边的1
 - `num & (num - 1)`: 删除num二进制中最右边的1
 - `n & ~(1 << k)`: 将n第k位清0
+- `n | (n + 1)`：将n的二进制中最右边的0置1
 - 给定 target 和 x，把 x 比特位中 target 为 1 的比特位变为1的最小操作数
     ```java
     // 找到 target 比特位为1且 x 中比特位为0的最高位
