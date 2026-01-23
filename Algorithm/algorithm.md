@@ -1496,6 +1496,9 @@ public ListNode mergeKLists(ListNode[] lists) {
     }
 ```
 
+题目：
+- [T3510. 移除最小数对使数组有序II](./problem/T3510.移除最小数对使数组有序II.md) 
+
 ## 10.2 单调队列
 ### 10.2.1 单调递减队列
 代码模板
