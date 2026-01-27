@@ -510,6 +510,15 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
 题目：
 - [T210.课程表II](https://leetcode.cn/problems/course-schedule-ii) 
 
+## 5.3 最短路径
+### 5.3.1 Dijkstra算法
+单点最短距离
+
+代码模板(T3650. 边反转的最小路径成本)：
+```java
+
+```
+
 # 六、二分查找
 定义：二分查找，通过不断缩小范围，找到目标元素。
 
