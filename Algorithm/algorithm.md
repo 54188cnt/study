@@ -516,7 +516,48 @@ public boolean canFinish(int numCourses, int[][] prerequisites) {
 
 代码模板(T3650. 边反转的最小路径成本)：
 ```java
+public int minCost(int n, int[][] edges) {
+    List<int[]>[] g = new ArrayList[n];
+    Arrays.setAll(g, i -> new ArrayList<>());
+    for(int[] e: edges) {
+        int u = e[0], v = e[1], w = e[2];
+        g[u].add(new int[]{v ,w});
+        g[v].add(new int[]{u, w * 2});
+    }
 
+    int[] dis = new int[n];
+    Arrays.fill(dis, Integer.MAX_VALUE);
+    // 存储 [source, weights]
+    PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+    // 起点距离为 0
+    dis[0] = 0;
+    q.offer(new int[]{0,0});
+
+    while(!q.isEmpty()) {
+        int[] p = q.poll();
+        int disX = p[1], x = p[0];
+        if(disX > dis[x]) {
+            // 表示 x 出过堆
+            continue;
+        }
+        if(x == n - 1) {
+            // 这点是这道题需要
+            return disX;
+        }
+        for(int[] e: g[x]) {
+            int y = e[0];
+            int wy = e[1];
+            int newDisY = disX + wy;
+            if(newDisY < dis[y]) {
+                // 更新最短路径，但是不对堆内数据修改，直接新加入
+                // 其实就有懒删除堆的思想
+                dis[y] = newDisY;
+                q.offer(new int[]{y, newDisY});
+            }
+        }
+    }
+    return -1;
+}
 ```
 
 # 六、二分查找
