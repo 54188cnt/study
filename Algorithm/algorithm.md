@@ -564,7 +564,44 @@ public int minCost(int n, int[][] edges) {
 该算法寻找的是任意两个点之间的距离
 代码模板(以T2976. 转换字符串的最小成本I)：
 ```java
-
+public long minimumCost(String source, String target, char[] original, char[] changed, int[] cost) {
+    final int INF = Integer.MAX_VALUE / 2;
+    int[][] dis = new int[26][26];
+    for(int i = 0;i < 26;++i) {
+        // 对角线均为0
+        Arrays.fill(dis[i], INF);
+        dis[i][i] = 0;
+    }
+    // 构造图矩阵
+    for(int i = 0;i < cost.length;++i) {
+        int x = original[i] - 'a';
+        int y = changed[i] - 'a';
+        dis[x][y] = Math.min(dis[x][y], cost[i]);
+    }
+    // Floyd算法
+    for(int k = 0;k < 26;++k) {
+        for(int i = 0;i < 26;++i) {
+          // 优化，若是为INF则整个数组不会发生变化
+            if(dis[i][k] == INF) {
+                continue;
+            }
+      
+            for(int j = 0;j < 26;++j) {
+                dis[i][j] = Math.min(dis[i][j], dis[i][k] + dis[k][j]);
+            }
+        }
+    }
+  
+    long res = 0;
+    for(int i = 0;i < source.length();++i) {
+        int d = dis[source.charAt(i) - 'a'][target.charAt(i) - 'a'];
+        if(d == INF) {
+          return -1;
+        }
+        res += d;
+    }
+    return res;
+}
 ```
 
 # 六、二分查找
