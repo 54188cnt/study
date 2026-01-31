@@ -801,6 +801,9 @@ public List<List<Integer>> levelOrder(TreeNode root) {
 ```
 
 ## 7.2 前缀树/字典树
+可以使用一个字段sid来将所有字符串进行编号，初始化为-1表示不是结尾。  
+sid的使用可以参考[T2977. 转换字符串的最小成本 II](./problem/T2977.转换字符串的最小成本II.md) 
+
 基本模板：
 ```java
 public class Trie {
@@ -871,6 +874,9 @@ class Trie {
     }
 }
 ```
+
+题目：
+- [T2977. 转换字符串的最小成本 II](./problem/T2977.转换字符串的最小成本II.md) 
 
 ## 7.3 线段树/树状数组
 [灵神算法之数据结构](https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/)
