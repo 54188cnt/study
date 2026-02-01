@@ -1088,6 +1088,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 >   - 参数：BigDecimal val
 >   - divide(BigDecimal val, int scale, RoundingMode mode)这是除法的另一个方法，
 >     scale表示保留的小数位数，mode表示舍入模式
+> - 比较大小要使用 <font color="#ff0000">compareTo</font>，不建议使用 equals  
 
 ## 11.6 正则表达式
 > <font color="red">单个</font>字符类：
