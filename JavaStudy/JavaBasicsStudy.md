@@ -488,7 +488,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > |------|----------|----------|
 > | 类中位置不同| 类中，方法外 | 方法内，代码块内 |
 > | 生命周期 | 对象创建时分配内存，销毁时释放内存 | 方法调用时分配内存，方法结束后释放内存 |
-> | 初始化值不同 | 有默认初始值 | 无默认初始值，必须手动初始化 |
+> | 初始化值不同 | 有默认初始值(final修饰需要显示赋值) | 无默认初始值，必须手动初始化 |
 > | 内存位置不同 | 堆内存 | 栈内存 |
 > | 作用域 | 整个类 | 方法或代码块内 |
 
@@ -1832,9 +1832,10 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 
 > FileReader:  
 > 1. 创建字符输入流：
->   - ```
+>   -
+>     ```java
 >     FileReader fr = new FileReader(File file);
->     FileReader fr = new FileReader(String path); 
+>     FileReader fr = new FileReader(String path);
 >     ```
 > 2. 读取数据：
 >   - int read(): 读取一个字符，返回字符值，如果已读到末尾则返回-1
@@ -1847,7 +1848,8 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 
 > FileWriter:  
 > 1. 创建字符输出流：
->   - ``` java
+>   -   
+>     ```java
 >     FileWriter fw = new FileWriter(File file);
 >     FileWriter fw = new FileWriter(String path);
 >     ```
@@ -1871,17 +1873,17 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 缓冲流就是<font color="red">基本流包装成高级流</font>，缓冲流提高效率   
 > 字节缓冲流:   
 > 1. 创建缓冲流：
->   - ``` java
->     BufferedInputStream bis = new BufferedInputStream(InputStream is);
->     ```
->   - ``` java
->     BufferedOutputStream bos = new BufferedOutputStream(OutputStream os);
->     ```
-> 2. 缓冲区为长度为8192的字节数组
-> 
+>   - 
+>     `BufferedInputStream bis = new BufferedInputStream(InputStream is);`
+>   - 
+>     `BufferedOutputStream bos = new BufferedOutputStream(OutputStream os);`
+>  
+> 2. 缓冲区为长度为8192的字节数组  
+>    
 > 字符缓冲流：  
 > 1. 创建缓冲流：
->   - ``` java
+>   - 
+>     ```java
 >     BufferedReader br = new BufferedReader(Reader r); // 字符输入流
 >     BufferedWriter bw = new BufferedWriter(Writer w); // 字符输出流
 >     ```
@@ -1927,23 +1929,22 @@ JDK11之后FileReader和FileWriter已经包含了编码转换功能，不再需�
 
 > PrintStream:
 > - 构造方法： 
->   - PrintStream(OutputStream/File/String): 关联字节输出流/文件/文件路径
->   - PrintStream(String fileName, Charset charset): 指定字符编码
->   - PrintStream(OutputStream out, boolean autoFlush): 设置自动刷新
->   - PrintStream(OutputStream out, boolean autoFlush, String encoding): 指定字符编码并自动更新
+>   - `PrintStream(OutputStream/File/String)`: 关联字节输出流/文件/文件路径
+>   - `PrintStream(String fileName, Charset charset)`: 指定字符编码
+>   - `PrintStream(OutputStream out, boolean autoFlush)`: 设置自动刷新
+>   - `PrintStream(OutputStream out, boolean autoFlush, String encoding)`: 指定字符编码并自动更新
 >   - <font color="red">注意</font>：字节流底层没有缓冲区，开不开自动刷新都一样
 > - 常规方法： write(int b)
 > - 特有方法：
->   - print(Xxx x): 打印任意数据不会换行
->   - println(Xxx x): 打印任意数据并换行
->   - printf(String format, Object... args): 格式化打印(带有占位符的打印语句，不换行)，保证数据原样输出
->   - 占位符：%n(换行), %c, %d, %f, %s, %b(boolean), %x(十六进制数), %o(八进制), %a(十六进制), %e(科学计数法), 
->     %%(百分比), %t(时间)
+>   -` print(Xxx x)`: 打印任意数据不会换行
+>   - `println(Xxx x)`: 打印任意数据并换行
+>   - `printf(String format, Object... args)`: 格式化打印(带有占位符的打印语句，不换行)，保证数据原样输出
+>   - 占位符：`%n`(换行), `%c`, %d, `%f`, `%s`,` %b(boolean)`, `%x`(十六进制数), `%o`(八进制), `%a`(十六进制), `%e`(科学计数法), `%%`(百分比), `%t`(时间)
 
 > PrintWriter:  
 > - 构造方法：
->   - PrintWriter(Write/OutputStream/File/String): 创建打印流对象
->   - 其他三个构造方法同PrintStream
+>   - `PrintWriter(Write/OutputStream/File/String)`: 创建打印流对象
+>   - 其他三个构造方法同 PrintStream
 >   - 需要后动开启自动刷新(只有关联Write和OutputStream的构造方法含有自动刷新参数)
 > - 方法同 `PrintStream`
 
@@ -2278,7 +2279,7 @@ B/S架构：浏览器/服务器
 > **TCP通信程序：**  
 > 客户端：  
 > 1. 创建发送端的Socket对象  
->   ```Socket(String host, int port)```
+>   `Socket(String host, int port)`
 > 2. 获取输出流，发送数据  
 >   ```OutputStream getOutputStream()```
 > 3. 结束标记(某些情况才需要)  
