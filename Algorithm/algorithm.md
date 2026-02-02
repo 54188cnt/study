@@ -1621,6 +1621,28 @@ class LazyHeap extends PriorityQueue<Integer> {
         removeCnt.merge(x, 1, Integer::sum);
         size--;
     }
+    // 正式执行删除操作
+    private void applyRemove() {
+        // peek() 是继承的 PriorityQueue 的
+        while(removeCnt.getOrDefault(peek(), 0) > 0) {
+            // poll() 是继承的 PriorityQueue的方法
+            removeCnt.merge(poll(), -1, Integer::sum);
+        }
+    }
+    // 查看堆顶
+    public int top() {
+        applyRemove();
+        return peek();
+    }
+    
+    // 出堆
+    public int pop() {
+        applyRemove();
+        size--;
+        return poll();
+    }
+    
+    // 入堆
     
 }
 ```
