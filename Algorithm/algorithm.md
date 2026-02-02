@@ -1573,6 +1573,7 @@ public int kmpSearch(String origin, String target) {
 
 方法：`boolean offer(e), E poll(), E peek()`
 
+### 10.1.1 普通堆
 代码模板(以T23.合并k个升序链表为例):
 ```java
 public ListNode mergeKLists(ListNode[] lists) {
@@ -1598,7 +1599,19 @@ public ListNode mergeKLists(ListNode[] lists) {
 ```
 
 题目：
+
+### 10.1.2 懒删除堆
+删除的时候，我们只记录「要删除一个值为 x 的数」，并不去「执行」删除操作。等到要出堆（或者查看堆顶）时才真正地执行删除操作。  
+
+代码模板：
+```java
+
+```
+
+
+题目：
 - [T3510. 移除最小数对使数组有序II](./problem/T3510.移除最小数对使数组有序II.md) 
+
 
 ## 10.2 单调队列
 ### 10.2.1 单调递减队列
