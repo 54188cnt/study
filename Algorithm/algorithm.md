@@ -1604,8 +1604,25 @@ public ListNode mergeKLists(ListNode[] lists) {
 删除的时候，我们只记录「要删除一个值为 x 的数」，并不去「执行」删除操作。等到要出堆（或者查看堆顶）时才真正地执行删除操作。  
 
 代码模板：
-```java
 
+```java
+class LazyHeap extends PriorityQueue<Integer> {
+    private final Map<Integer, Integer> removeCnt = new HashMap<>();
+    private int size = 0;
+    
+    public LazyHeap(Comparator<Integer> comparator) {
+        super(comparator);
+    }
+    public int size() {
+        return size;
+    }
+    // 删除
+    public void remove(int x) {
+        removeCnt.merge(x, 1, Integer::sum);
+        size--;
+    }
+    
+}
 ```
 
 
