@@ -1643,7 +1643,17 @@ class LazyHeap extends PriorityQueue<Integer> {
     }
     
     // 入堆
+    public int push(int x) {
+        offer(x);
+        size++;
+    }
     
+    // push(x) and pop()
+    public int pushPop(int x) {
+        if(size > 0 && comparator().compare(x, top()) > 0) {
+            
+        }
+    }
 }
 ```
 
