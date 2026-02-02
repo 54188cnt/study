@@ -1651,8 +1651,11 @@ class LazyHeap extends PriorityQueue<Integer> {
     // push(x) and pop()
     public int pushPop(int x) {
         if(size > 0 && comparator().compare(x, top()) > 0) {
-            
+            // 直接替换堆顶
+            offer(x);
+            return poll();
         }
+        return x;
     }
 }
 ```
