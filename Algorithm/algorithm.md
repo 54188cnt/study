@@ -2060,4 +2060,6 @@ private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 ```
 
 # 十五、其他
-##
+## 取模
+模运算特点：
+- $x $
