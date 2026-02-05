@@ -2062,4 +2062,4 @@ private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 # 十五、其他
 ## 取模
 模运算特点：
-- $x $
+- $x \equiv y(\mod m)$：$(x \mod m + m) \mod m = y$ （可以避免 x  < 0）
