@@ -1643,7 +1643,7 @@ class LazyHeap extends PriorityQueue<Integer> {
     }
     
     // 入堆
-    public int push(int x) {
+    public void push(int x) {
         offer(x);
         size++;
     }
