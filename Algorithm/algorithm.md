@@ -1649,6 +1649,8 @@ class LazyHeap extends PriorityQueue<Integer> {
     }
     
     // push(x) and pop()
+    // 小顶堆的 pushPop 保持堆中始终是较大的 k 个元素
+	// 大顶堆的 pushPop 保持堆中始终是较小的 k 个元素
     public int pushPop(int x) {
         if(size > 0 && comparator().compare(x, top()) > 0) {
             // 直接替换堆顶
