@@ -820,15 +820,15 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 ## 9.7 接口
 > 接口是Java中一种特殊的抽象类，用于定义一组方法的规范，接口中的方法没有具体实现。  
 > 接口是一种规则，对行为进行抽象。  
-> 接口的定义格式：```public interface 接口名 {}```  
+> 接口的定义格式：`public interface 接口名 {}`  
 > 接口不可以实例化。  
-> 接口和类之间是实现关系，通过implements关键字表示。```public class 类名 implements 接口名 {}```  
+> 接口和类之间是实现关系，通过implements关键字表示。`public class 类名 implements 接口名 {}`  
 > 接口的子类(实现类):要么重写接口中所有方法，要么是抽象类。  
 > 注意：  
 > - 接口和类的实现关系可以是单实现，也可以多实现。  
-> ```public class 类名 implements 接口1, 接口2 {}```
+> `public class 类名 implements 接口1, 接口2 {}`
 > - 实现类还可以继承一个类的同时实现多个接口。  
-> ```public class 类名 extends 父类 implements 接口1, 接口2 {}```
+> `public class 类名 extends 父类 implements 接口1, 接口2 {}`
 
 > 接口中成员的特点：  
 > - 成员变量：接口中的成员变量默认是public static final的，即常量。
@@ -853,8 +853,8 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 >   - public可以省略，static不可以省略。
 >   - 静态方法不能被重写，因为静态方法属于接口本身，而不是实现类。
 > - 私有方法：接口中可以定义私有方法，使用private关键字修饰。  
->   格式1(给默认方法服务)：```private 返回值类型 方法名(参数列表) {}```  
->   格式2(给静态方法服务)：```private static 返回值类型 方法名(参数列表) {}```  
+>   格式1(给默认方法服务)：`private 返回值类型 方法名(参数列表) {}`  
+>   格式2(给静态方法服务)：`private static 返回值类型 方法名(参数列表) {}`  
 > - 接口多态：接口的多态是指通过接口引用指向<font color="red">实现类对象</font>，调用实现类的方法。
 
 > 接口适配器：  
