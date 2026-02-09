@@ -414,6 +414,16 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > 重载方法的返回值类型可以相同也可以不同，但不能仅通过返回值类型来区分。</br>
 > 重载方法的调用是根据参数列表来决定的。</br>
 
+### 重载和重写的区别
+
+| 区别点 | 重载 (Overloading) | 重写 (Overriding) |
+| --- | --- | --- |
+| 发生范围  | 同一个类中。| 父类与子类之间（存在继承关系）。 |
+| 方法签名  | 方法名必须相同，但参数列表必须不同（参数的类型、个数或顺序至少有一项不同）。 | 方法名、参数列表必须完全相同。 |
+| 返回类型 | 与返回值类型无关，可以任意修改。 | 子类方法的返回类型必须与父类方法的返回类型相同，或者是其子类。 |
+| 访问修饰符 | 与访问修饰符无关，可以任意修改。 | 子类方法的访问权限不能低于父类方法的访问权限。（public > protected > default > private） |
+| 绑定时期 | 编译时绑定或称静态绑定 | 运行时绑定 (Run-time Binding) 或称动态绑定 |
+
 ## 5.4 方法的值传递
 > Java中方法参数是值传递，即将实参的值复制给形参。</br>
 
@@ -667,7 +677,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > - 多态支持：继承是实现多态的基础，可以通过父类引用指向子类对象。
 > - 增强可扩展性：可以通过继承来扩展现有类的功能，而不需要修改原有代码。
 > 
-> 继承的格式：```public class 子类名 extends 父类名 {}```  
+> 继承的格式：`public class 子类名 extends 父类名 {}`
 > 继承后子类的特点：
 > - 子类拥有父类的所有<font color="red">非私有</font>属性和方法。
 > - 子类可以添加自己的属性和方法。
@@ -690,11 +700,12 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > - 子类可以重写父类的方法，重写后子类的方法会覆盖父类的方法。
 > - 重写方法必须与父类方法具有<font color="red">相同的</font>方法名、参数列表和返回类型。
 > - 重写的方法需要在方法前加上<font color="red">@Override</font>注解，表示这是一个重写方法。
-> 
+> - 构造方法无法被重写
+>
 > 注意：  
 > 子类重写方法的访问修饰符必须与父类方法的修饰符相同，或者更宽松（如protected可以变为public，但不能变为private）。  
 > 重写方法的名称、形参列表必须与父类中的一致。  
-> 子类重写父类方法时，返回值类型子类必须小于等于父类。  
+> 子类重写父类方法时，返回值类型子类必须小于等于父类，抛出的异常范围也需要小于等于父类。  
 > <font color="red">重写的方法尽量和父类保持一致</font>。  
 > 只有被添加到[虚方法表](https://blog.csdn.net/ouhexie/article/details/141749123)中的方法才能被重写。  
 > 
@@ -1486,62 +1497,55 @@ Set是Collection的子接口，HashSet、TreeSet和LinkedHashSet是Set的实现�
 ## 12.4 双列集合Map
 Map: 双列集合顶层接口，全部双列集合均可以继承使用  
 HashMap, TreeMap, LinkedHashMap均为Map实现类 
-> <font color="pink">Map(接口)</font>:  
-> 泛型接口：```public interface Map<K, V>{}```  
-> 常用方法：  
-> - V put(K key, V value): 添加元素(键不存在直接添加，键存在则覆盖)
-> - V remove(Object key): 删除key对应的键值对元素
-> - void clear(): 清空所有元素
-> - boolean containsKey(Object key): 判断集合中是否包含指定key
-> - boolean containsValue(Object value): 判断集合中是否包含指定value
-> - boolean isEmpty(): 判断集合是否为空
-> - int size(): 获取集合大小
-> - V get(Object key): 获取指定key对应的value
-> - Set< K> keySet(): 获取所有键的集合
-> - Collection< V> values(): 获取所有值的集合
-> - entrySet(): 获取所有键值对的集合
-> 
-> 遍历方式（迭代器，增强for，Lambda表达式）：
-> - 键找值：  
->   - 获取键的集合：```Set< E> keys = map.keySet();```
-> - 键值对：
->   - 获取键值对集合：```Set<Map.Entry<K, V>> entries = map.entrySet();```
->   - 利用Entry内部接口的方法获取键值对：getKey(), getValue()
-> - Lambda表达式：
->   - ```map.forEach((k, v) -> {})```
 
-> <font color="pink">HashMap</font>:  
-> 底层是哈希表(数组+链表+红黑树)存储数据  
-> 是Map的一个实现类  
+### <font color="pink">Map(接口)</font>:  
+泛型接口：```public interface Map<K, V>{}```  
+常用方法：  
+- V put(K key, V value): 添加元素(键不存在直接添加，键存在则覆盖)
+- V remove(Object key): 删除key对应的键值对元素
+- void clear(): 清空所有元素
+- boolean containsKey(Object key): 判断集合中是否包含指定key
+- boolean containsValue(Object value): 判断集合中是否包含指定value
+- boolean isEmpty(): 判断集合是否为空
+- int size(): 获取集合大小
+- V get(Object key): 获取指定key对应的value
+- Set< K> keySet(): 获取所有键的集合
+- Collection< V> values(): 获取所有值的集合
+- entrySet(): 获取所有键值对的集合
 
-> <font color="pink">LinkedHashMap</font>(有序):  
-> 这里的有序是指保证存储与取的顺序一致  
-> Map的实现类，是HashMap的子类
-> 底层是哈希表(数组+双向链表)
+遍历方式（迭代器，增强for，Lambda表达式）：
+- 键找值：  
+  - 获取键的集合：```Set< E> keys = map.keySet();```
+- 键值对：
+  - 获取键值对集合：```Set<Map.Entry<K, V>> entries = map.entrySet();```
+  - 利用Entry内部接口的方法获取键值对：getKey(), getValue()
+- Lambda表达式：
+  - ```map.forEach((k, v) -> {})```
 
-> <font color="pink">HashTable</font>:   
+### <font color="pink">HashMap</font>:  
+底层是哈希表(数组+链表+红黑树)存储数据  
+是Map的一个实现类  
 
+### <font color="pink">LinkedHashMap</font>(有序):  
+这里的有序是指保证存储与取的顺序一致  
+Map的实现类，是HashMap的子类
+底层是哈希表(数组+双向链表)
 
 
+### <font color="pink">HashTable</font>:   
 
 
+### <font color="pink">Properties</font>:    
+HashTable的子类，专门用来存储键值对的集合。
 
 
-> <font color="pink">Properties</font>:    
-> HashTable的子类，专门用来存储键值对的集合。
+### <font color="pink">HashMap(可排序)</font>:   
+这里的可排序是指可以对键进行排序。  
+两种排序规则：  
+- 实现Comparable接口，重写compareTo()方法，规则跟sort一样
+- 创建集合时添加比较器进行排序
 
-
-
-
-
-
-> <font color="pink">HashMap(可排序)</font>:   
-> 这里的可排序是指可以对键进行排序。  
-> 两种排序规则：  
-> - 实现Comparable接口，重写compareTo()方法，规则跟sort一样
-> - 创建集合时添加比较器进行排序
-> 
-> 底层原理：基于红黑树实现的Map
+底层原理：基于红黑树实现的Map
 
 ## 12.5 可变参数
 > 可变参数：在方法中可以传入任意个数的参数(包括0个)  
