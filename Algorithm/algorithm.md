@@ -2065,3 +2065,17 @@ private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 ## 取模
 模运算特点：
 - $x \equiv y \pmod n$：$(x \bmod m + m) \bmod m = y$ （可以避免 x  < 0）
+
+## 组合运算
+```java
+private long comb(int n, int k) {
+	k = Math.min(k, n-k);
+	long res = 1;
+	for(int i = 1;i <= k;++i) {
+		res = res * (n + 1 - i) / i;
+	}
+	return res;
+}
+```
+
+
