@@ -1161,6 +1161,7 @@ class LazySegmentTree {
         if(qr > m) {
             update(node * 2 + 1, m + 1, r, ql, qr,f);
         }
+        maintain(node);
     }
     
     private long query(int node, int l, int r, int ql, int qr) {
