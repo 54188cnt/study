@@ -2079,4 +2079,18 @@ private long comb(int n, int k) {
 }
 ```
 
+## 排序
+### 快速排序(包含优化)
+```java
+class Solution {
+    private static final Random rand = new Random();
+    public int[] sortArray(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+
+    private 
+}
+```
+
 
