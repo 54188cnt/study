@@ -561,8 +561,9 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > StringBuilder是一个可变的字符序列，用于高效地操作字符串。  
 > StringBuilder的创建方式：  
 > ```java
-> StringBuilder sb = new StringBuilder(); // 创建一个空的StringBuilder
-> StringBuilder sb = new StringBuilder("Hello, World!"); // 创建一个包含初始内容的StringBuilder
+> StringBuilder sb = new StringBuilder(); // 创建一个空的字符构造器
+> StringBuilder sb = new StringBuilder("Hello, World!"); // 创建一个包含初始内容的字符构造器
+> StringBuilder sb = new StringBuilder(int capacity); //构造一个字符串构建器，没有字符，初始容量由容量参数指定。
 > ```
 > 
 > 常用方法：</br>
@@ -573,7 +574,9 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > 
 > 注意：  
 > - 直接打印StringBuilder对象会输出字符串内容，而不是地址值(与String区别)。
-> - StringBuilder是线程不安全的，如果在多线程环境中使用，可能会导致数据不一致。
+> - StringBuilder是<font color="#ff0000">线程不安全</font>的，如果在多线程环境中使用，可能会导致数据不一致。
+> - 单线程操作字符串缓冲区下操作大量数据: 适用 `StringBuilder`
+> - 多线程操作字符串缓冲区下操作大量数据: 适用 `StringBuffer`
 >
 > 链式编程：  
 > 定义：依赖前一个方法的结果继续调用下一个方法。  
