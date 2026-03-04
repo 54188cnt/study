@@ -560,7 +560,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 ## 7.5 StringBuilder类
 > StringBuilder是一个可变的字符序列，用于高效地操作字符串。  
 > StringBuilder的创建方式：  
-> ```
+> ```java
 > StringBuilder sb = new StringBuilder(); // 创建一个空的StringBuilder
 > StringBuilder sb = new StringBuilder("Hello, World!"); // 创建一个包含初始内容的StringBuilder
 > ```
