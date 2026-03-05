@@ -1730,6 +1730,24 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 >   释放资源
 > }
 > ```
+> 
+> try...catch...resources：
+> ```java
+> try (
+> BufferedInputStream bin = new BufferedInputStream(
+>                new FileInputStream(new File("test.txt")));
+ >BufferedOutputStream bout = new BufferedOutputStream(
+ >               new FileOutputStream(new File("out.txt")))
+ >) {
+>     int b;
+>     while ((b = bin.read()) != -1) {
+>     bout.write(b);
+>     }
+> }
+> catch (IOException e) {
+>     e.printStackTrace();
+> }
+> ```
 
 > Throwable的成员方法：  
 > - String getMessage(): 返回详细消息字符串
@@ -1752,7 +1770,8 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 
 ## 13.5 自定义异常
 1. 定义一个类继承Exception或者RuntimeException
-2. 空参构造和有参构造
+2. 不要定义为静态变量
+3. 空参构造和有参构造
 
 # 十四、File和IO
 ## 14.1 File 
