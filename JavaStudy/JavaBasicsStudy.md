@@ -608,7 +608,22 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > 拼接原理：
 > - 如果没有变量参与会复用串池中的字符串
 > - 如果有变量参与会在栈中创建一个新的StringBuilder对象
-
+> - 要理解字符串常量池以及[[explanation/NounExplanation.md#常量折叠 | 常量折叠]]的意思
+> 
+> ```java
+> String str1 = "str";
+> String str2 = "ing";
+> String str3 = "str" + "ing";
+> String str4 = str1 + str2;
+> String str5 = "string";
+> System.out.println(str3 == str4);  //false
+> System.out.println(str3 == str5);  //true
+> System.out.println(str4 == str5);  //false
+> final String str6 = "str";
+> final String str7 = "ing";
+> String str8 = str6 + str7;
+> System.out.println(str3 == str8); // true
+> ```
 # 八、集合基础
 ## 8.1 集合的基本使用
 > 集合是Java中用于存储一组对象的容器，可以动态地添加、删除和访问元素。  
