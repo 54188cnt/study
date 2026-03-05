@@ -530,6 +530,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > 注意：  
 > - 使用new关键字创建的字符串对象会在堆内存中分配空间，而字面量创建的字符串会在字符串常量池中分配空间。
 > - 通常采用字面量创建字符串，因为它更简洁且更节省空间
+> - java9将String内部的 char[] 改为 byte[]  
 
 > 内存分配：  
 > - 字符串常量池(StringTable 串池)：存储字面量创建的字符串，避免重复创建相同内容的字符串。(JDK7开始，字符串常量池移到了堆内存中)  
@@ -564,6 +565,7 @@ int arr2[] = arr1; // arr2指向arr1的内存地址
 > StringBuilder sb = new StringBuilder(); // 创建一个空的字符构造器
 > StringBuilder sb = new StringBuilder("Hello, World!"); // 创建一个包含初始内容的字符构造器
 > StringBuilder sb = new StringBuilder(int capacity); //构造一个字符串构建器，没有字符，初始容量由容量参数指定。
+> // 提前分配好空间可以避免字符串扩容
 > ```
 > 
 > 常用方法：</br>
