@@ -1303,7 +1303,7 @@ JDK5以后增加了自动拆箱和自动装箱
 - `Boolean` 直接返回 `TRUE` or `FALSE` 
 - <font color="#ff0000">只有 valueOf 和 自动装箱才会走缓存</font>，新建对象不会走缓存 
 
-# 十二 集合进阶
+# 十二、集合进阶
 二分查找改进：  
 $$
 mid = left + (value - arr[left]) / (arr[right] - arr[left]) * (right - left);
