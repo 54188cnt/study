@@ -1324,7 +1324,8 @@ public class Client{
 }
 ```
 
-cglib动态代理(没有接口的类，如上述TranStation没有接口的时候不能使用JDK动态代理)：同上例子
+cglib动态代理(没有接口的类，如上述TranStation没有接口的时候不能使用JDK动态代理)：同上例子  
+[cglib动态代理讲解](https://javaguide.cn/java/basis/proxy.html#_3-2-cglib-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%9C%BA%E5%88%B6) 
 需要导入maven依赖cglib  
 
 代理模式优缺点  
