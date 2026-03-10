@@ -1267,7 +1267,7 @@ public class Client{
 }
 ```
 
-JDK动态代理：同上例子
+JDK动态代理（被代理的类必须<font color="#ff0000">实现了接口</font>）：同上例子
 ```java
 public interface SellTickets{
     void sell();
@@ -1323,6 +1323,7 @@ public class Client{
     }
 }
 ```
+<font color="#ff0000">注意</font>：jdk动态代理不能代理 final 修饰的类，且被代理的方法不能是 final 或者 private
 
 cglib动态代理(没有接口的类，如上述TranStation没有接口的时候不能使用JDK动态代理)：同上例子  
 [cglib动态代理讲解](https://javaguide.cn/java/basis/proxy.html#_3-2-cglib-%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%9C%BA%E5%88%B6) 
