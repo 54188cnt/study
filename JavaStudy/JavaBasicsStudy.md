@@ -1327,6 +1327,7 @@ $$
 >   - 参数a: 无序序列遍历得到的每一个元素
 >   - 参数b: 有序序列中的元素
 >   - 可以理解为a-b升序，b-a降序
+>   - [Comparable和Comparator的区别](./Java进阶学习/Comparator和Comparable)
 
 ## 12.2 Lambda表达式(函数式编程)
 本质是一个匿名函数
