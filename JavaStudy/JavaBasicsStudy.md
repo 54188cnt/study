@@ -1437,6 +1437,9 @@ List，Collection是接口，ArrayList和LinkedList是接口实现类
 > - E removeFirst(): 删除链表头元素
 > - E removeLast(): 删除链表尾元素
 
+<font color="#00b0f0">Q:</font> ArrayList和LinkedList的区别？
+<font color="#00b050">A:</font> [[./explanation/answer#ArrayList和LinkedList的区别 | 回答]]
+
 > <font color="pink">Vector</font>:(被移除)  
 
 > <font color="pink">泛型</font>:  
