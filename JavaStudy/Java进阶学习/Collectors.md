@@ -72,3 +72,7 @@ Map<String, Person> name2Person =
             Function.identity(),
             (p1, p2) -> p2));
 ```
+
+注意：使用 `java.util.stream.Collectors` 类的 `toMap()` 方法转为 `Map` 集合时，一定要注意当 <span style="background:#d2cbff">value 为 null 时会抛 NPE 异常</span>。
+
+
