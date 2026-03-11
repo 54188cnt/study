@@ -1554,6 +1554,8 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 底层是哈希表(数组+链表+红黑树)存储数据  
 是Map的一个实现类  
 扩容机制同 HashSet  
+增加元素只提供了put方法，实际调用的是 putVal 方法   
+[putVal方法流程图](./assets/JavaBasicsStudy/putVal方法流程图.png)
 
 ### <font color="pink">LinkedHashMap</font>(有序):  
 这里的有序是指保证存储与取的顺序一致  
