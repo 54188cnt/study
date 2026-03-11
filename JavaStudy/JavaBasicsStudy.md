@@ -1561,6 +1561,9 @@ HashMap, TreeMap, LinkedHashMap均为Map实现类
 增加元素只提供了put方法，实际调用的是 putVal 方法   
 [putVal方法流程图](./assets/JavaBasicsStudy/putVal方法流程图.png)
 
+<font color="#00b0f0">Q:</font> 为什么 HashMap 的长度是 2 的幂次方？
+<font color="#00b050">A:</font> [[explanation/answer#HashMap 的长度是 2 的幂次方的原因| HashMap 的长度是 2 的幂次方的原因]]
+
 ### <font color="pink">LinkedHashMap</font>(有序):  
 这里的有序是指保证存储与取的顺序一致  
 Map的实现类，是HashMap的子类
