@@ -1327,7 +1327,19 @@ $$
 >   - 参数a: 无序序列遍历得到的每一个元素
 >   - 参数b: 有序序列中的元素
 >   - 可以理解为a-b升序，b-a降序
->   - [Comparable和Comparator的区别](./Java进阶学习/Comparator和Comparable)
+>   - [Comparable和Comparator的区别](./Java进阶学习/Comparator和Comparable) 
+
+集合转数组：
+```java
+String [] s= new String[]{
+    "dog", "lazy", "a", "over", "jumps", "fox", "brown", "quick", "A"
+};
+List<String> list = Arrays.asList(s);
+Collections.reverse(list);
+//没有指定类型的话会报错
+// 这里的new String[0]只是模板作用，而且0能省内存
+s=list.toArray(new String[0]);
+```
 
 ## 12.2 Lambda表达式(函数式编程)
 本质是一个匿名函数
