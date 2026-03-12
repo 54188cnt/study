@@ -1133,7 +1133,7 @@ public class CoffeeFactory{
     private static Map<String, Coffee> map = new HashMap<>();
     
     static {
-        Properties properties = new Properties();
+        Properties p = new Properties();
         // 加载配置文件
         InputStream is = CoffeeFactory.class.getClassLoader().getResourceAsStream("bean.properties");
         try{
