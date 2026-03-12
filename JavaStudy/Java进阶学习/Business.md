@@ -390,3 +390,214 @@ public class TestLogistics {
     }
 }
 ```
+
+## 订单状态变更通知
+
+<font color="#95b3d7">背景</font>：
+某一订单更新后需要做一系列操作（减库存、通知用户、日志等）
+
+<font color="#95b3d7">代码</font>：
+```java
+// 1. 定义订单状态变更事件（被观察者的事件载体）
+class OrderStatusChangeEvent {
+    private String orderId;
+    private String oldStatus;
+    private String newStatus;
+
+    public OrderStatusChangeEvent(String orderId, String oldStatus, String newStatus) {
+        this.orderId = orderId;
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+    }
+
+    // getter
+    public String getOrderId() { return orderId; }
+    public String getOldStatus() { return oldStatus; }
+    public String getNewStatus() { return newStatus; }
+}
+
+// 2. 定义观察者接口
+interface OrderStatusListener {
+    void onStatusChange(OrderStatusChangeEvent event);
+}
+
+// 3. 具体观察者实现
+// 短信通知观察者
+class SmsNotifyListener implements OrderStatusListener {
+    @Override
+    public void onStatusChange(OrderStatusChangeEvent event) {
+        if ("已支付".equals(event.getNewStatus())) {
+            System.out.println("【短信通知】订单" + event.getOrderId() + "已支付，请注意查收包裹");
+        } else if ("已取消".equals(event.getNewStatus())) {
+            System.out.println("【短信通知】订单" + event.getOrderId() + "已取消，退款将在1-3个工作日到账");
+        }
+    }
+}
+
+// 库存更新观察者
+class StockUpdateListener implements OrderStatusListener {
+    @Override
+    public void onStatusChange(OrderStatusChangeEvent event) {
+        if ("已支付".equals(event.getNewStatus())) {
+            System.out.println("【库存更新】订单" + event.getOrderId() + "已支付，扣减对应商品库存");
+        } else if ("已取消".equals(event.getNewStatus())) {
+            System.out.println("【库存更新】订单" + event.getOrderId() + "已取消，恢复对应商品库存");
+        }
+    }
+}
+
+// 日志记录观察者
+class OrderLogListener implements OrderStatusListener {
+    @Override
+    public void onStatusChange(OrderStatusChangeEvent event) {
+        System.out.println("【日志记录】订单" + event.getOrderId() + "状态从" + event.getOldStatus() + 
+                           "变更为" + event.getNewStatus() + "，时间：" + System.currentTimeMillis());
+    }
+}
+
+// 4. 被观察者（订单服务）
+class OrderService {
+    // 存储所有观察者
+    private List<OrderStatusListener> listeners = new ArrayList<>();
+
+    // 注册观察者
+    public void addListener(OrderStatusListener listener) {
+        listeners.add(listener);
+    }
+
+    // 移除观察者
+    public void removeListener(OrderStatusListener listener) {
+        listeners.remove(listener);
+    }
+
+    // 订单状态变更（核心业务）
+    public void changeOrderStatus(String orderId, String oldStatus, String newStatus) {
+        // 1. 执行核心业务逻辑
+        System.out.println("【核心业务】订单" + orderId + "状态已更新为" + newStatus);
+        
+        // 2. 构建事件对象
+        OrderStatusChangeEvent event = new OrderStatusChangeEvent(orderId, oldStatus, newStatus);
+        
+        // 3. 通知所有观察者
+        for (OrderStatusListener listener : listeners) {
+            listener.onStatusChange(event);
+        }
+    }
+}
+
+// 5. 测试类
+public class TestOrderStatus {
+    public static void main(String[] args) {
+        // 1. 创建被观察者
+        OrderService orderService = new OrderService();
+        
+        // 2. 注册观察者
+        orderService.addListener(new SmsNotifyListener());
+        orderService.addListener(new StockUpdateListener());
+        orderService.addListener(new OrderLogListener());
+        
+        // 3. 触发订单状态变更
+        System.out.println("===== 测试1：订单支付 =====");
+        orderService.changeOrderStatus("O20260312001", "待支付", "已支付");
+        
+        System.out.println("\n===== 测试2：订单取消 =====");
+        orderService.changeOrderStatus("O20260312001", "已支付", "已取消");
+    }
+}
+```
+
+## 用户注册后自动执行多任务
+
+<font color="#95b3d7">背景</font>：
+
+
+<font color="#95b3d7">代码</font>：
+```java
+// 1. 定义用户注册事件
+class UserRegisterEvent {
+    private String userId;
+    private String phone;
+    private String email;
+
+    public UserRegisterEvent(String userId, String phone, String email) {
+        this.userId = userId;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    // getter
+    public String getUserId() { return userId; }
+    public String getPhone() { return phone; }
+    public String getEmail() { return email; }
+}
+
+// 2. 定义观察者接口
+interface UserRegisterListener {
+    void onRegister(UserRegisterEvent event);
+}
+
+// 3. 具体观察者实现
+// 短信通知观察者
+class UserSmsListener implements UserRegisterListener {
+    @Override
+    public void onRegister(UserRegisterEvent event) {
+        System.out.println("【注册短信】欢迎用户" + event.getUserId() + "注册，手机号：" + 
+                           event.getPhone() + "，验证码已发送");
+    }
+}
+
+// 积分初始化观察者
+class UserPointListener implements UserRegisterListener {
+    @Override
+    public void onRegister(UserRegisterEvent event) {
+        System.out.println("【积分初始化】用户" + event.getUserId() + "注册成功，初始化100积分");
+    }
+}
+
+// 邮件通知观察者
+class UserEmailListener implements UserRegisterListener {
+    @Override
+    public void onRegister(UserRegisterEvent event) {
+        System.out.println("【注册邮件】已向" + event.getEmail() + "发送欢迎邮件，请注意查收");
+    }
+}
+
+// 4. 被观察者（用户服务）
+class UserService {
+    private List<UserRegisterListener> listeners = new ArrayList<>();
+
+    // 注册观察者
+    public void addListener(UserRegisterListener listener) {
+        listeners.add(listener);
+    }
+
+    // 用户注册核心方法
+    public void register(String userId, String phone, String email) {
+        // 1. 核心业务：保存用户
+        System.out.println("【核心业务】用户" + userId + "注册成功，保存用户信息到数据库");
+        
+        // 2. 构建事件
+        UserRegisterEvent event = new UserRegisterEvent(userId, phone, email);
+        
+        // 3. 通知所有观察者
+        for (UserRegisterListener listener : listeners) {
+            listener.onRegister(event);
+        }
+    }
+}
+
+// 5. 测试类
+public class TestUserRegister {
+    public static void main(String[] args) {
+        UserService userService = new UserService();
+        // 注册观察者
+        userService.addListener(new UserSmsListener());
+        userService.addListener(new UserPointListener());
+        userService.addListener(new UserEmailListener());
+        
+        // 触发注册
+        System.out.println("===== 测试：用户注册 =====");
+        userService.register("U1001", "13800138000", "test@example.com");
+    }
+}
+```
