@@ -1056,6 +1056,7 @@ DockerCompose:
   // 双重检查锁方式
   public class Singleton {
       private Singleton(){}
+      // 必须加volatile
       private static volatile Singleton instance;
       private static Singleton getInstance(){
           if(instance == null){
