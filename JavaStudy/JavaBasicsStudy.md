@@ -1869,7 +1869,7 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 > 字节流实现类：FileInputStream、FileOutputStream  
 > 字符流实现类：FileReader、FileWriter  
 
-> FileOutputStream:
+> <font color="#fac08f">FileOutputStream</font>:
 > 1. 创建输出流：
 >   - 参数可以是路径字符串、File对象(new FileOutputStream(file))
 >   - 文件不存在会创建，文件存在会清空文件内容，但要求<font color="red">父级目录存在</font>
@@ -1882,7 +1882,7 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 >   - 换行符：Windows(\r\n), Linux(\n), Mac(\r)
 > 3. <font color="red">释放资源</font>：每次使用完流都要关闭(流名.close())
 
-> FileInputStream:
+> <font color="#fac08f">FileInputStream</font>:
 > 1. 创建输入流：
 >   - <font color="red">文件不存在会报错(空指针异常)</font>
 > 1. 读数据：
@@ -1932,7 +1932,7 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 > - new String(byte[] bytes): 使用默认方式解码
 > - new String(byte[] bytes, String charsetName): 使用指定的编码解码
 
-> FileReader:  
+> <font color="#fac08f">FileReader</font>:  
 > 1. 创建字符输入流：
 >   -
 >     ```java
@@ -1948,7 +1948,7 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 > 3. 释放资源：
 >   - fr.close()
 
-> FileWriter:  
+> <font color="#fac08f">FileWriter</font>:  
 > 1. 创建字符输出流：
 >   -   
 >     ```java
@@ -1996,13 +1996,22 @@ Exception: 代表程序可能出现的问题，分为<font color="red">运行时
 >   - void newLine(): 跨平台换行(<font color="red">字符缓冲输出流独有</font>)
 > 3. 缓冲区为长度为8192的字符数组
 
-`DataInputStream` 用于读取指定类型数据，不能单独使用，必须结合其它流。
+<font color="#fac08f">DataInputStream</font> 用于读取指定类型数据，不能单独使用，必须结合其它流。
 ```java
 FileInputStream fis = new FileInputStream("input.txt");
 DataInputStream dis = new DataInputStream(fis);
 dis.readInt();
 dis.readBoolean();
 dis.readUTF();
+```
+
+同样也存在 <font color="#fac08f">DataOutputStream</font>
+```java
+FileOutputStream fos = new FileOutputStream("out.txt");
+DataOutputStream dos = new DataOutputStream(fos);
+
+dos.writeBoolean(true);
+dos.writeByte(1);
 ```
 ### 14.2.3 转换流
 字符流和字节流之间的桥梁  
