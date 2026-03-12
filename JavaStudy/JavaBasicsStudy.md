@@ -1329,7 +1329,7 @@ $$
 >   - 可以理解为a-b升序，b-a降序
 >   - [Comparable和Comparator的区别](./Java进阶学习/Comparator和Comparable) 
 
-集合转数组：
+<span style="background:#affad1">集合转数组</span>：
 ```java
 String [] s= new String[]{
     "dog", "lazy", "a", "over", "jumps", "fox", "brown", "quick", "A"
@@ -1339,6 +1339,31 @@ Collections.reverse(list);
 //没有指定类型的话会报错
 // 这里的new String[0]只是模板作用，而且0能省内存
 s=list.toArray(new String[0]);
+```
+
+<span style="background:#affad1">数组转集合</span>：
+使用工具类 `Arrays.asList()` 把数组转换成集合时，<font color="#ff0000">不能使用其修改集合相关的方法</font>（add, remove, clear），并且传入的数组必须是一个<font color="#ff0000">对象数组</font>。
+```java
+// 如何正确实现数组转List
+// 1.手动实现工具类
+//JDK1.5+
+static <T> List<T> arrayToList(final T[] array) {
+	final List<T> l = new ArrayList<T>(array.length);
+	for (final T s : array) {
+		l.add(s);
+	}
+	return l;
+}
+
+// 2.最便捷方法
+List list = new ArrayList<>(Arrays.asList("a", "b", "c"));
+
+// 3.stream流(推荐)
+Integer[] myArray = {1, 2, 3 ,4};
+List myList = Arrays.stream(myArray).collect(Collectors.toList());
+//基本类型也可以实现转换（依赖boxed的装箱操作）
+int[] myArray2 = {1, 2, 3, 4};
+List myList = Arrays.stream(myArray2).boxed().collect(Collectors.toList());
 ```
 
 ## 12.2 Lambda表达式(函数式编程)
