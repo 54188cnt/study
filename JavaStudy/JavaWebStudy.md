@@ -1079,7 +1079,7 @@ DockerCompose:
       }
   }
   ```
-  - [volatile](https://blog.csdn.net/u012723673/article/details/80682208)
+  - [volatile](https://blog.csdn.net/u012723673/article/details/80682208) 
 - 枚举方式(恶汉式)
   ``` java
   public enum Singleton {

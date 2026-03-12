@@ -12,3 +12,7 @@
 - `void setLength(int newLength)` 
 - `String toString()` 
 - `String substring(int start[, int end])` 
+
+## 其他
+StringBuilder 不支持多线程，多线程使用 <span style="background:#affad1">StringBuffer</span>
+
