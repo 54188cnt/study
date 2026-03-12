@@ -276,3 +276,117 @@ public class TestDataReader {
 电商系统需要对接顺丰、圆通、中通的物流查询接口，各接口的请求参数、返回格式都不同：
 - 顺丰：`sfQuery(String waybillNo)` → 返回`SFLogisticsDTO`；
 - 圆通：`ytQuery(Long mailNo)` → 返回`YTLogisticsVO`；
+
+<font color="#95b3d7">代码</font>：
+```java
+// 1. 统一的目标接口
+public interface LogisticsQuery {
+    // 统一查询物流，返回标准化的LogisticsInfo
+    LogisticsInfo query(String waybillNo);
+}
+
+// 2. 第三方物流接口（不能修改）
+// 顺丰接口
+public class SFLogisticsSDK {
+    public SFLogisticsDTO sfQuery(String waybillNo) {
+        SFLogisticsDTO dto = new SFLogisticsDTO();
+        dto.setWaybillNo(waybillNo);
+        dto.setStatus("已签收");
+        dto.setUpdateTime("2026-03-12 10:00:00");
+        return dto;
+    }
+}
+
+// 圆通接口
+public class YTLogisticsSDK {
+    public YTLogisticsVO ytQuery(Long mailNo) {
+        YTLogisticsVO vo = new YTLogisticsVO();
+        vo.setMailNo(mailNo.toString());
+        vo.setLogisticsStatus(2); // 2代表已签收
+        vo.setUpdateTime("2026-03-12 10:00:00");
+        return vo;
+    }
+}
+
+// 3. 标准化的物流信息类
+class LogisticsInfo {
+    private String waybillNo;
+    private String status; // 统一为：待揽收、运输中、已签收
+    private String updateTime;
+    // getter/setter省略
+}
+
+// 第三方DTO/VO
+class SFLogisticsDTO {
+    private String waybillNo;
+    private String status;
+    private String updateTime;
+    // getter/setter省略
+}
+
+class YTLogisticsVO {
+    private String mailNo;
+    private int logisticsStatus; // 1=运输中，2=已签收
+    private String updateTime;
+    // getter/setter省略
+}
+
+// 4. 适配器实现
+// 顺丰适配器
+public class SFLogisticsAdapter implements LogisticsQuery {
+    private SFLogisticsSDK sfSDK;
+
+    public SFLogisticsAdapter(SFLogisticsSDK sfSDK) {
+        this.sfSDK = sfSDK;
+    }
+
+    @Override
+    public LogisticsInfo query(String waybillNo) {
+        // 调用顺丰接口
+        SFLogisticsDTO dto = sfSDK.sfQuery(waybillNo);
+        // 适配：将SFLogisticsDTO转换成标准化的LogisticsInfo
+        LogisticsInfo info = new LogisticsInfo();
+        info.setWaybillNo(dto.getWaybillNo());
+        info.setStatus(dto.getStatus());
+        info.setUpdateTime(dto.getUpdateTime());
+        return info;
+    }
+}
+
+// 圆通适配器
+public class YTLogisticsAdapter implements LogisticsQuery {
+    private YTLogisticsSDK ytSDK;
+
+    public YTLogisticsAdapter(YTLogisticsSDK ytSDK) {
+        this.ytSDK = ytSDK;
+    }
+
+    @Override
+    public LogisticsInfo query(String waybillNo) {
+        // 适配：将字符串运单号转换成圆通需要的Long类型
+        Long mailNo = Long.parseLong(waybillNo);
+        // 调用圆通接口
+        YTLogisticsVO vo = ytSDK.ytQuery(mailNo);
+        // 适配：将YTLogisticsVO转换成标准化的LogisticsInfo
+        LogisticsInfo info = new LogisticsInfo();
+        info.setWaybillNo(vo.getMailNo());
+        // 转换状态码为统一描述
+        info.setStatus(vo.getLogisticsStatus() == 2 ? "已签收" : "运输中");
+        info.setUpdateTime(vo.getUpdateTime());
+        return info;
+    }
+}
+
+// 测试使用
+public class TestLogistics {
+    public static void main(String[] args) {
+        // 查询顺丰物流
+        LogisticsQuery sfQuery = new SFLogisticsAdapter(new SFLogisticsSDK());
+        System.out.println("顺丰物流：" + sfQuery.query("SF1234567890").getStatus());
+
+        // 查询圆通物流
+        LogisticsQuery ytQuery = new YTLogisticsAdapter(new YTLogisticsSDK());
+        System.out.println("圆通物流：" + ytQuery.query("YT1234567890").getStatus());
+    }
+}
+```
