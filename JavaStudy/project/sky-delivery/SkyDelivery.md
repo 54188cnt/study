@@ -919,7 +919,175 @@ cron表达式：
 
 #### Redisson延迟队列
 [学习文档](https://redisson.pro/docs/) 
+由于 <font color="#92cddc">RReliableQueue</font> 需要付费，所以使用的是 <font color="#92cddc">RBlockingQueue 协同 RDelayedQueue </font>
 
+1. 将id加入队列
+```java
+// 采用RReliableQueue
+RReliableQueue<Long> delayQueue = redissonClient.getReliableQueue(RedisConstant.ORDER_TIMEOUT_QUEUE);  
+delayQueue.add(QueueAddArgs.messages(MessageArgs.payload(orderId).delay(Duration.ofMinutes(3))));  
+log.info("订单 {} 已成功加入可靠队列 (RReliableQueue)", orderId);
+
+// 采用RBlockingQueue 协同 RDelayedQueue
+RBlockingQueue<Long> blockingQueue = redissonClient.getBlockingQueue(RedisConstant.ORDER_TIMEOUT_QUEUE);  
+RDelayedQueue<Long> delayedQueue = redissonClient.getDelayedQueue(blockingQueue);  
+  
+delayedQueue.offer(orderId, 15, TimeUnit.MINUTES);  
+log.info("订单 {} 已加入延迟队列，15分钟后触发超时检查", orderId);
+```
+2. 创建Listener（消费者）
+```java
+public class OrderTimeoutListener {  
+    private final RedissonClient redissonClient;  
+    private final OrderMapper orderMapper;  
+  
+    public OrderTimeoutListener(RedissonClient redissonClient, OrderMapper orderMapper) {  
+        this.redissonClient = redissonClient;  
+        this.orderMapper = orderMapper;  
+    }  
+  
+    // 使用专用的线程池处理业务，不阻塞监听线程  
+    private final ExecutorService businessExecutor = new ThreadPoolExecutor(  
+            4, 8, 60L, TimeUnit.SECONDS,  
+            new LinkedBlockingQueue<>(1000),  
+            r -> {  
+                Thread t = new Thread(r);  
+                t.setName("order-cancel-" + t.getId());  
+                return t;  
+            },  
+            new ThreadPoolExecutor.CallerRunsPolicy()  
+    );  
+  
+    private volatile boolean running = true;  
+    private Thread pollThread;  
+  
+    @PostConstruct  
+    public void startListening() {  
+        pollThread = new Thread(this::listen, "order-timeout-poll");  
+        pollThread.start();  
+    }  
+  
+    @PreDestroy  
+    public void shutdown() {  
+        log.info("订单超时监听器开始关闭...");  
+  
+        // 第一步：先停监听线程，此时 Redisson 还活着  
+        running = false;  
+        if (pollThread != null) {  
+            pollThread.interrupt();  
+            try {  
+                pollThread.join(5000); // 最多等 5 秒让 poll 线程退出  
+            } catch (InterruptedException e) {  
+                Thread.currentThread().interrupt();  
+            }  
+        }  
+  
+        // 第二步：再关线程池，等 worker 把手头任务跑完  
+        businessExecutor.shutdown();  
+        try {  
+            if (!businessExecutor.awaitTermination(10, TimeUnit.SECONDS)) {  
+                businessExecutor.shutdownNow();  
+            }  
+        } catch (InterruptedException e) {  
+            businessExecutor.shutdownNow();  
+            Thread.currentThread().interrupt();  
+        }  
+  
+        log.info("订单超时监听器已关闭");  
+    }  
+  
+    private void listen() {  
+        // 消费方只需监听 BlockingQueue，到期的消息会自动从延迟队列转移过来  
+        RBlockingQueue<Long> blockingQueue = redissonClient.getBlockingQueue(RedisConstant.ORDER_TIMEOUT_QUEUE);  
+        log.info("订单超时监听器已启动");  
+  
+        while (running && !Thread.currentThread().isInterrupted()) {  
+            try {  
+                // take() 会阻塞等待，直到有到期消息  
+                Long orderId = blockingQueue.take();  
+                log.info("收到超时订单消息，orderId={}", orderId);  
+                businessExecutor.submit(() -> handleCancelLogic(orderId));  
+  
+            } catch (InterruptedException e) {  
+                Thread.currentThread().interrupt();  
+                log.warn("监听线程被中断，退出");  
+                break;  
+            } catch (RedissonShutdownException e) {  
+                // Redisson 已关闭，正常退出，不打 error                log.info("Redisson 已关闭，监听线程退出");  
+                break;  
+            }catch (Exception e) {  
+                if(!running) break;  
+                log.error("处理超时消息异常", e);  
+                try {  
+                    Thread.sleep(1000);  
+                } catch (InterruptedException ie) {  
+                    Thread.currentThread().interrupt();  
+                }  
+            }  
+        }  
+        log.info("poll进程已退出");  
+    }  
+
+	// 这个是RReliableQueue的listen函数
+    private void listen() {
+	    RReliableQueue<Long> queue = redissonClient.getReliableQueue(RedisConstant.ORDER_TIMEOUT_QUEUE);
+	    log.info("订单超时监听器已启动");
+
+	    while (!Thread.currentThread().isInterrupted()) {
+	        try {
+	            // poll 参数是 QueuePollArgs，返回 Message<Long>
+	            Message<Long> msg = queue.poll(QueuePollArgs.defaults()
+	                    .visibility(Duration.ofSeconds(30))   // 30s内未ACK，消息重新可见
+	                    .acknowledgeMode(AcknowledgeMode.MANUAL));
+	
+	            if (msg == null) continue;
+	
+	            Long orderId = msg.getPayload();
+	            String msgId = msg.getId();
+	            log.info("收到超时订单消息，orderId={}, msgId={}", orderId, msgId);
+	
+	            businessExecutor.submit(() -> handleCancelLogic(queue, msgId, orderId));
+	
+	        } catch (Exception e) {
+	            log.error("poll 消息异常", e);
+	            try {
+	                Thread.sleep(1000);
+	            } catch (InterruptedException ie) {
+	                Thread.currentThread().interrupt();
+	            }
+	        }
+	    }
+	}
+
+// 若是RReliableQueue参数要加上queue以及msgId
+    private void handleCancelLogic(Long orderId) {  
+        try {  
+            int rows = orderMapper.updateTimeoutOrders(  
+                    List.of(orderId),  
+                    StatusConstant.ORDER_STATUS_CANCELLED,  
+                    "订单超时，自动取消",  
+                    LocalDateTime.now()  
+            );  
+  
+            if (rows > 0) {  
+                log.info("订单 {} 已超时自动取消", orderId);  
+            } else {  
+                log.info("订单 {} 无需取消（已支付或不存在）", orderId);  
+            }  
+  
+            // 无论是否真的取消，业务上都属于"处理完毕"，直接 ACK//            queue.acknowledge(QueueAckArgs.ids(msgId));  
+  
+        } catch (Exception e) {  
+            log.error("取消订单 {} 失败，消息将在 visibility 超时后重试", orderId, e);  
+            // 不 ACK，等 visibility(30s) 超时后消息自动重新可见，下次重试  
+            // 也可以主动 nack 并指定重试延迟：  
+//            queue.negativeAcknowledge(QueueNegativeAckArgs  
+//                    .failed(msgId)  
+//                    .delay(Duration.ofSeconds(10)));  
+        }  
+    }   
+}
+```
 
 #### <font color="#ff0000">消息队列(MQ)</font>
 
