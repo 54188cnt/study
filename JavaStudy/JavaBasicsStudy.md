@@ -1669,7 +1669,7 @@ HashTable的子类，专门用来存储键值对的集合。
 >   - 零散数据：Stream.of(T... values)，但是需要<font color="red">数据的类型统一</font>
 > - 对流进行操作（先中间方法，最后加上终止方法）：  
 >   - 中间方法：
->     - filter(Predicate< ? super T> predicate): 过滤流中的元素(符合predict的元素会被保留)
+>     - filter(Predicate< ? super T> predict): 过滤流中的元素(符合predict的元素会被保留)
 >     - limit(long maxSize): 限制(获取)流中的元素个数
 >     - skip(long n): 跳过流中的前n个元素
 >     - distinct(): 去重，依赖hashCode()和equals()方法
