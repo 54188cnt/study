@@ -2066,6 +2066,8 @@ private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 ## 取模
 模运算特点：
 - $x \equiv y \pmod n$：$(x \bmod m + m) \bmod m = y$ （可以避免 x  < 0）
+- 如果 p 是一个质数，a 是 b 的倍数且 b 和 p 互质（b 不是 p 的倍数），那么有
+    $\frac{a}{b} \pmod p =(a\cdot b ^ {p-2}) \pmod p$ 
 
 ## 组合运算
 ```java
@@ -2074,6 +2076,20 @@ private long comb(int n, int k) {
 	long res = 1;
 	for(int i = 1;i <= k;++i) {
 		res = res * (n + 1 - i) / i;
+	}
+	return res;
+}
+```
+
+## 快速幂
+```java
+private long pow(long x, int n, int MOD) {
+	long res = 1;
+	for(;n > 0;n /= 2) {
+		if((n & 1) == 1) {
+			res = res * x % MOD;
+		}
+		x = x * x % MOD;
 	}
 	return res;
 }
