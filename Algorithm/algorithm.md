@@ -2085,10 +2085,11 @@ private long comb(int n, int k) {
 ```java
 private long pow(long x, int n, int MOD) {
 	long res = 1;
-	for(;n > 0;n /= 2) {
+	while(n > 0) {
 		if((n & 1) == 1) {
 			res = res * x % MOD;
 		}
+		n >>>= 1;
 		x = x * x % MOD;
 	}
 	return res;
