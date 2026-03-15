@@ -2423,12 +2423,12 @@ B/S架构：浏览器/服务器
 > 类：UUID  
 > 方法：static String randomUUID()
 
-# 十六、反射
+# 十七、反射
 反射允许对成员变量，成员方法和构造方法的信息进行编程访问  
 作用：获取一个类里面的所有信息，获取到之后在执行其他业务逻辑；结合配置文件动态的创建对象并调用方法
 含义：从类里面拿出能拿的信息展示出来
 
-## 16.1 获取Class字节码对象
+## 17.1 获取Class字节码对象
 > 三种方式：  
 > 1. Class.forName("全类名")
 >   - <font color="red">源代码阶段</font>获取字节码对象
@@ -2440,8 +2440,8 @@ B/S架构：浏览器/服务器
 >   - <font color="red">运行阶段</font>获取字节码对象
 >   - 需要已经有了这个类的对象
 
-## 16.2 获取Class内部信息
-### 16.2.1 获取构造方法(Constructor)
+## 17.2 获取Class内部信息
+### 17.2.1 获取构造方法(Constructor)
 - Constructor< ?>[] getConstructors(): 获取当前类中所有公有构造方法
 - Constructor< ?>[] getDeclaredConstructors(): 获取当前类中所有构造方法
 - Constructor< T> getConstructor(Class< ?>... parameterTypes): 获取当前类中指定参数的公有构造方法
@@ -2453,7 +2453,7 @@ Constructor常用方法：
 - int getModifiers(): 获取当前类成员变量的访问权限修饰符
 - Parameter[] getParameters(): 获取当前类成员方法的参数列表
 
-### 16.2.2 获取成员变量(Field)
+### 17.2.2 获取成员变量(Field)
 - Filed[] getFields(): 获取当前类中所有公有成员变量
 - Filed[] getDeclaredFields(): 获取当前类中所有成员变量
 - Filed getField(String name): 获取当前类中指定名称的公有成员变量
@@ -2467,7 +2467,7 @@ Field常用方法：
 - Object get(Object obj): 获取当前类成员变量的值（已知类型可以直接强转）
 - void s et(Object obj, Object value): 设置当前类成员变量的值
 
-### 16.2.3 获取成员方法(Method)
+### 17.2.3 获取成员方法(Method)
 - Method[] getMethods(): 获取当前类中所有公有成员方法，包括继承的
 - Method[] getDeclaredMethods(): 获取当前类中所有成员方法，不包括继承的
 - Method getMethod(String name, Class< ?>... parameterTypes): 获取当前类中指定名称的公有成员方法
@@ -2482,7 +2482,7 @@ Method常用方法：
 - String getName(): 获取当前类成员方法名称
 - Object invoke(Object obj, Object... args): 调用方法并得到返回值
 
-## 16.3 动态代理
+## 17.3 动态代理
 Proxy类提供了为对象产生代理对象的方法  
 方法：`public static Object newProxyInstance(ClassLoader loader, Class< ?>[] interfaces, InvocationHandler h)`   
 创建方法：  
@@ -2507,9 +2507,12 @@ Star star = (Star)Proxy.newProxyInstance(
 });
 ```
 
-# 十七、其他
+# 十八、并发编程
 
-## 17.1 SPI
+
+# 十九、其他
+
+## 19.1 SPI
 ### SPI和API的区别
 一般模块之间都是通过接口进行通讯，因此我们在服务调用方和服务实现方（也称服务提供者）之间引入一个“接口”。
 
@@ -2524,7 +2527,7 @@ Star star = (Star)Proxy.newProxyInstance(
 4. 根据获取到的全类名，先判断跟 spi 接口是否为同一类型，如果是的，那么就通过反射的机制构造对应的实例对象，
 5. 将构造出来的实例对象添加到 `Providers` 的列表中。
 
-## 17.2 序列化和反序列化
+## 19.2 序列化和反序列化
 如果我们需要持久化 Java 对象比如将 Java 对象保存在文件中，或者在网络传输 Java 对象，这些场景都需要用到序列化。
 
 <font color="#ff0000">序列化</font>：将数据结构或对象转换成可以存储或传输的形式，通常是二进制字节流，也可以是 JSON, XML 等文本格式
@@ -2559,6 +2562,6 @@ Star star = (Star)Proxy.newProxyInstance(
 - **性能差**：相比于其他序列化框架性能更低，主要原因是序列化之后的字节数组体积较大，导致传输成本加大。
 - **存在安全问题**：序列化和反序列化本身并不存在问题。但当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码
 
-## Optional
+## 19.3 Optional
 建议使用 `Optional` 解决 NPE（`java.lang.NullPointerException`）问题，它就是为 NPE 而生的，其中可以包含空值或非空值。
 [Optional详细学习](./Java进阶学习/Optional.md) 
