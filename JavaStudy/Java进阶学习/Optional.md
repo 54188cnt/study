@@ -84,6 +84,20 @@ public T get() {
 ```
 
 ### 过滤值
+```java
+/**
+* 1. 如果是empty返回empty
+* 2. predicate.test(value)==true 返回this，否则返回empty
+*/
+public Optional<T> filter(Predicate<? super T> predicate) {
+    Objects.requireNonNull(predicate);
+    if (!isPresent())
+        return this;
+    else
+        return predicate.test(value) ? this : empty();
+}
+```
 
+<font color="#ff0000">注意</font>：如果坚决不想看见 NPE，就不要用 of()、 get()、flatMap(..)。
 
 
